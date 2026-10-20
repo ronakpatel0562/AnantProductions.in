@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anant Productions — Brand Identity & Logo System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0A0908;
+      --bg-card: #141210;
+      --bg-crimson: #1F070B;
+      --gold-primary: #D4AF37;
+      --gold-light: #F3E5AB;
+      --gold-dark: #997B24;
+      --text-muted: #A39E93;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: #F5F2EB;
+      font-family: 'Montserrat', sans-serif;
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+      padding-bottom: 30px;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    }
+
+    .badge {
+      display: inline-block;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      color: var(--gold-primary);
+      padding: 6px 16px;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-radius: 50px;
+      margin-bottom: 16px;
+      background: rgba(212, 175, 55, 0.05);
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 2.6rem;
+      letter-spacing: 0.15em;
+      color: #FFF;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 30px;
+      margin-bottom: 50px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid rgba(212, 175, 55, 0.15);
+      border-radius: 16px;
+      padding: 40px 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(212, 175, 55, 0.4);
+    }
+
+    .card.crimson-theme {
+      background: radial-gradient(circle at center, #2C0B12 0%, #150407 100%);
+      border-color: rgba(212, 175, 55, 0.25);
+    }
+
+    .card.ivory-theme {
+      background: #FDFBF7;
+      color: #1A1A1A;
+      border-color: rgba(0,0,0,0.1);
+    }
+
+    .card.ivory-theme .logo-subtitle {
+      color: #666;
+    }
+
+    .card.ivory-theme .tagline {
+      color: #888;
+    }
+
+    .card-label {
+      position: absolute;
+      top: 16px;
+      left: 20px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--gold-primary);
+      opacity: 0.8;
+    }
+
+    .card.ivory-theme .card-label {
+      color: #8C6D1F;
+    }
+
+    /* SVG LOGO MARK */
+    .logo-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .logo-mark {
+      width: 120px;
+      height: 72px;
+      margin-bottom: 24px;
+    }
+
+    .logo-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      padding-left: 0.35em; /* Optical balance for letter-spacing */
+    }
+
+    .logo-subtitle {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.55em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 16px;
+      padding-left: 0.55em;
+      opacity: 0.9;
+    }
+
+    .divider {
+      width: 48px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+      margin-bottom: 14px;
+    }
+
+    .tagline {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.58rem;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* Horizontal Lockup */
+    .horizontal-lockup {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 20px 0;
+    }
+
+    .horizontal-lockup .logo-mark {
+      width: 80px;
+      height: 48px;
+      margin-bottom: 0;
+    }
+
+    .horizontal-lockup .text-group {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+
+    .horizontal-lockup .logo-title {
+      font-size: 1.35rem;
+      margin-bottom: 2px;
+      padding-left: 0;
+    }
+
+    .horizontal-lockup .logo-subtitle {
+      font-size: 0.62rem;
+      margin-bottom: 6px;
+      padding-left: 0;
+    }
+
+    .horizontal-lockup .divider {
+      margin-left: 0;
+    }
+
+    /* Design Specs Section */
+    .specs-section {
+      background: #111;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 36px;
+      margin-top: 30px;
+    }
+
+    .specs-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.3rem;
+      color: var(--gold-primary);
+      margin-bottom: 20px;
+      letter-spacing: 0.1em;
+    }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+
+    .spec-item h4 {
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #FFF;
+      margin-bottom: 8px;
+    }
+
+    .spec-item p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .color-swatches {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .swatch {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.15);
+      position: relative;
+    }
+
+    .swatch span {
+      position: absolute;
+      bottom: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 9px;
+      color: #888;
+      white-space: nowrap;
+    }
+
+    /* Watermark sample */
+    .watermark-sample {
+      position: relative;
+      width: 100%;
+      height: 240px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: url('https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      padding: 24px;
+      margin-top: 20px;
+      border: 1px solid rgba(212, 175, 55, 0.2);
+    }
+
+    .watermark-sample::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%);
+    }
+
+    .watermark-overlay {
+      position: relative;
+      z-index: 2;
+      opacity: 0.85;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.8));
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="badge">Brand Architecture • Anant Productions</div>
+      <h1>Official Identity Redesign</h1>
+      <p class="subtitle">Crafted with mathematical vector precision for high-end wedding cinematography and photography based in Ahmedabad, Gujarat.</p>
+    </header>
+
+    <div class="grid">
+      <!-- 1. Royal Obsidian (Primary Master Lockup) -->
+      <div class="card">
+        <span class="card-label">Primary Royal Obsidian (Hero & Dark Mode)</span>
+        <div class="logo-container">
+          <!-- Pristine Scalable Vector Emblem -->
+          <svg class="logo-mark" viewBox="0 0 160 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="goldGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#F5DF9E" />
+                <stop offset="50%" stop-color="#D4AF37" />
+                <stop offset="100%" stop-color="#AA821C" />
+              </linearGradient>
+            </defs>
+            <!-- Infinity Lemniscate Ribbon with Precision Aperture Geometry -->
+            <!-- Left Infinity Loop -->
+            <path d="M 80 45 C 62 23, 34 23, 20 37 C 6 51, 6 69, 20 83 C 34 97, 62 97, 80 75" 
+                  transform="translate(0, -15)"
+                  stroke="url(#goldGrad1)" stroke-width="3.5" stroke-linecap="round" fill="none" />
+            
+            <!-- Right Infinity Loop (Cinematic Aperture / Lens Core) -->
+            <path d="M 80 75 C 98 97, 126 97, 140 83 C 154 69, 154 51, 140 37 C 126 23, 98 23, 80 45" 
+                  transform="translate(0, -15)"
+                  stroke="url(#goldGrad1)" stroke-width="3.5" stroke-linecap="round" fill="none" />
+
+            <!-- Core Lens Aperture Iris Blades inside Right Loop -->
+            <g transform="translate(110, 45)">
+              <circle cx="0" cy="0" r="16" stroke="url(#goldGrad1)" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6" fill="none" />
+              <!-- Precision geometric aperture lines -->
+              <line x1="-12" y1="-5" x2="-4" y2="13" stroke="url(#goldGrad1)" stroke-width="1.8" />
+              <line x1="-4" y1="13" x2="13" y2="7" stroke="url(#goldGrad1)" stroke-width="1.8" />
+              <line x1="13" y1="7" x2="11" y2="-10" stroke="url(#goldGrad1)" stroke-width="1.8" />
+              <line x1="11" y1="-10" x2="-6" y2="-12" stroke="url(#goldGrad1)" stroke-width="1.8" />
+              <circle cx="0" cy="0" r="3.5" fill="url(#goldGrad1)" />
+            </g>
+
+            <!-- Center Infinity Interlock Point Accent -->
+            <circle cx="80" cy="45" r="2.5" fill="url(#goldGrad1)" />
+          </svg>
+
+          <div class="logo-title" style="color: #FFF;">ANANT</div>
+          <div class="logo-subtitle">PRODUCTIONS</div>
+          <div class="divider"></div>
+          <div class="tagline">CINEMATOGRAPHY &bull; PHOTOGRAPHY &bull; AHMEDABAD</div>
+        </div>
+      </div>
+
+      <!-- 2. Heritage Royal Crimson (Gujarat Palace & Wedding Invitation Edition) -->
+      <div class="card crimson-theme">
+        <span class="card-label">Heritage Crimson (Ceremony & Album Emboss)</span>
+        <div class="logo-container">
+          <svg class="logo-mark" viewBox="0 0 160 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="goldGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FFF2C6" />
+                <stop offset="45%" stop-color="#E2BA4B" />
+                <stop offset="100%" stop-color="#B28A25" />
+              </linearGradient>
+            </defs>
+            <path d="M 80 45 C 62 23, 34 23, 20 37 C 6 51, 6 69, 20 83 C 34 97, 62 97, 80 75" 
+                  transform="translate(0, -15)"
+                  stroke="url(#goldGrad2)" stroke-width="3.5" stroke-linecap="round" fill="none" />
+            <path d="M 80 75 C 98 97, 126 97, 140 83 C 154 69, 154 51, 140 37 C 126 23, 98 23, 80 45" 
+                  transform="translate(0, -15)"
+                  stroke="url(#goldGrad2)" stroke-width="3.5" stroke-linecap="round" fill="none" />
+            <g transform="translate(110, 45)">
+              <circle cx="0" cy="0" r="16" stroke="url(#goldGrad2)" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.7" fill="none" />
+              <line x1="-12" y1="-5" x2="-4" y2="13" stroke="url(#goldGrad2)" stroke-width="1.8" />
+              <line x1="-4" y1="13" x2="13" y2="7" stroke="url(#goldGrad2)" stroke-width="1.8" />
+              <line x1="13" y1="7" x2="11" y2="-10" stroke="url(#goldGrad2)" stroke-width="1.8" />
+              <line x1="11" y1="-10" x2="-6" y2="-12" stroke="url(#goldGrad2)" stroke-width="1.8" />
+              <circle cx="0" cy="0" r="3.5" fill="url(#goldGrad2)" />
+            </g>
+            <circle cx="80" cy="45" r="2.5" fill="url(#goldGrad2)" />
+          </svg>
+
+          <div class="logo-title" style="color: #FFF2C6;">ANANT</div>
+          <div class="logo-subtitle" style="color: #E2BA4B;">PRODUCTIONS</div>
+          <div class="divider"></div>
+          <div class="tagline" style="color: #DFC8A2;">FINE ART WEDDING FILMS &bull; AHMEDABAD</div>
+        </div>
+      </div>
+
+      <!-- 3. Fine Ivory Editorial (Vogue & High-End Print) -->
+      <div class="card ivory-theme">
+        <span class="card-label">Editorial Ivory (Contracts, Print & Stationery)</span>
+        <div class="logo-container">
+          <svg class="logo-mark" viewBox="0 0 160 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="goldGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#9C7720" />
+                <stop offset="100%" stop-color="#6F5310" />
+              </linearGradient>
+            </defs>
+            <path d="M 80 45 C 62 23, 34 23, 20 37 C 6 51, 6 69, 20 83 C 34 97, 62 97, 80 75" 
+                  transform="translate(0, -15)"
+                  stroke="url(#goldGrad3)" stroke-width="3.5" stroke-linecap="round" fill="none" />
+            <path d="M 80 75 C 98 97, 126 97, 140 83 C 154 69, 154 51, 140 37 C 126 23, 98 23, 80 45" 
+                  transform="translate(0, -15)"
+                  stroke="url(#goldGrad3)" stroke-width="3.5" stroke-linecap="round" fill="none" />
+            <g transform="translate(110, 45)">
+              <circle cx="0" cy="0" r="16" stroke="url(#goldGrad3)" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6" fill="none" />
+              <line x1="-12" y1="-5" x2="-4" y2="13" stroke="url(#goldGrad3)" stroke-width="1.8" />
+              <line x1="-4" y1="13" x2="13" y2="7" stroke="url(#goldGrad3)" stroke-width="1.8" />
+              <line x1="13" y1="7" x2="11" y2="-10" stroke="url(#goldGrad3)" stroke-width="1.8" />
+              <line x1="11" y1="-10" x2="-6" y2="-12" stroke="url(#goldGrad3)" stroke-width="1.8" />
+              <circle cx="0" cy="0" r="3.5" fill="url(#goldGrad3)" />
+            </g>
+            <circle cx="80" cy="45" r="2.5" fill="url(#goldGrad3)" />
+          </svg>
+
+          <div class="logo-title" style="color: #1A1A1A;">ANANT</div>
+          <div class="logo-subtitle" style="color: #8C6D1F;">PRODUCTIONS</div>
+          <div class="divider" style="background: linear-gradient(90deg, transparent, #8C6D1F, transparent);"></div>
+          <div class="tagline">CINEMATOGRAPHY &bull; PHOTOGRAPHY</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Horizontal Navbar Lockup -->
+    <div class="card" style="align-items: stretch; margin-bottom: 30px;">
+      <span class="card-label">Horizontal Header / Navbar Lockup</span>
+      <div class="horizontal-lockup" style="justify-content: center; margin-top: 10px;">
+        <svg class="logo-mark" viewBox="0 0 160 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="goldGradH" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#F5DF9E" />
+              <stop offset="50%" stop-color="#D4AF37" />
+              <stop offset="100%" stop-color="#AA821C" />
+            </linearGradient>
+          </defs>
+          <path d="M 80 45 C 62 23, 34 23, 20 37 C 6 51, 6 69, 20 83 C 34 97, 62 97, 80 75" 
+                transform="translate(0, -15)"
+                stroke="url(#goldGradH)" stroke-width="4" stroke-linecap="round" fill="none" />
+          <path d="M 80 75 C 98 97, 126 97, 140 83 C 154 69, 154 51, 140 37 C 126 23, 98 23, 80 45" 
+                transform="translate(0, -15)"
+                stroke="url(#goldGradH)" stroke-width="4" stroke-linecap="round" fill="none" />
+          <g transform="translate(110, 45)">
+            <circle cx="0" cy="0" r="16" stroke="url(#goldGradH)" stroke-width="1.8" stroke-dasharray="3 3" opacity="0.6" fill="none" />
+            <line x1="-12" y1="-5" x2="-4" y2="13" stroke="url(#goldGradH)" stroke-width="2" />
+            <line x1="-4" y1="13" x2="13" y2="7" stroke="url(#goldGradH)" stroke-width="2" />
+            <line x1="13" y1="7" x2="11" y2="-10" stroke="url(#goldGradH)" stroke-width="2" />
+            <line x1="11" y1="-10" x2="-6" y2="-12" stroke="url(#goldGradH)" stroke-width="2" />
+            <circle cx="0" cy="0" r="4" fill="url(#goldGradH)" />
+          </g>
+          <circle cx="80" cy="45" r="3" fill="url(#goldGradH)" />
+        </svg>
+
+        <div class="text-group">
+          <div class="logo-title" style="color: #FFF; font-size: 1.4rem;">ANANT</div>
+          <div class="logo-subtitle" style="font-size: 0.65rem; margin-bottom: 4px;">PRODUCTIONS</div>
+          <div class="tagline" style="font-size: 0.52rem; letter-spacing: 0.25em;">AHMEDABAD &bull; EST. 2024</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Real-world Watermark Simulation -->
+    <div class="specs-section">
+      <div class="specs-title">Real-World Application: Film & Photo Watermark</div>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px;">
+        Unlike busy logos, this minimalist geometry functions effortlessly as a subtle, elegant luxury watermark on your wedding films, 4K teasers, and Instagram reels without obscuring the emotions.
+      </p>
+
+      <div class="watermark-sample">
+        <div class="watermark-overlay">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <svg style="width: 44px; height: 26px;" viewBox="0 0 160 90" fill="none">
+              <path d="M 80 45 C 62 23, 34 23, 20 37 C 6 51, 6 69, 20 83 C 34 97, 62 97, 80 75" 
+                    transform="translate(0, -15)"
+                    stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" fill="none" />
+              <path d="M 80 75 C 98 97, 126 97, 140 83 C 154 69, 154 51, 140 37 C 126 23, 98 23, 80 45" 
+                    transform="translate(0, -15)"
+                    stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" fill="none" />
+              <circle cx="110" cy="45" r="14" stroke="#FFFFFF" stroke-width="3" stroke-dasharray="4 4" fill="none" />
+            </svg>
+            <div>
+              <div style="font-family: 'Cinzel', serif; font-size: 0.9rem; letter-spacing: 0.25em; color: #FFF; font-weight: 700;">ANANT</div>
+              <div style="font-family: 'Montserrat', sans-serif; font-size: 0.45rem; letter-spacing: 0.4em; color: rgba(255,255,255,0.85); font-weight: 500;">PRODUCTIONS</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Designer Rationale & Technical Specifications -->
+    <div class="specs-section">
+      <div class="specs-title">Design Rationale & Brand DNA</div>
+      <div class="specs-grid">
+        <div class="spec-item">
+          <h4>1. The Infinity Lemniscate</h4>
+          <p>The name <strong>Anant</strong> translates directly to <em>infinite, boundless, and eternal</em>. The continuous ribbon immortalizes the couple's lifelong bond and generational memories.</p>
+        </div>
+        <div class="spec-item">
+          <h4>2. The Integrated Iris Diaphragm</h4>
+          <p>We eliminated the literal hand-drawn camera outline (which looked like amateur clip-art). In its place, the right loop seamlessly resolves into a <strong>precision 6-blade camera aperture</strong>, declaring professional cinematography expertise.</p>
+        </div>
+        <div class="spec-item">
+          <h4>3. Royal Gujarat Color Palette</h4>
+          <p>Crafted with <strong>Imperial Obsidian</strong> (`#0A0908`), <strong>Royal Gujarat Velvet Crimson</strong> (`#1F070B`), and <strong>Champagne Leaf Gold</strong> (`#D4AF37`), conveying heritage luxury without looking artificial.</p>
+          <div class="color-swatches">
+            <div class="swatch" style="background: #0A0908;"><span>#0A0908</span></div>
+            <div class="swatch" style="background: #1F070B;"><span>#1F070B</span></div>
+            <div class="swatch" style="background: #D4AF37;"><span>#D4AF37</span></div>
+            <div class="swatch" style="background: #F3E5AB;"><span>#F3E5AB</span></div>
+          </div>
+        </div>
+        <div class="spec-item">
+          <h4>4. Timeless Typography</h4>
+          <p>Replacing the casual cursive handwriting with high-fashion, classical Roman serif <strong>Cinzel</strong> paired with geometric <strong>Montserrat</strong>. This establishes immediate credibility and high booking fee prestige.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

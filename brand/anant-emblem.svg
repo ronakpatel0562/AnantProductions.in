@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 90" width="160" height="90" fill="none">
+  <defs>
+    <linearGradient id="anantGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F5DF9E" />
+      <stop offset="50%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#AA821C" />
+    </linearGradient>
+  </defs>
+  <!-- Left Infinity Loop -->
+  <path d="M 80 45 C 62 23, 34 23, 20 37 C 6 51, 6 69, 20 83 C 34 97, 62 97, 80 75" 
+        transform="translate(0, -15)"
+        stroke="url(#anantGold)" stroke-width="3.5" stroke-linecap="round" fill="none" />
+  
+  <!-- Right Infinity Loop (Cinematic Aperture / Lens Core) -->
+  <path d="M 80 75 C 98 97, 126 97, 140 83 C 154 69, 154 51, 140 37 C 126 23, 98 23, 80 45" 
+        transform="translate(0, -15)"
+        stroke="url(#anantGold)" stroke-width="3.5" stroke-linecap="round" fill="none" />
+
+  <!-- Core Lens Aperture Iris Blades inside Right Loop -->
+  <g transform="translate(110, 45)">
+    <circle cx="0" cy="0" r="16" stroke="url(#anantGold)" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.65" fill="none" />
+    <line x1="-12" y1="-5" x2="-4" y2="13" stroke="url(#anantGold)" stroke-width="1.8" />
+    <line x1="-4" y1="13" x2="13" y2="7" stroke="url(#anantGold)" stroke-width="1.8" />
+    <line x1="13" y1="7" x2="11" y2="-10" stroke="url(#anantGold)" stroke-width="1.8" />
+    <line x1="11" y1="-10" x2="-6" y2="-12" stroke="url(#anantGold)" stroke-width="1.8" />
+    <circle cx="0" cy="0" r="3.5" fill="url(#anantGold)" />
+  </g>
+
+  <!-- Center Infinity Interlock Point Accent -->
+  <circle cx="80" cy="45" r="2.5" fill="url(#anantGold)" />
+</svg>
