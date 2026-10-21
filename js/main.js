@@ -1,14 +1,14 @@
 /**
  * ANANT PRODUCTIONS — LUXURY CINEMATOGRAPHY & FINE-ART PHOTOGRAPHY
  * Interactive Engine: Gujarati & Pan-India Wedding Calculator, Video Lightbox,
- * Gallery Filtering, FAQs & Royal Soundscape.
+ * Gallery Filtering, Accessible FAQs & Royal Soundscape.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
   // 1. Navbar Sticky & Scroll Effects
   const navbar = document.querySelector('.navbar');
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
+    if (window.scrollY > 40) {
       navbar.classList.add('scrolled');
     } else {
       navbar.classList.remove('scrolled');
@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (mobileToggle && mobileDrawer) {
     mobileToggle.addEventListener('click', () => {
+      mobileDrawer.style.display = 'flex';
       mobileDrawer.classList.add('active');
     });
   }
@@ -29,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (mobileClose && mobileDrawer) {
     mobileClose.addEventListener('click', () => {
       mobileDrawer.classList.remove('active');
+      mobileDrawer.style.display = 'none';
     });
   }
 
@@ -105,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `• Estimated Investment: ${formattedTotal}\n\n` +
         `Please let me know your availability for our wedding dates. We would love to discuss further!`
       );
-      calcWhatsappBtn.href = `https://wa.me/919879000000?text=${waMsg}`;
+      calcWhatsappBtn.href = `https://wa.me/918000088819?text=${waMsg}`;
     }
   }
 
@@ -143,8 +145,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
+      filterBtns.forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
       btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
 
       const filterValue = btn.getAttribute('data-filter');
 
@@ -152,15 +158,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const itemCat = item.getAttribute('data-category');
         if (filterValue === 'all' || itemCat === filterValue) {
           item.style.display = 'block';
-          item.style.animation = 'fadeIn 0.4s ease';
+          item.style.opacity = '1';
         } else {
           item.style.display = 'none';
+          item.style.opacity = '0';
         }
       });
     });
   });
 
-  // 4. Video Player Modal Lightbox
+  // 4. Video Player Modal Lightbox with Keyboard Accessibility
   const videoCards = document.querySelectorAll('.film-card');
   const modalBackdrop = document.getElementById('video-modal');
   const modalIframe = document.getElementById('modal-video-frame');
@@ -191,49 +198,67 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  function openVideoModal(filmKey) {
+    const film = filmDatabase[filmKey] || filmDatabase['film-1'];
+    if (modalTitle) modalTitle.textContent = film.title;
+    if (modalDetails) modalDetails.textContent = film.desc;
+    if (modalIframe) modalIframe.src = film.embedUrl;
+    if (modalBackdrop) modalBackdrop.classList.add('active');
+  }
+
+  function closeVideoModal() {
+    if (modalBackdrop) modalBackdrop.classList.remove('active');
+    if (modalIframe) modalIframe.src = '';
+  }
+
   videoCards.forEach(card => {
     card.addEventListener('click', () => {
-      const filmKey = card.getAttribute('data-film-id');
-      const film = filmDatabase[filmKey] || filmDatabase['film-1'];
+      openVideoModal(card.getAttribute('data-film-id'));
+    });
 
-      if (modalTitle) modalTitle.textContent = film.title;
-      if (modalDetails) modalDetails.textContent = film.desc;
-      if (modalIframe) {
-        // Fallback demo reel video or embed
-        modalIframe.src = film.embedUrl;
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openVideoModal(card.getAttribute('data-film-id'));
       }
-      if (modalBackdrop) modalBackdrop.classList.add('active');
     });
   });
 
   if (modalCloseBtn && modalBackdrop) {
-    modalCloseBtn.addEventListener('click', () => {
-      modalBackdrop.classList.remove('active');
-      if (modalIframe) modalIframe.src = '';
-    });
+    modalCloseBtn.addEventListener('click', closeVideoModal);
 
     modalBackdrop.addEventListener('click', (e) => {
       if (e.target === modalBackdrop) {
-        modalBackdrop.classList.remove('active');
-        if (modalIframe) modalIframe.src = '';
+        closeVideoModal();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modalBackdrop.classList.contains('active')) {
+        closeVideoModal();
       }
     });
   }
 
-  // 5. FAQ Accordion Toggle
+  // 5. FAQ Accordion Toggle with aria-expanded
   const faqItems = document.querySelectorAll('.faq-item');
   faqItems.forEach(item => {
     const questionBtn = item.querySelector('.faq-question');
     questionBtn.addEventListener('click', () => {
       const isActive = item.classList.contains('active');
-      faqItems.forEach(i => i.classList.remove('active'));
+      faqItems.forEach(i => {
+        i.classList.remove('active');
+        const btn = i.querySelector('.faq-question');
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+      });
       if (!isActive) {
         item.classList.add('active');
+        questionBtn.setAttribute('aria-expanded', 'true');
       }
     });
   });
 
-  // 6. Direct Contact Form Submission to WhatsApp / Notification
+  // 6. Direct Contact Form Submission to WhatsApp
   const bookingForm = document.getElementById('wedding-inquiry-form');
   if (bookingForm) {
     bookingForm.addEventListener('submit', (e) => {
@@ -243,6 +268,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const phone = document.getElementById('form-phone').value;
       const date = document.getElementById('form-date').value;
       const venueCity = document.getElementById('form-city').value;
+      const budgetEl = document.getElementById('form-budget');
+      const budget = budgetEl ? budgetEl.value : '';
+      const serviceEl = document.getElementById('form-service');
+      const service = serviceEl ? serviceEl.value : '';
       const eventDetails = document.getElementById('form-details').value;
 
       const whatsappText = encodeURIComponent(
@@ -252,19 +281,18 @@ document.addEventListener('DOMContentLoaded', () => {
         `• Phone/Contact: ${phone}\n` +
         `• Wedding Dates: ${date}\n` +
         `• City/Venues: ${venueCity}\n` +
-        `• Functions & Notes: ${eventDetails}\n\n` +
+        (budget ? `• Expected Budget: ${budget}\n` : '') +
+        (service ? `• Coverage Needed: ${service}\n` : '') +
+        (eventDetails ? `• Functions & Notes: ${eventDetails}\n\n` : '\n') +
         `Please confirm your availability and share next steps!`
       );
 
       // Open WhatsApp with populated form details
-      window.open(`https://wa.me/919879000000?text=${whatsappText}`, '_blank');
-
-      alert(`Aum Shree Ganeshay Namah! Thank you ${brideGroom}. Your inquiry is being sent directly to our director on WhatsApp. We will connect with you within a few hours!`);
+      window.open(`https://wa.me/918000088819?text=${whatsappText}`, '_blank');
     });
   }
 
   // 7. Ambient Royal Audio Soundscape (Web Audio API Synthesizer)
-  // Generates a soft, majestic royal tanpura / sitar harmonic drone when user clicks the music toggle
   const audioToggle = document.getElementById('ambient-audio-toggle');
   let audioCtx = null;
   let isPlaying = false;
@@ -276,10 +304,10 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
           audioCtx = new (window.AudioContext || window.webkitAudioContext)();
           
-          // Royal Indian Sa-Pa meditative drone chord (frequencies for D Indian scale: D3 146.8Hz, A3 220Hz, D4 293.6Hz)
+          // Royal Indian Sa-Pa meditative drone chord
           const freqs = [146.83, 220.00, 293.66, 440.00];
           const masterGain = audioCtx.createGain();
-          masterGain.gain.setValueAtTime(0.04, audioCtx.currentTime); // Gentle soothing volume
+          masterGain.gain.setValueAtTime(0.035, audioCtx.currentTime);
           masterGain.connect(audioCtx.destination);
 
           oscillators = freqs.map((f, idx) => {
@@ -287,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const gain = audioCtx.createGain();
             osc.type = idx % 2 === 0 ? 'sine' : 'triangle';
             osc.frequency.setValueAtTime(f, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.4 / (idx + 1), audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.35 / (idx + 1), audioCtx.currentTime);
             osc.connect(gain);
             gain.connect(masterGain);
             osc.start();
@@ -295,9 +323,9 @@ document.addEventListener('DOMContentLoaded', () => {
           });
 
           isPlaying = true;
-          audioToggle.innerHTML = '🎵 <span style="font-size:0.65rem; margin-left:4px;">Pause</span>';
-          audioToggle.setAttribute('title', 'Pause Royal Ambiance');
-          audioToggle.style.borderColor = '#D4AF37';
+          audioToggle.innerHTML = '<span aria-hidden="true">&#9646;&#9646;</span> <span>Mute</span>';
+          audioToggle.setAttribute('title', 'Mute Royal Ambiance');
+          audioToggle.style.borderColor = 'var(--gold-primary)';
         } catch (err) {
           console.log('Audio init prevented:', err);
         }
@@ -311,9 +339,9 @@ document.addEventListener('DOMContentLoaded', () => {
           audioCtx = null;
         }
         isPlaying = false;
-        audioToggle.innerHTML = '🪕 <span style="font-size:0.65rem; margin-left:4px;">Sound</span>';
+        audioToggle.innerHTML = '<span aria-hidden="true">&#9835;</span> <span>Sound</span>';
         audioToggle.setAttribute('title', 'Play Royal Indian Wedding Ambiance');
-        audioToggle.style.borderColor = 'rgba(212, 175, 55, 0.22)';
+        audioToggle.style.borderColor = 'var(--hairline)';
       }
     });
   }
