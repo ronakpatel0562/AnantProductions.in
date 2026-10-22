@@ -43,7 +43,7 @@
   </script>
 
   <!-- Main Stylesheet -->
-  <link rel="stylesheet" href="css/style.css?v=12">
+  <link rel="stylesheet" href="css/style.css?v=21">
 
   <style>
     @media (min-width: 961px) {
@@ -135,27 +135,40 @@
     </div>
   </header>
 
-  <!-- Mobile Drawer -->
-  <div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
-    <div class="mobile-drawer-inner">
-      <div class="mobile-drawer-header">
-        <span class="nav-brand-title">ANANT PRODUCTIONS</span>
-        <button class="mobile-drawer-close" aria-label="Close navigation menu">&times;</button>
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-drawer" style="display: none; position: fixed; inset: 0; background: rgba(9,9,11,0.98); z-index: 999; padding: 36px 24px; flex-direction: column; justify-content: space-between;">
+    <div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <img src="anant_logo.png" alt="Anant Productions Logo" class="nav-brand-img" style="height: 32px; width: auto;">
+          <div class="nav-brand-text">
+            <span class="nav-brand-title" style="font-size: 1.05rem;">ANANT PRODUCTIONS</span>
+          </div>
+        </div>
+        <button class="mobile-drawer-close" aria-label="Close navigation menu" style="background: none; border: none; color: var(--gold-light); font-size: 1.8rem; cursor: pointer;">✕</button>
       </div>
-      <ul class="mobile-nav-links">
+      <ul style="list-style: none; display: flex; flex-direction: column; gap: 16px; font-size: 1rem; font-family: var(--font-mono);">
         <li><a href="index.html" class="mobile-nav-link">Home</a></li>
-        <li><a href="index.html#portfolio" class="mobile-nav-link">Our Work</a></li>
-        <li><a href="index.html#films" class="mobile-nav-link">Films</a></li>
-        <li><a href="index.html#packages" class="mobile-nav-link">Packages</a></li>
-        <li><a href="index.html#quotation-builder" class="mobile-nav-link">Quotation Builder</a></li>
         <li><a href="about.html" class="mobile-nav-link">About Us &amp; Story</a></li>
-        <li><a href="contact.html" class="mobile-nav-link">Contact Studio</a></li>
-        <li><a href="privacy-policy.html" class="mobile-nav-link active">Privacy Policy</a></li>
-        <li><a href="terms-and-conditions.html" class="mobile-nav-link">Terms &amp; Conditions</a></li>
+        <li><a href="index.html#portfolio" class="mobile-nav-link">Our Work &amp; Films</a></li>
+        <li><a href="index.html#packages" class="mobile-nav-link">Curated Packages</a></li>
+        <li><a href="index.html#quotation-builder" class="mobile-nav-link" style="color: var(--gold-light);">⚡ Quotation Builder</a></li>
+        <li><a href="contact.html" class="mobile-nav-link">Contact &amp; Studio Location</a></li>
+        <li><a href="terms-and-conditions.html" class="mobile-nav-link" style="font-size: 0.9rem; color: var(--mute);">Terms &amp; Retainer Policies</a></li>
+        <li><a href="privacy-policy.html" class="mobile-nav-link" style="color: var(--gold-light); font-size: 0.9rem;">✦ Privacy Policy &amp; Vaults</a></li>
       </ul>
-      <div class="mobile-drawer-footer">
-        <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!" target="_blank" rel="noopener" class="btn btn-whatsapp btn-block">Chat on WhatsApp</a>
-      </div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 24px;">
+      <button type="button" class="btn btn-outline-gold" id="mobile-theme-toggle-btn" style="width: 100%; justify-content: center; gap: 8px;">
+        <span class="mobile-theme-label">☀️ Switch to Light Mode</span>
+      </button>
+      <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20would%20love%20to%20connect." class="btn btn-whatsapp" style="width: 100%; justify-content: center;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        Chat on WhatsApp
+      </a>
+      <a href="contact.html" class="btn btn-gold mobile-drawer-cta" style="width: 100%; justify-content: center;">
+        Check Date Availability
+      </a>
     </div>
   </div>
 
@@ -268,24 +281,25 @@
           </div>
         </div>
       </div>
-    </section>
-  </main>
-
   <!-- Site Footer -->
   <footer class="footer">
     <div class="container">
-      <div class="footer-grid">
-        <!-- Col 1: Studio Identity -->
+      <div class="footer-top">
+        <!-- Col 1: Brand Info -->
         <div>
-          <div class="footer-brand">
-            <span class="footer-brand-title">ANANT PRODUCTIONS</span>
+          <div class="nav-brand" style="margin-bottom: 16px;">
+            <img src="anant_logo.png" alt="Anant Productions Logo" class="nav-brand-img" style="height: 40px; width: auto; max-width: 90px;">
+            <div class="nav-brand-text">
+              <span class="nav-brand-title" style="font-size: 1.25rem;">ANANT PRODUCTIONS</span>
+              <span class="nav-brand-sub" style="font-size: 0.58rem;">WEDDING CINEMATOGRAPHY &amp; PHOTOGRAPHY</span>
+            </div>
           </div>
-          <p class="footer-tagline">
-            "We don't count photos; we capture your wedding story."
+          <p class="footer-brand-desc">
+            Anant translates to <em>infinite, eternal, and boundless</em>. Preserving authentic Gujarati wedding rituals, electrifying Garba nights, and candid family emotions with timeless fine-art photography and 4K cinema.
           </p>
-          <p class="footer-desc">
-            Ahmedabad's emotion-first wedding photography and cinematography studio. Preserving Gujarati wedding rituals, tears of joy, and sacred pheras across Ahmedabad, Vadodara, Surat, Rajkot, and all Gujarat.
-          </p>
+          <div style="font-family: var(--font-sans); font-size: 0.74rem; color: var(--gold-light); letter-spacing: 0.1em; text-transform: uppercase;">
+            Ahmedabad &bull; Vadodara &bull; Surat &bull; Anand &bull; Rajkot &bull; Bharuch &bull; Pan-Gujarat
+          </div>
         </div>
 
         <!-- Col 2: Navigation Links -->
@@ -332,7 +346,7 @@
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
             </a>
             <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20would%20love%20to%20connect." target="_blank" rel="noopener" aria-label="WhatsApp (+91 80000 88819)" title="WhatsApp" style="display: flex; align-items: center;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1 3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
             </a>
           </div>
         </div>
@@ -348,7 +362,6 @@
           શુભ લગ્ન &bull; અનંત પ્રેમ &bull; અવિસ્મરણીય ક્ષણો
         </div>
       </div>
-    </div>
   </footer>
 
   <!-- Floating Desktop WhatsApp -->
