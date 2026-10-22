@@ -117,5 +117,39 @@ Whenever changes or additions are made:
     Each with crew details, deliverables, and direct-booking WhatsApp buttons. Updated inquiry dropdown and footer links.
   - Redesigned the enquiry form's "Approximate Budget" and "Coverage / Celebration Type" fields: replaced native browser select dropdowns with identical `.form-input` text fields matching the exact dark styling of the rest of the form. Removed strict tiers so clients can enter any custom budget value (from 15K to 10 Lakh+) with non-intrusive datalist autocomplete suggestions.
   - Replaced `anant_logo.jpg` in the navbar and mobile drawer with `anant_logo.png` (the transparent 3D golden infinity camera lens mark without redundant text). Updated CSS with `object-fit: contain`, width: auto, height: 38px, and a subtle Champagne Gold drop-shadow glow.
+  - **Full Conversion Rate Optimization & Redesign Overhaul:**
+    - Replaced unverified historical statistics ("450+ Weddings", "10+ Years", fabricated reviews) with authentic, grounded value pillars: Emotion-First Candid Moments, Vedic Ritual Fluency, Photo + Cinema Coordinated Unit, and Transparent Packages.
+    - Updated hero headline to the emotionally resonant: *"Your Story. Your Emotions. Your Forever."* with supporting copy tailored to couples planning weddings in Gujarat.
+    - Built **Founding Couple Launch Offer** banner: Signature Two-Day Photo + Cinema package at ₹34,999 (limited to first 3 bookings, saving ₹10,000) with direct WhatsApp claim action.
+    - Introduced **Two-Day Gujarati Wedding Packages** in `index.html` and centralized in `js/config.js`:
+      - **Essential Photography:** ₹24,999 (Range ₹24,999 – ₹29,999, 1 photographer, up to 6 hrs/day, 300–400 photos).
+      - **Signature Photo + Cinema:** ₹39,999 (Range ₹39,999 – ₹49,999, 1 photographer + 1 cinematographer, 350–500 photos, 3–5 min film, 1 reel, visually highlighted).
+      - **Premium Wedding Story:** ₹59,999 (Range ₹59,999 – ₹79,999, 1 photographer + 1 cinematographer, up to 8 hrs/day, 500–700 photos, highlight film, 2 reels).
+    - Built **Additional Services Cards** for Pre-wedding shoots (from ₹5,999), Engagement coverage (from ₹7,999), Additional functions, Extra coverage hours (from ₹1,500/hr), Printed heirloom albums (from ₹6,999), and Additional vertical reels (from ₹1,999).
+    - Added **Why Choose Us** (6 value pillars), **Our 4-Step Process**, and **Our Promise to You and Your Family** (reverence for Baa-Dada, sacred mandap presence, analog warmth, fast family delivery).
+    - Built complete **9 FAQ items** addressing two-day Gujarati weddings, coverage, customization, deliverables, and booking.
+    - Implemented **High-Converting Enquiry System**: couple names, WhatsApp number, wedding date with "Date not yet finalized" flexibility toggle, city/venue, celebration duration, interactive celebration function selector pills, service type, approximate budget, and notes with URL-safe direct WhatsApp dispatch.
+    - Implemented **Full-Screen Image Lightbox** for high-resolution portfolio inspection and video film spotlight modals.
+    - Created **`js/config.js`** as single source of truth for business details, packages, launch offers, add-ons, and contact links.
+    - Added **`robots.txt`**, **`sitemap.xml`**, and Schema.org JSON-LD structured data for Gujarat wedding photography SEO.
+    - Added **Mobile Sticky Action Bar** ("Check Wedding Date" + "WhatsApp") for effortless mobile conversions without obscuring content.
+  - **Interactive Wedding Package & Custom Quotation Builder System Release:**
+    - Architected centralized single source of truth in `js/config.js` with categorized collections (Two-Day Weddings, Pre-Wedding Films, Engagement & Sakar Pudo, Standalone Functions) and full Add-on Catalogue (Photography, Cinema, 4K Drone Aerials, Social Media Reels, Interviews & Podcasts, Post-Production, Heirloom Albums, and Extra Hours).
+    - Built pure, deterministic pricing calculation engine in `js/pricing-engine.js` with zero-duplicate subtraction for base package inclusions, integer currency math, Indian numbering formatting (`formatINR`), and URL state hash serialization.
+    - Added automated unit test suite in `test/pricing-engine.test.js` (15/15 passing tests covering base tiers, package switching, duplicate prevention, multi-day adjustments, discounts, and custom quote items).
+    - Built rich 8-step luxury interactive configurator in `js/quotation-builder.js` mounted at `#quotation-builder-app` with live sticky price breakdown, mobile drawer, formal PDF-ready branded quotation modal with unique reference IDs (e.g. `AP-2026-PZB7`), copy summary, and direct WhatsApp dispatch.
+    - Updated `#packages` section in `index.html` with interactive category tabs and direct "Customize in Quotation Builder" actions.
+    - Added client-side telemetry bus (`trackAnantEvent`) respecting customer privacy without exposing PII.
+  - **Gujarati Phrasing Polish & Commercial Margin Inflation Update:**
+    - Replaced the unnatural literal phrase `"શૂન્ય છૂપા ખર્ચા"` with natural, authentic native Gujarati: `"કોઈ પણ છૂપા ખર્ચ વિના"` ("Without any hidden costs") across the site.
+    - Adjusted baseline prices across all packages and add-ons by ~20%–25% to establish an inflated commercial list-price schedule, allowing the studio to comfortably negotiate and provide discounts to clients while preserving healthy net profit margins:
+      - **Two-Day Wedding Packages:** Essential ₹29,999 (was 24,999); Signature ₹49,999 (was 39,999); Premium ₹74,999 (was 59,999).
+      - **Founding Couple Launch Offer:** Introductory rate ₹39,999 on Signature Photo + Cinema (regular price ₹49,999, Save ₹10,000 for early bookings).
+      - **Pre-Wedding Shoots:** Essential ₹7,999 (was 5,999); Signature ₹15,999 (was 11,999); Premium Film ₹24,999 (was 19,999).
+      - **Engagement / Sakar Pudo:** Essential ₹9,999 (was 7,999); Signature ₹18,999 (was 14,999); Premium Gala ₹31,999 (was 24,999).
+      - **Standalone Functions:** Essential ₹9,999 (was 7,999); Signature Garba ₹18,999 (was 14,999); Premium Grand ₹28,999 (was 22,999).
+      - **Production Crew Rates:** Traditional Photo ₹9,999; Candid Photo ₹9,999; 4K Cinema ₹12,499; Video Archive ₹8,499; Drone ₹7,499; Production Assistant ₹3,000.
+      - **Add-on Services:** Drone ₹7,499; 9:16 Reel ₹2,499 (3-bundle ₹5,999); Interviews ₹5,999; Heirloom Album from ₹8,999; Royal Velvet Album ₹15,999; Extra hour ₹2,000; Extra day ₹24,999.
+    - Updated all static cards, launch banners, budget dropdown selectors, pricing calculation engine, and 15/15 unit test assertions in `test/pricing-engine.test.js` to match.
 
 

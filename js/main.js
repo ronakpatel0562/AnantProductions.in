@@ -1,146 +1,91 @@
 /**
- * ANANT PRODUCTIONS — LUXURY CINEMATOGRAPHY & FINE-ART PHOTOGRAPHY
- * Interactive Engine: Gujarati & Pan-India Wedding Calculator, Video Lightbox,
- * Gallery Filtering, Accessible FAQs & Royal Soundscape.
+ * ANANT PRODUCTIONS — WEDDING PHOTOGRAPHY & CINEMATOGRAPHY
+ * 
+ * Interactive Engine:
+ * - Dynamic Configuration Sync with js/config.js
+ * - High-Converting Date Checker & WhatsApp Inquiry Dispatch
+ * - Image & Video Lightbox Modals
+ * - Portfolio Category Filtering
+ * - Accessible FAQ Accordion
+ * - Interactive Celebration Functions Selector
+ * - Mobile Navigation & Floating Action Bar
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Navbar Sticky & Scroll Effects
-  const navbar = document.querySelector('.navbar');
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 40) {
-      navbar.classList.add('scrolled');
-    } else {
-      navbar.classList.remove('scrolled');
-    }
-  });
+  const config = window.ANANT_CONFIG || null;
 
-  // Mobile Menu Toggle
+  // 1. Sync Configuration Data to UI (if present)
+  if (config) {
+    // Launch offer card sync
+    const launchCard = document.getElementById('launch-card-container');
+    if (launchCard && config.launchOffer) {
+      if (!config.launchOffer.active) {
+        // Hide launch offer if deactivated by business owner
+        const launchSection = document.getElementById('launch-offer');
+        if (launchSection) launchSection.style.display = 'none';
+      } else {
+        const priceDisplay = document.getElementById('launch-price-display');
+        const regularDisplay = document.getElementById('launch-regular-display');
+        const savingsDisplay = document.getElementById('launch-savings-display');
+        const ctaBtn = document.getElementById('launch-cta-btn');
+
+        if (priceDisplay) priceDisplay.textContent = config.launchOffer.price;
+        if (regularDisplay) regularDisplay.textContent = config.launchOffer.regularPrice;
+        if (savingsDisplay) savingsDisplay.textContent = config.launchOffer.savings;
+        if (ctaBtn) {
+          const encodedMsg = encodeURIComponent(config.launchOffer.waMessage);
+          ctaBtn.href = `https://wa.me/${config.business.phoneRaw}?text=${encodedMsg}`;
+        }
+      }
+    }
+  }
+
+  // 2. Navbar Sticky & Headroom Scroll Effect
+  const navbar = document.querySelector('.navbar');
+  if (navbar) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 30) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    }, { passive: true });
+  }
+
+  // 3. Mobile Navigation Drawer
   const mobileToggle = document.querySelector('.mobile-menu-toggle');
   const mobileDrawer = document.querySelector('.mobile-drawer');
   const mobileClose = document.querySelector('.mobile-drawer-close');
+  const mobileLinks = document.querySelectorAll('.mobile-nav-link, .mobile-drawer-cta');
 
   if (mobileToggle && mobileDrawer) {
     mobileToggle.addEventListener('click', () => {
       mobileDrawer.style.display = 'flex';
       mobileDrawer.classList.add('active');
+      mobileToggle.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
     });
   }
 
-  if (mobileClose && mobileDrawer) {
-    mobileClose.addEventListener('click', () => {
+  function closeMobileDrawer() {
+    if (mobileDrawer) {
       mobileDrawer.classList.remove('active');
       mobileDrawer.style.display = 'none';
-    });
-  }
-
-  // 2. Interactive Gujarat & Pan-India Package Investment Calculator
-  const locationBtns = document.querySelectorAll('[data-calc="location"]');
-  const daysBtns = document.querySelectorAll('[data-calc="days"]');
-  const addOnCheckboxes = document.querySelectorAll('[data-calc="addon"]');
-  const calcCityDisplay = document.getElementById('calc-city-display');
-  const calcDaysDisplay = document.getElementById('calc-days-display');
-  const calcAddonsDisplay = document.getElementById('calc-addons-display');
-  const calcTotalDisplay = document.getElementById('calc-total-display');
-  const calcWhatsappBtn = document.getElementById('calc-whatsapp-btn');
-
-  // Pricing Model (INR)
-  const locationRates = {
-    'ahmedabad': { name: 'Ahmedabad / Gandhinagar', base: 120000, travelFee: 0 },
-    'surat': { name: 'Surat & South Gujarat', base: 135000, travelFee: 15000 },
-    'vadodara': { name: 'Vadodara (Laxmi Vilas / Estates)', base: 130000, travelFee: 10000 },
-    'rajkot': { name: 'Rajkot & Saurashtra Region', base: 135000, travelFee: 15000 },
-    'udaipur': { name: 'Rajasthan Destination (Udaipur/Jaipur)', base: 180000, travelFee: 40000 },
-    'goa': { name: 'Goa & Other Pan-India Destination', base: 195000, travelFee: 45000 }
-  };
-
-  const daysMultipliers = {
-    '1': { label: '1 Day Intimate Celebration', factor: 1 },
-    '2': { label: '2 Days (Garba + Wedding)', factor: 1.6 },
-    '3': { label: '3 Days (Mandva/Pithi + Garba + Wedding + Reception)', factor: 2.2 },
-    '4': { label: '4+ Days Grand Royal Extravaganza', factor: 2.8 }
-  };
-
-  let selectedLocation = 'ahmedabad';
-  let selectedDays = '3'; // Default to 3-day typical Gujarati wedding
-
-  function updateCalculator() {
-    const locInfo = locationRates[selectedLocation] || locationRates['ahmedabad'];
-    const daysInfo = daysMultipliers[selectedDays] || daysMultipliers['3'];
-
-    // Base calculation
-    const baseAmount = Math.round(locInfo.base * daysInfo.factor);
-
-    // Add-ons calculation
-    let addonsTotal = 0;
-    const selectedAddonNames = [];
-
-    addOnCheckboxes.forEach(cb => {
-      if (cb.checked) {
-        const price = parseInt(cb.getAttribute('data-price'), 10) || 0;
-        addonsTotal += price;
-        selectedAddonNames.push(cb.getAttribute('data-name'));
-      }
-    });
-
-    const grandTotal = baseAmount + addonsTotal + locInfo.travelFee;
-
-    // Format in Indian currency notation (e.g. ₹2,75,000)
-    const formattedTotal = '₹' + grandTotal.toLocaleString('en-IN');
-
-    if (calcCityDisplay) calcCityDisplay.textContent = locInfo.name;
-    if (calcDaysDisplay) calcDaysDisplay.textContent = daysInfo.label;
-    if (calcAddonsDisplay) {
-      calcAddonsDisplay.textContent = selectedAddonNames.length > 0 
-        ? `${selectedAddonNames.length} selected (+₹${addonsTotal.toLocaleString('en-IN')})` 
-        : 'None selected';
-    }
-    if (calcTotalDisplay) calcTotalDisplay.textContent = formattedTotal;
-
-    // Update WhatsApp Inquiry Link
-    if (calcWhatsappBtn) {
-      const waMsg = encodeURIComponent(
-        `Jai Shree Krishna / Namaste Anant Productions Team!\n\nI just customized a wedding photography & cinematography estimate on your website:\n` +
-        `• Destination: ${locInfo.name}\n` +
-        `• Schedule: ${daysInfo.label}\n` +
-        `• Custom Add-ons: ${selectedAddonNames.length > 0 ? selectedAddonNames.join(', ') : 'Standard Complete Film Package'}\n` +
-        `• Estimated Investment: ${formattedTotal}\n\n` +
-        `Please let me know your availability for our wedding dates. We would love to discuss further!`
-      );
-      calcWhatsappBtn.href = `https://wa.me/918000088819?text=${waMsg}`;
+      if (mobileToggle) mobileToggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
     }
   }
 
-  // Location selector handlers
-  locationBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      locationBtns.forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
-      selectedLocation = btn.getAttribute('data-val');
-      updateCalculator();
-    });
+  if (mobileClose) {
+    mobileClose.addEventListener('click', closeMobileDrawer);
+  }
+
+  mobileLinks.forEach(link => {
+    link.addEventListener('click', closeMobileDrawer);
   });
 
-  // Days selector handlers
-  daysBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      daysBtns.forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
-      selectedDays = btn.getAttribute('data-val');
-      updateCalculator();
-    });
-  });
-
-  // Add-on checkboxes
-  addOnCheckboxes.forEach(cb => {
-    cb.addEventListener('change', updateCalculator);
-  });
-
-  // Initial Calculation Run
-  updateCalculator();
-
-  // 3. Portfolio Gallery Category Filtering
-  const filterBtns = document.querySelectorAll('.filter-btn');
+  // 4. Portfolio Category Filtering
+  const filterBtns = document.querySelectorAll('.gallery-filters [data-filter]');
   const galleryItems = document.querySelectorAll('.gallery-item');
 
   filterBtns.forEach(btn => {
@@ -152,11 +97,11 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.classList.add('active');
       btn.setAttribute('aria-selected', 'true');
 
-      const filterValue = btn.getAttribute('data-filter');
+      const filterVal = btn.getAttribute('data-filter');
 
       galleryItems.forEach(item => {
         const itemCat = item.getAttribute('data-category');
-        if (filterValue === 'all' || itemCat === filterValue) {
+        if (filterVal === 'all' || itemCat === filterVal) {
           item.style.display = 'block';
           item.style.opacity = '1';
         } else {
@@ -167,55 +112,134 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 4. Video Player Modal Lightbox with Keyboard Accessibility
+  // 4b. Package Category Tabs Switcher (Weddings / Pre-Wed / Engagement / Functions)
+  const pkgTabs = document.querySelectorAll('[data-pkg-tab]');
+  pkgTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      pkgTabs.forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+
+      const targetTab = tab.getAttribute('data-pkg-tab');
+      document.querySelectorAll('.pkg-category-panel').forEach(panel => {
+        if (panel.id === `tab-panel-${targetTab}`) {
+          panel.style.display = 'block';
+          panel.classList.add('active');
+        } else {
+          panel.style.display = 'none';
+          panel.classList.remove('active');
+        }
+      });
+    });
+  });
+
+  // 5. Image Lightbox for High-Resolution Photo Viewing
+  const imageLightbox = document.getElementById('image-lightbox-modal');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const lightboxCaption = document.getElementById('lightbox-caption');
+  const lightboxClose = document.getElementById('lightbox-close-btn');
+
+  function openImageLightbox(src, caption) {
+    if (imageLightbox && lightboxImg) {
+      lightboxImg.src = src;
+      lightboxImg.alt = caption || 'Wedding Photograph';
+      if (lightboxCaption) lightboxCaption.textContent = caption || '';
+      imageLightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeImageLightbox() {
+    if (imageLightbox) {
+      imageLightbox.classList.remove('active');
+      if (lightboxImg) lightboxImg.src = '';
+      document.body.style.overflow = '';
+    }
+  }
+
+  galleryItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const fullSrc = item.getAttribute('data-full-src') || item.querySelector('img')?.src;
+      const caption = item.getAttribute('data-caption') || item.querySelector('.gallery-title')?.textContent;
+      if (fullSrc) openImageLightbox(fullSrc, caption);
+    });
+
+    item.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        const fullSrc = item.getAttribute('data-full-src') || item.querySelector('img')?.src;
+        const caption = item.getAttribute('data-caption') || item.querySelector('.gallery-title')?.textContent;
+        if (fullSrc) openImageLightbox(fullSrc, caption);
+      }
+    });
+  });
+
+  if (lightboxClose) {
+    lightboxClose.addEventListener('click', closeImageLightbox);
+  }
+
+  if (imageLightbox) {
+    imageLightbox.addEventListener('click', (e) => {
+      if (e.target === imageLightbox) closeImageLightbox();
+    });
+  }
+
+  // 6. Video Film Preview Modal
   const videoCards = document.querySelectorAll('.film-card');
-  const modalBackdrop = document.getElementById('video-modal');
-  const modalIframe = document.getElementById('modal-video-frame');
-  const modalTitle = document.getElementById('modal-film-title');
-  const modalDetails = document.getElementById('modal-film-desc');
-  const modalCloseBtn = document.querySelector('.modal-close-btn');
+  const videoModal = document.getElementById('video-modal');
+  const modalFilmTitle = document.getElementById('modal-film-title');
+  const modalFilmDesc = document.getElementById('modal-film-desc');
+  const modalWhatsappCta = document.getElementById('modal-whatsapp-cta');
+  const modalCloseBtn = videoModal ? videoModal.querySelector('.modal-close-btn') : null;
 
   const filmDatabase = {
     'film-1': {
-      title: 'Aastha & Parth — The Royal Belvedere Symphony, Ahmedabad',
-      desc: 'Three days of vibrant Mandva Muhurat, high-voltage Dodhiya Garba night, and sunset Hasta Melap under golden temple bells.',
-      embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1'
+      title: 'Belvedere Celebration — Ahmedabad, Gujarat',
+      desc: 'Three days of vibrant Mandva Muhurat, high-voltage Dodhiya Garba night, and sunset Hasta Melap under golden temple bells.'
     },
     'film-2': {
-      title: 'Dhwani & Harsh — From the Riverbanks of Surat to The Leela, Udaipur',
-      desc: 'A grand Kathiyawadi & Diamond Merchant celebration with 1400 guests, live royal dhol, and palatial fireworks.',
-      embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1'
+      title: 'Lakeside Heritage Romance — Surat to Udaipur',
+      desc: 'Opulent lakeside celebrations with Shehnai melodies, traditional silver procession, and emotional Mosalu ceremony honoring maternal roots.'
     },
     'film-3': {
-      title: 'Maitri & Bhavin — Intimate Heritage Haveli Rites, Vadodara',
-      desc: 'Tears of joy during Mameru, heartfelt Kanku Pagla, and authentic Gujarati traditions captured with soulful cinematic restraint.',
-      embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1'
+      title: 'Baroda Haveli Symphony — Vadodara, Gujarat',
+      desc: 'Grandmother’s tearful blessings, soulful Vedic mantras, and authentic Gujarati traditions captured with warm analog cinematic tones.'
     },
     'film-4': {
-      title: 'Priyanshi & Yash — Royal Rajputana & Saurashtra Grandeur, Rajkot to Jaipur',
-      desc: 'A magnificent fusion of Kathiyawadi royal warmth and royal palace aesthetics, celebrating lifelong love and extended family bonds.',
-      embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1'
+      title: 'Saurashtra Traditions — Rajkot & Saurashtra',
+      desc: 'Royal Kathiyawadi warmth, silver jewellery, live folk singers, playful nose-pulling during Ponkvu, and an emotional Vidaai.'
     }
   };
 
-  function openVideoModal(filmKey) {
-    const film = filmDatabase[filmKey] || filmDatabase['film-1'];
-    if (modalTitle) modalTitle.textContent = film.title;
-    if (modalDetails) modalDetails.textContent = film.desc;
-    if (modalIframe) modalIframe.src = film.embedUrl;
-    if (modalBackdrop) modalBackdrop.classList.add('active');
+  function openVideoModal(filmId) {
+    const film = filmDatabase[filmId] || filmDatabase['film-1'];
+    if (modalFilmTitle) modalFilmTitle.textContent = film.title;
+    if (modalFilmDesc) modalFilmDesc.textContent = film.desc;
+    if (modalWhatsappCta) {
+      const msg = encodeURIComponent(`Hello Anant Productions! I am interested in viewing sample films like "${film.title}". Could you please share the preview links?`);
+      const phoneRaw = config?.business?.phoneRaw || '918000088819';
+      modalWhatsappCta.href = `https://wa.me/${phoneRaw}?text=${msg}`;
+    }
+    if (videoModal) {
+      videoModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
   }
 
   function closeVideoModal() {
-    if (modalBackdrop) modalBackdrop.classList.remove('active');
-    if (modalIframe) modalIframe.src = '';
+    if (videoModal) {
+      videoModal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
   }
 
   videoCards.forEach(card => {
     card.addEventListener('click', () => {
       openVideoModal(card.getAttribute('data-film-id'));
     });
-
     card.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
@@ -224,124 +248,151 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  if (modalCloseBtn && modalBackdrop) {
+  if (modalCloseBtn) {
     modalCloseBtn.addEventListener('click', closeVideoModal);
+  }
 
-    modalBackdrop.addEventListener('click', (e) => {
-      if (e.target === modalBackdrop) {
-        closeVideoModal();
-      }
+  if (videoModal) {
+    videoModal.addEventListener('click', (e) => {
+      if (e.target === videoModal) closeVideoModal();
     });
+  }
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && modalBackdrop.classList.contains('active')) {
-        closeVideoModal();
+  // Global ESC key listener for modals
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (imageLightbox && imageLightbox.classList.contains('active')) closeImageLightbox();
+      if (videoModal && videoModal.classList.contains('active')) closeVideoModal();
+      if (mobileDrawer && mobileDrawer.classList.contains('active')) closeMobileDrawer();
+    }
+  });
+
+  // 7. Accessible FAQ Accordion
+  const faqItems = document.querySelectorAll('.faq-item');
+  faqItems.forEach(item => {
+    const questionBtn = item.querySelector('.faq-question');
+    if (questionBtn) {
+      questionBtn.addEventListener('click', () => {
+        const isActive = item.classList.contains('active');
+        // Close all
+        faqItems.forEach(i => {
+          i.classList.remove('active');
+          const btn = i.querySelector('.faq-question');
+          if (btn) btn.setAttribute('aria-expanded', 'false');
+        });
+        // Toggle current
+        if (!isActive) {
+          item.classList.add('active');
+          questionBtn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    }
+  });
+
+  // 8. Celebration Functions Selector Pills
+  const functionPills = document.querySelectorAll('.function-pill');
+  functionPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      pill.classList.toggle('selected');
+    });
+  });
+
+  // 9. Wedding Date "Not Yet Finalized" Toggle
+  const dateInput = document.getElementById('form-date');
+  const dateFlexibleCheckbox = document.getElementById('form-date-flexible');
+
+  if (dateFlexibleCheckbox && dateInput) {
+    dateFlexibleCheckbox.addEventListener('change', () => {
+      if (dateFlexibleCheckbox.checked) {
+        dateInput.value = '';
+        dateInput.placeholder = 'e.g. Discussing winter 2026/2027 muhurat…';
+        dateInput.removeAttribute('required');
+      } else {
+        dateInput.placeholder = 'e.g. 14–15 Dec 2026…';
+        dateInput.setAttribute('required', 'required');
       }
     });
   }
 
-  // 5. FAQ Accordion Toggle with aria-expanded
-  const faqItems = document.querySelectorAll('.faq-item');
-  faqItems.forEach(item => {
-    const questionBtn = item.querySelector('.faq-question');
-    questionBtn.addEventListener('click', () => {
-      const isActive = item.classList.contains('active');
-      faqItems.forEach(i => {
-        i.classList.remove('active');
-        const btn = i.querySelector('.faq-question');
-        if (btn) btn.setAttribute('aria-expanded', 'false');
-      });
-      if (!isActive) {
-        item.classList.add('active');
-        questionBtn.setAttribute('aria-expanded', 'true');
-      }
-    });
-  });
-
-  // 6. Direct Contact Form Submission to WhatsApp
+  // 10. High-Converting Wedding Enquiry Submission to WhatsApp
   const bookingForm = document.getElementById('wedding-inquiry-form');
+  const feedbackBox = document.getElementById('form-feedback');
+  const feedbackDirectLink = document.getElementById('feedback-direct-link');
+
   if (bookingForm) {
     bookingForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      const brideGroom = document.getElementById('form-names').value;
-      const phone = document.getElementById('form-phone').value;
-      const date = document.getElementById('form-date').value;
-      const venueCity = document.getElementById('form-city').value;
-      const budgetEl = document.getElementById('form-budget');
-      const budget = budgetEl ? budgetEl.value : '';
-      const serviceEl = document.getElementById('form-service');
-      const service = serviceEl ? serviceEl.value : '';
-      const eventDetails = document.getElementById('form-details').value;
+      const names = document.getElementById('form-names')?.value.trim() || '';
+      const phone = document.getElementById('form-phone')?.value.trim() || '';
+      const isDateFlexible = dateFlexibleCheckbox?.checked;
+      let dateVal = dateInput?.value.trim() || '';
+      if (isDateFlexible && !dateVal) {
+        dateVal = 'Date not yet finalized (Consulting family Panditji)';
+      }
+      const city = document.getElementById('form-city')?.value.trim() || '';
+      const days = document.getElementById('form-days')?.value || '';
+      const service = document.getElementById('form-service')?.value || '';
+      const budget = document.getElementById('form-budget')?.value || '';
+      const notes = document.getElementById('form-details')?.value.trim() || '';
 
-      const whatsappText = encodeURIComponent(
-        `Jai Shree Krishna / Hello Anant Productions,\n\n` +
-        `New Wedding Booking Inquiry from Website:\n` +
-        `• Couple Names: ${brideGroom}\n` +
-        `• Phone/Contact: ${phone}\n` +
-        `• Wedding Dates: ${date}\n` +
-        `• City/Venues: ${venueCity}\n` +
-        (budget ? `• Expected Budget: ${budget}\n` : '') +
-        (service ? `• Coverage Needed: ${service}\n` : '') +
-        (eventDetails ? `• Functions & Notes: ${eventDetails}\n\n` : '\n') +
-        `Please confirm your availability and share next steps!`
-      );
+      // Gather selected functions
+      const selectedFns = [];
+      document.querySelectorAll('.function-pill.selected').forEach(p => {
+        selectedFns.push(p.getAttribute('data-fn'));
+      });
 
-      // Open WhatsApp with populated form details
-      window.open(`https://wa.me/918000088819?text=${whatsappText}`, '_blank');
-    });
-  }
+      // Basic validation
+      if (!names) {
+        alert('Please enter your name or couple names.');
+        document.getElementById('form-names')?.focus();
+        return;
+      }
+      if (!phone) {
+        alert('Please enter your WhatsApp contact number.');
+        document.getElementById('form-phone')?.focus();
+        return;
+      }
+      if (!isDateFlexible && !dateVal) {
+        alert('Please enter your wedding date or check "Date not yet finalized".');
+        dateInput?.focus();
+        return;
+      }
+      if (!city) {
+        alert('Please enter your wedding city or venue.');
+        document.getElementById('form-city')?.focus();
+        return;
+      }
 
-  // 7. Ambient Royal Audio Soundscape (Web Audio API Synthesizer)
-  const audioToggle = document.getElementById('ambient-audio-toggle');
-  let audioCtx = null;
-  let isPlaying = false;
-  let oscillators = [];
+      // Construct respectful, clean WhatsApp message
+      const waMessageText = 
+        `Jai Shree Krishna / Hello Anant Productions Team,\n\n` +
+        `We would love to check date availability and receive a customized package quotation for our wedding:\n\n` +
+        `• Couple / Family Names: ${names}\n` +
+        `• WhatsApp Number: ${phone}\n` +
+        `• Wedding Dates: ${dateVal}\n` +
+        `• City / Venue: ${city}\n` +
+        `• Celebration Duration: ${days}\n` +
+        `• Service Interested In: ${service}\n` +
+        (selectedFns.length > 0 ? `• Functions to Cover: ${selectedFns.join(', ')}\n` : '') +
+        (budget ? `• Approximate Budget: ${budget}\n` : '') +
+        (notes ? `• Special Notes / Vision: ${notes}\n\n` : '\n') +
+        `Please let us know your calendar availability and the next steps. Thank you!`;
 
-  if (audioToggle) {
-    audioToggle.addEventListener('click', () => {
-      if (!isPlaying) {
-        try {
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-          
-          // Royal Indian Sa-Pa meditative drone chord
-          const freqs = [146.83, 220.00, 293.66, 440.00];
-          const masterGain = audioCtx.createGain();
-          masterGain.gain.setValueAtTime(0.035, audioCtx.currentTime);
-          masterGain.connect(audioCtx.destination);
+      const phoneRaw = config?.business?.phoneRaw || '918000088819';
+      const encodedWaUrl = `https://wa.me/${phoneRaw}?text=${encodeURIComponent(waMessageText)}`;
 
-          oscillators = freqs.map((f, idx) => {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = idx % 2 === 0 ? 'sine' : 'triangle';
-            osc.frequency.setValueAtTime(f, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.35 / (idx + 1), audioCtx.currentTime);
-            osc.connect(gain);
-            gain.connect(masterGain);
-            osc.start();
-            return osc;
-          });
+      // Show friendly on-page confirmation
+      if (feedbackBox) {
+        feedbackBox.style.display = 'block';
+        if (feedbackDirectLink) feedbackDirectLink.href = encodedWaUrl;
+      }
 
-          isPlaying = true;
-          audioToggle.innerHTML = '<span aria-hidden="true">&#9646;&#9646;</span> <span>Mute</span>';
-          audioToggle.setAttribute('title', 'Mute Royal Ambiance');
-          audioToggle.style.borderColor = 'var(--gold-primary)';
-        } catch (err) {
-          console.log('Audio init prevented:', err);
-        }
-      } else {
-        if (oscillators.length > 0) {
-          oscillators.forEach(osc => osc.stop());
-          oscillators = [];
-        }
-        if (audioCtx) {
-          audioCtx.close();
-          audioCtx = null;
-        }
-        isPlaying = false;
-        audioToggle.innerHTML = '<span aria-hidden="true">&#9835;</span> <span>Sound</span>';
-        audioToggle.setAttribute('title', 'Play Royal Indian Wedding Ambiance');
-        audioToggle.style.borderColor = 'var(--hairline)';
+      // Open WhatsApp directly
+      const waWindow = window.open(encodedWaUrl, '_blank');
+      if (!waWindow || waWindow.closed || typeof waWindow.closed === 'undefined') {
+        // Fallback if popup blocked: navigate directly
+        window.location.href = encodedWaUrl;
       }
     });
   }
