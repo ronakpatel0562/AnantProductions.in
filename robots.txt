@@ -1,4 +1,17 @@
+# Robots.txt for Anant Productions (https://anantproductions.in)
+# Gujarati Wedding Photography & Cinematography Studio — Ahmedabad, Gujarat
+
 User-agent: *
 Allow: /
+Allow: /css/
+Allow: /js/
+Allow: /images/
 
+# Prevent crawlers from indexing error pages and internal test suites
+Disallow: /404.html
+Disallow: /500.html
+Disallow: /test/
+Disallow: /.agents/
+
+# XML Sitemap Location
 Sitemap: https://anantproductions.in/sitemap.xml

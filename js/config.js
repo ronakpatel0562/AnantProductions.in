@@ -39,6 +39,47 @@ const ANANT_CONFIG = {
     ]
   },
 
+  // OUR PHOTOGRAPHY PHILOSOPHY (Rules A, B & C)
+  photographyPhilosophy: {
+    headline: 'Our Photography Philosophy',
+    quote: 'We believe in capturing genuine emotions, unscripted moments, and the true essence of your wedding rather than setting artificial limits on the number of pictures taken. Every meaningful ritual, family blessing, laughter, and tear will be thoroughly documented.',
+    fullText: 'At Anant Productions, we believe wedding photography is an art, not a numbers game.\n\nEvery photograph deserves thoughtful consideration. Our team carefully reviews the captured moments, removes unnecessary, duplicate, and technically unusable images, and curates the photographs that genuinely preserve your story.\n\nWe deliver all curated, ultra-high-resolution RAW photographs after this quality-filtering process, along with the finest photographs handpicked by our team and enhanced through meticulous, world-class editing.\n\nEvery selected image receives the attention it deserves, with the goal of creating photographs that sparkle in your eyes and become treasured memories for a lifetime.\n\nWe focus on meaningful moments, exceptional image quality, and artistic editing rather than arbitrary photo counts.',
+    rawDeliverable: 'All curated ultra-high-resolution RAW photographs, delivered after our team carefully removes unnecessary, duplicate, and technically unusable images.',
+    editedDeliverable: 'Our team personally selects the photographs that best capture your emotions, relationships, and unforgettable moments. Each selected photograph receives thoughtful, world-class editing to bring out its beauty and artistic character.'
+  },
+
+  // COMPLIMENTARY EXPERIENCES (Reference PDF Section 4)
+  complimentaryBenefits: [
+    {
+      id: 'comp-cloud-gallery',
+      title: 'Private Cloud Family Gallery (1 Full Year)',
+      description: 'High-speed, password-protected online digital gallery for your entire family across the globe with instant full-resolution download rights.',
+      valueText: 'Complimentary Privilege',
+      badge: 'Family Access'
+    },
+    {
+      id: 'comp-sneak-peek',
+      title: "Couple's Digital Sneak Peek within 48 Hours",
+      description: 'Priority handpicked selection of beautifully color-graded preview photographs delivered within 48 hours to share your happiness with loved ones.',
+      valueText: 'Complimentary Priority',
+      badge: '48-Hour Delivery'
+    },
+    {
+      id: 'comp-archival-drive',
+      title: 'Archival Keepsake Wooden Drive & Presentation Box',
+      description: 'Your complete curated RAW archive, master edited photographs, and 4K films preserved on an engraved wooden pen drive for lifetime family archiving.',
+      valueText: 'Heirloom Keepsake',
+      badge: 'Lifetime Archival'
+    },
+    {
+      id: 'comp-artist-consultation',
+      title: 'Direct Creative Consultation & Ritual Timeline Planning',
+      description: 'Pre-wedding coordination with our lead visual director to align ceremony lighting, Vedic muhurat schedules, and emotional candid moments.',
+      valueText: 'VIP Service',
+      badge: 'Personalized'
+    }
+  ],
+
   // Founding Couple Launch Offer
   launchOffer: {
     active: true,
@@ -50,11 +91,12 @@ const ANANT_CONFIG = {
     discountAmount: 10000, // ₹49,999 Signature down to ₹39,999
     slotsTotal: 3,
     note: 'Introductory pricing limited to the first 3 bookings for 2026–2027 wedding seasons.',
-    packageTitle: 'Signature Two-Day Photo + Cinema Package',
-    crew: '1 Candid Photographer + 1 Cinematographer',
+    packageTitle: 'Signature Two-Day Photo + Cinema Collection',
+    servicesText: 'Candid Photography & Cinematic Wedding Filmmaking',
     hours: 'Up to 6 hours per day (2-day coverage)',
     deliverables: [
-      '350–500 Master color-graded high-resolution photographs',
+      'Curated ultra-high-resolution RAW photographs after quality filtering',
+      'Handpicked, professionally edited master photographs with artistic color-grading',
       'One 3–5 minute cinematic highlight film in 4K',
       'One short vertical 9:16 social media reel for WhatsApp & Instagram',
       'Private online gallery with instant family download access'
@@ -63,49 +105,98 @@ const ANANT_CONFIG = {
     waMessage: 'Hello Anant Productions! I saw your Founding Couple Launch Offer (₹39,999 for Signature Photo + Cinema). We are planning our wedding and would love to check date availability!'
   },
 
-  // PRODUCTION CREW ROLES (For Step 4 crew configurator)
+  // COVERAGE SERVICES & STYLES (Customer-Facing Services — Rule A Compliant)
   crewRoles: [
     {
       id: 'photo_trad',
-      name: 'Traditional Photographer',
+      name: 'Traditional Photography Coverage',
+      serviceTitle: 'Traditional Photography',
       ratePerEvent: 9999,
       isPerDay: false,
-      description: 'Stage portraits, family groups, and formal ceremony archives.'
+      description: 'Stage portraits, family groupings, and complete sacred Vedic ritual documentation.'
     },
     {
       id: 'photo_candid',
-      name: 'Candid Photographer',
+      name: 'Candid Photography Coverage',
+      serviceTitle: 'Candid Photography',
       ratePerEvent: 9999,
       isPerDay: false,
       description: 'Unposed raw moments, genuine emotions, laughter, and tearful glances.'
     },
     {
       id: 'cinema_cam',
-      name: 'Cinematographer (4K Cinema)',
+      name: 'Cinematic Wedding Filmmaking',
+      serviceTitle: 'Cinematic Filmmaking',
       ratePerEvent: 12499,
       isPerDay: false,
-      description: 'Stabilized gimbals, prime cinema glass, and artistic cinematic motion.'
+      description: 'Stabilized gimbals, prime cinema glass, ambient sound capture, and cinematic motion.'
     },
     {
       id: 'video_trad',
-      name: 'Traditional Video Operator',
+      name: 'Traditional Videography Coverage',
+      serviceTitle: 'Traditional Videography',
       ratePerEvent: 8499,
       isPerDay: false,
-      description: 'Continuous tripod and shoulder documentary recording of all vidhis.'
+      description: 'Continuous documentary recording of all vidhis from start to finish.'
     },
     {
       id: 'drone_pilot',
-      name: 'Drone Aerial Operator',
+      name: 'Drone Aerial Cinematography',
+      serviceTitle: 'Drone Cinematography',
       ratePerEvent: 7499,
       isPerDay: false,
-      description: 'Licensed 4K drone cinematography. Subject to weather & venue airspace.'
+      description: 'Licensed 4K drone cinematography. Subject to weather & venue airspace permissions.'
     },
     {
       id: 'crew_assistant',
-      name: 'Production Assistant / Lighting',
+      name: 'Production Lighting & Audio Support',
+      serviceTitle: 'Lighting & Audio Support',
       ratePerEvent: 3000,
       isPerDay: false,
-      description: 'Lighting support, wireless mic management, and gear coordination.'
+      description: 'On-location soft lighting, wireless audio mic coordination, and synchronized gear support.'
+    }
+  ],
+
+  // CELEBRATION COVERAGE SCOPES (One-Side vs. Both-Sides)
+  coverageScopes: [
+    {
+      id: 'one_side',
+      name: 'One-Side Coverage (Bride OR Groom)',
+      title: 'One-Side Coverage',
+      subtitle: 'Bride or Groom Family Only',
+      gujarati: 'એક પક્ષ કવરેજ (વર અથવા કન્યા પક્ષ)',
+      badge: 'Single Family',
+      surcharge: 0,
+      price: 0,
+      icon: '👤',
+      tagline: 'Standard Base Price (+₹0)',
+      description: 'Dedicated visual team focused entirely on one family’s home, ceremonies, rituals, and celebration venue.'
+    },
+    {
+      id: 'both_same_venue',
+      name: 'Both Sides — Same Location (Joint Venue)',
+      title: 'Both Sides — Joint Venue',
+      subtitle: 'Same Location / Single Hall',
+      gujarati: 'બંને પક્ષ — એક જ સ્થળ (કમ્બાઈન્ડ લગ્ન)',
+      badge: 'Joint Venue',
+      surcharge: 0,
+      price: 0,
+      icon: '👥',
+      tagline: 'No Extra Charge (₹0)',
+      description: 'Both bride and groom families celebrating together at the same resort or hall. Seamless single-location coverage.'
+    },
+    {
+      id: 'both_diff_venues',
+      name: 'Both Sides — Different Locations (+₹8,500)',
+      title: 'Both Sides — Different Locations',
+      subtitle: 'Separate Residences / Venues',
+      gujarati: 'બંને પક્ષ — અલગ-અલગ સ્થળો (+₹8,500)',
+      badge: 'Dual Coordination',
+      surcharge: 8500,
+      price: 8500,
+      icon: '📍',
+      tagline: '+₹8,500 Dual Location Fee',
+      description: 'Coordinated simultaneous coverage across separate bride and groom homes, independent morning rituals, and Jaan procession.'
     }
   ],
 
@@ -129,14 +220,15 @@ const ANANT_CONFIG = {
           indicativePrice: 29999,
           duration: 'Two-day coverage',
           standardDays: 2,
-          crewText: '1 Dedicated Senior Photographer',
+          services: ['Traditional Photography Coverage', 'Full Ceremony Documentation'],
           baseCrew: { photo_trad: 1, photo_candid: 0, cinema_cam: 0, video_trad: 0, drone_pilot: 0, crew_assistant: 0 },
           hours: 'Up to 6 hours per day',
           summary: 'Ideal for intimate two-day Gujarati ceremonies focusing on authentic emotional stills and sacred Vedic rituals.',
           deliverables: [
             'Two-day coverage (up to 6 hours/day)',
-            '1 Senior Traditional Photographer',
-            'Approximately 300–400 master edited photographs',
+            'Traditional Photography & Sacred Ritual Documentation',
+            'Curated Ultra-High-Resolution RAW Photographs (all quality-filtered moments)',
+            'Handpicked, Professionally Edited Master Photographs with artistic color grading',
             'Full ceremony stills: Mandva, Pithi, Garba, Mandap, and Vidaai',
             'High-resolution private online gallery with full print rights'
           ],
@@ -160,15 +252,16 @@ const ANANT_CONFIG = {
           standardDays: 2,
           featured: true,
           badge: 'Recommended',
-          crewText: '1 Candid Photographer + 1 Master Cinematographer',
+          services: ['Candid Photography Coverage', 'Cinematic Wedding Filmmaking'],
           baseCrew: { photo_trad: 0, photo_candid: 1, cinema_cam: 1, video_trad: 0, drone_pilot: 0, crew_assistant: 0 },
           hours: 'Up to 6 hours per day',
           summary: 'The perfect harmony of emotional fine-art photography and 4K cinematic storytelling in one synchronized team.',
           deliverables: [
             'Two-day coverage (up to 6 hours/day)',
-            '1 Senior Candid Photographer + 1 Master Cinematographer',
-            'Approximately 350–500 master edited photographs',
-            'One 3–5 minute cinematic highlight film in 4K with custom music',
+            'Candid Photography & Cinematic Wedding Filmmaking in seamless harmony',
+            'Curated Ultra-High-Resolution RAW Photographs (all quality-filtered moments)',
+            'Handpicked, Professionally Edited Master Photographs with artistic color grading',
+            'One 3–5 minute cinematic highlight film in 4K with custom sound design',
             'One short vertical 9:16 social media reel for WhatsApp & Instagram',
             'Private high-speed online gallery with family downloads'
           ],
@@ -193,14 +286,15 @@ const ANANT_CONFIG = {
           indicativePrice: 74999,
           duration: 'Two-day coverage',
           standardDays: 2,
-          crewText: '1 Senior Candid Photographer + 1 Senior Cinematographer',
+          services: ['Candid Photography Coverage', 'Cinematic Wedding Filmmaking', 'Production Lighting Support'],
           baseCrew: { photo_trad: 0, photo_candid: 1, cinema_cam: 1, video_trad: 0, drone_pilot: 0, crew_assistant: 1 },
           hours: 'Up to 8 hours per day',
           summary: 'Extended daily hours to document every detail from early morning Mandva and Grah Shanti to late midnight Garba and Vidaai.',
           deliverables: [
             'Two-day coverage (up to 8 hours/day)',
-            '1 Senior Candid Photographer + 1 Senior Cinematographer + Assistant',
-            'Approximately 500–700 master edited photographs in full resolution',
+            'Comprehensive Candid Photography & Cinematic Filmmaking with creative lighting support',
+            'Curated Ultra-High-Resolution RAW Photographs (all quality-filtered moments)',
+            'Handpicked, Professionally Edited Master Photographs with artistic color grading',
             'Cinematic highlight film (4–6 minutes) with licensed sound design',
             'Two short vertical 9:16 social media reels for Instagram & WhatsApp',
             'Dedicated couple portraits session & extended family portrait setup',
@@ -238,14 +332,14 @@ const ANANT_CONFIG = {
           indicativePrice: 7999,
           duration: '1 Short Session (Up to 3 hrs)',
           standardDays: 1,
-          crewText: '1 Senior Portrait Photographer',
+          services: ['Creative Couple Portraiture', 'Fine-Art Color Grading'],
           baseCrew: { photo_trad: 0, photo_candid: 1, cinema_cam: 0, video_trad: 0, drone_pilot: 0, crew_assistant: 0 },
           hours: 'Up to 3 hours',
           summary: 'A relaxed, intimate photoshoot session at one local Ahmedabad or Gujarat scenic backdrop.',
           deliverables: [
-            'One photoshoot session (up to 3 hours)',
-            '1 Senior Creative Portrait Photographer',
-            '25–35 Master color-graded fine-art portraits',
+            'One dedicated photoshoot session (up to 3 hours)',
+            'Curated Ultra-High-Resolution RAW Photographs (all quality-filtered moments)',
+            'Handpicked, Professionally Edited Master Portraits with artistic fine-art grading',
             '1 Scenic location (Old City Pols, Riverfront, or Stepwell)',
             'High-resolution digital delivery in private gallery'
           ],
@@ -269,14 +363,14 @@ const ANANT_CONFIG = {
           standardDays: 1,
           featured: true,
           badge: 'Popular',
-          crewText: '1 Senior Photographer + 1 Cinematographer',
+          services: ['Creative Couple Portraiture', 'Cinematic Social Media Reel'],
           baseCrew: { photo_trad: 0, photo_candid: 1, cinema_cam: 1, video_trad: 0, drone_pilot: 0, crew_assistant: 0 },
           hours: 'Up to 5 hours',
           summary: 'Extended session across two locations with styled costume changes, fine-art portraits, and a cinematic reel.',
           deliverables: [
             'Half-day coverage across up to 2 locations',
-            '1 Senior Photographer + 1 Cinematographer',
-            '50–70 Master color-graded portraits',
+            'Curated Ultra-High-Resolution RAW Photographs (all quality-filtered moments)',
+            'Handpicked, Professionally Edited Master Portraits with artistic color grading',
             'One 60-second cinematic vertical 9:16 reel with trending romantic music',
             'Up to 3 outfit changes with creative direction'
           ],
@@ -300,14 +394,15 @@ const ANANT_CONFIG = {
           indicativePrice: 24999,
           duration: 'Full-Day Production (Up to 8 hrs)',
           standardDays: 1,
-          crewText: '1 Lead Photographer + 1 Master Cinematographer + Assistant',
+          services: ['Editorial Couple Portraiture', '4K Cinematic Concept Film', 'Drone Aerial Perspectives'],
           baseCrew: { photo_trad: 0, photo_candid: 1, cinema_cam: 1, video_trad: 0, drone_pilot: 0, crew_assistant: 1 },
           hours: 'Up to 8 hours (Sunrise to Golden Hour / Sunset)',
           summary: 'Full-day cinema production featuring narrative dialogue, multiple scenic vistas, aerial drone vistas, and a 2–3 minute film.',
           deliverables: [
             'Full-day concept shoot (sunrise to sunset lighting)',
-            'Full coordinated production team with lighting support',
-            '80–120 Color-graded master editorial portraits',
+            'Full coordinated production with creative lighting & audio direction',
+            'Curated Ultra-High-Resolution RAW Photographs (all quality-filtered moments)',
+            'Handpicked, Professionally Edited Master Editorial Portraits with artistic color grading',
             'One 2–3 minute 4K cinematic concept film with couple dialogue audio',
             'Two vertical 9:16 Instagram & WhatsApp teaser reels',
             'Drone establishing sequence (where permitted by airspace)'
@@ -344,14 +439,14 @@ const ANANT_CONFIG = {
           indicativePrice: 9999,
           duration: 'Single Function (Up to 4 hrs)',
           standardDays: 1,
-          crewText: '1 Senior Candid Photographer',
+          services: ['Candid Engagement Photography', 'Sacred Ritual Documentation'],
           baseCrew: { photo_trad: 0, photo_candid: 1, cinema_cam: 0, video_trad: 0, drone_pilot: 0, crew_assistant: 0 },
           hours: 'Up to 4 hours',
           summary: 'Complete photography coverage for intimate engagement ceremonies, ring exchange, and family portraiture.',
           deliverables: [
             'Up to 4 hours dedicated coverage',
-            '1 Senior Candid Photographer',
-            '150–200 Color-graded high-resolution photos',
+            'Curated Ultra-High-Resolution RAW Photographs (all quality-filtered moments)',
+            'Handpicked, Professionally Edited Master Photographs with artistic color grading',
             'Complete coverage of Sakar Pudo, Gol Dhana & Ring Exchange',
             'High-speed digital delivery gallery'
           ],
@@ -374,14 +469,15 @@ const ANANT_CONFIG = {
           standardDays: 1,
           featured: true,
           badge: 'Most Booked',
-          crewText: '1 Candid Photographer + 1 Cinematographer',
+          services: ['Candid Engagement Photography', 'Cinematic Highlight Film'],
           baseCrew: { photo_trad: 0, photo_candid: 1, cinema_cam: 1, video_trad: 0, drone_pilot: 0, crew_assistant: 0 },
           hours: 'Up to 5 hours',
           summary: 'Both emotional photography and a 2–3 minute 4K cinematic film capturing the joy and family banter.',
           deliverables: [
             'Up to 5 hours coverage',
-            '1 Senior Candid Photographer + 1 Master Cinematographer',
-            '250–350 Master color-graded photographs',
+            'Candid Photography & Cinematic Filmmaking in synchronized harmony',
+            'Curated Ultra-High-Resolution RAW Photographs (all quality-filtered moments)',
+            'Handpicked, Professionally Edited Master Photographs with artistic color grading',
             'One 2–3 minute cinematic highlight film in 4K',
             'One vertical social media reel for WhatsApp'
           ],
@@ -405,14 +501,15 @@ const ANANT_CONFIG = {
           indicativePrice: 31999,
           duration: 'Full Evening / Gala (Up to 6 hrs)',
           standardDays: 1,
-          crewText: '2 Photographers + 1 Cinematographer + Assistant',
+          services: ['Dual Photography Coverage', 'Cinematic Wedding Filmmaking', 'Lighting Support'],
           baseCrew: { photo_trad: 1, photo_candid: 1, cinema_cam: 1, video_trad: 0, drone_pilot: 0, crew_assistant: 1 },
           hours: 'Up to 6 hours',
           summary: 'Designed for larger engagement celebrations with stage ceremonies, dance performances, and lavish family banquets.',
           deliverables: [
             'Up to 6 hours full gala coverage',
-            '1 Traditional + 1 Candid Photographer + 1 Cinematographer',
-            '400–500 Color-graded photographs',
+            'Dual Photography & Cinematic Filmmaking with creative lighting coordination',
+            'Curated Ultra-High-Resolution RAW Photographs (all quality-filtered moments)',
+            'Handpicked, Professionally Edited Master Photographs with artistic color grading',
             'Cinematic highlight film (3–4 minutes)',
             'Two vertical 9:16 social media reels',
             'Dedicated couple portrait session before guest arrival'
@@ -448,14 +545,14 @@ const ANANT_CONFIG = {
           indicativePrice: 9999,
           duration: 'Up to 4 hours',
           standardDays: 1,
-          crewText: '1 Candid Photographer',
+          services: ['Candid Function Photography', 'Ritual Stills'],
           baseCrew: { photo_trad: 0, photo_candid: 1, cinema_cam: 0, video_trad: 0, drone_pilot: 0, crew_assistant: 0 },
           hours: 'Up to 4 hours',
           summary: 'Ideal for Haldi/Pithi, Mosalu, Mehndi afternoon, or intimate home pujas.',
           deliverables: [
             'Up to 4 hours coverage for 1 function',
-            '1 Senior Candid Photographer',
-            '150–250 Master edited photographs',
+            'Curated Ultra-High-Resolution RAW Photographs (all quality-filtered moments)',
+            'Handpicked, Professionally Edited Master Photographs with artistic color grading',
             'Full digital delivery gallery'
           ],
           exclusions: [
@@ -477,14 +574,15 @@ const ANANT_CONFIG = {
           standardDays: 1,
           featured: true,
           badge: 'Best for Garba',
-          crewText: '1 Candid Photographer + 1 Cinematographer',
+          services: ['Candid Function Photography', 'High-Energy Cinematic Highlight Film'],
           baseCrew: { photo_trad: 0, photo_candid: 1, cinema_cam: 1, video_trad: 0, drone_pilot: 0, crew_assistant: 0 },
           hours: 'Up to 5 hours',
           summary: 'Specially tuned for high-energy Raas Garba nights, Sangeet dance performances, or wedding Receptions.',
           deliverables: [
             'Up to 5 hours coverage',
-            '1 Candid Photographer + 1 Cinematographer',
-            '250–350 Master edited photographs',
+            'Candid Photography & Cinematic Filmmaking in synchronized motion',
+            'Curated Ultra-High-Resolution RAW Photographs (all quality-filtered moments)',
+            'Handpicked, Professionally Edited Master Photographs with artistic color grading',
             'One 2–3 minute high-energy highlight film',
             'One vertical social media reel for WhatsApp'
           ],
@@ -508,14 +606,15 @@ const ANANT_CONFIG = {
           indicativePrice: 28999,
           duration: 'Up to 6 hours',
           standardDays: 1,
-          crewText: '2 Photographers + 1 Cinematographer',
+          services: ['Dual Photography Coverage', 'Cinematic Wedding Filmmaking'],
           baseCrew: { photo_trad: 1, photo_candid: 1, cinema_cam: 1, video_trad: 0, drone_pilot: 0, crew_assistant: 0 },
           hours: 'Up to 6 hours',
           summary: 'Expanded team coverage for lavish midnight Garba nights or formal Receptions with 500+ guests.',
           deliverables: [
             'Up to 6 hours coverage',
-            '1 Traditional + 1 Candid Photographer + 1 Cinematographer',
-            '400–550 Master edited photographs',
+            'Comprehensive Dual Photography & Cinematic Filmmaking coverage',
+            'Curated Ultra-High-Resolution RAW Photographs (all quality-filtered moments)',
+            'Handpicked, Professionally Edited Master Photographs with artistic color grading',
             'Cinematic highlight film with sound design',
             'Two vertical 9:16 social reels for instant sharing'
           ],
@@ -532,174 +631,60 @@ const ANANT_CONFIG = {
     }
   },
 
-  // CENTRALIZED ADD-ON CATALOGUE (Phase 3 Requirements)
+  // CENTRALIZED ADD-ON CATALOGUE (Product Deliverables, Keepsakes & Enhancements)
   addOnCatalog: [
-    // 1. PHOTOGRAPHY
+    // 1. ALBUMS & PHYSICAL HEIRLOOMS
     {
-      id: 'addon-photo-trad',
-      name: 'Traditional Photography Coverage',
-      category: 'photography',
-      categoryName: 'Photography',
-      pricingMethod: 'per_event',
-      pricingUnit: 'per event',
-      defaultPrice: 9999,
-      description: 'Formal stage portraits, family groupings, and complete ritual documentation by a dedicated senior photographer.',
-      applicableCategories: ['wedding', 'engagement', 'functions']
+      id: 'addon-album-standard',
+      name: 'Printed Heirloom Wedding Album (30 Sheets / 60 Pages)',
+      category: 'albums',
+      categoryName: 'Heirloom Albums & Keepsakes',
+      pricingMethod: 'per_unit',
+      pricingUnit: 'starting price',
+      defaultPrice: 8999,
+      description: 'Handcrafted hardbound 12x18 inch photo album on imported luster/silk photo paper with matching keepsake box and panoramic lay-flat binding.',
+      applicableCategories: ['wedding', 'engagement']
     },
     {
-      id: 'addon-photo-candid',
-      name: 'Additional Candid Photographer',
-      category: 'photography',
-      categoryName: 'Photography',
-      pricingMethod: 'per_event',
-      pricingUnit: 'per event',
-      defaultPrice: 9999,
-      description: 'Captures spontaneous emotions, tears during Hasta Melap, laughter among cousins, and candid bridal portraits.',
-      applicableCategories: ['wedding', 'engagement', 'functions']
-    },
-    {
-      id: 'addon-photo-extra',
-      name: 'Additional Supporting Photographer',
-      category: 'photography',
-      categoryName: 'Photography',
-      pricingMethod: 'per_event',
-      pricingUnit: 'per event',
-      defaultPrice: 8499,
-      description: 'Ensures thorough simultaneous coverage for simultaneous bride and groom side rituals in different locations.',
+      id: 'addon-album-premium',
+      name: 'Royal Velvet Master Album Upgrade (40 Sheets / 80 Pages)',
+      category: 'albums',
+      categoryName: 'Heirloom Albums & Keepsakes',
+      pricingMethod: 'per_unit',
+      pricingUnit: 'per album',
+      defaultPrice: 15999,
+      description: 'Imported Italian velvet or bonded leather cover with laser-engraved gold typography, acrylic cameo window, and padded presentation briefcase.',
       applicableCategories: ['wedding']
     },
     {
-      id: 'addon-photo-couple-portrait',
-      name: 'Dedicated Couple Portrait Session',
-      category: 'photography',
-      categoryName: 'Photography',
-      pricingMethod: 'per_session',
-      pricingUnit: 'per session',
-      defaultPrice: 3999,
-      description: '45-minute focused couple portrait session with creative lighting assistance before the main ceremony.',
-      applicableCategories: ['wedding', 'engagement', 'functions']
-    },
-    {
-      id: 'addon-photo-family',
-      name: 'Extended Family Portrait Coverage',
-      category: 'photography',
-      categoryName: 'Photography',
-      pricingMethod: 'per_session',
-      pricingUnit: 'per session',
-      defaultPrice: 4499,
-      description: 'Organized, respectful photo session honoring Baa-Dada, maternal/paternal elders, and extended family generations.',
-      applicableCategories: ['wedding', 'engagement']
-    },
-
-    // 2. CINEMATOGRAPHY & VIDEO
-    {
-      id: 'addon-cine-cinematographer',
-      name: 'Master Cinematographer (4K Cinema)',
-      category: 'cinematography',
-      categoryName: 'Cinematography & Video',
-      pricingMethod: 'per_event',
-      pricingUnit: 'per event',
-      defaultPrice: 12499,
-      description: 'Dedicated cinema camera operator utilizing stabilized gimbals, cinematic prime lenses, and audio recording kits.',
-      applicableCategories: ['wedding', 'prewed', 'engagement', 'functions']
-    },
-    {
-      id: 'addon-cine-highlight',
-      name: 'Cinematic Highlight Film (3–5 Min, 4K)',
-      category: 'cinematography',
-      categoryName: 'Cinematography & Video',
+      id: 'addon-album-parent',
+      name: 'Parent / Family Duplicate Keepsake Album',
+      category: 'albums',
+      categoryName: 'Heirloom Albums & Keepsakes',
       pricingMethod: 'per_unit',
-      pricingUnit: 'per film',
-      defaultPrice: 9999,
-      description: 'Emotionally edited 3–5 minute cinematic highlight film in 4K with personalized sound design and licensed music.',
-      applicableCategories: ['wedding', 'prewed', 'engagement', 'functions']
-    },
-    {
-      id: 'addon-cine-trad-video',
-      name: 'Traditional Full-Length Video Archive',
-      category: 'cinematography',
-      categoryName: 'Cinematography & Video',
-      pricingMethod: 'per_event',
-      pricingUnit: 'per event',
-      defaultPrice: 8499,
-      description: 'Continuous documentary-style recording of complete vidhis from start to finish, ideal for family archives.',
-      applicableCategories: ['wedding', 'engagement', 'functions']
-    },
-    {
-      id: 'addon-cine-extra-cam',
-      name: 'Additional Video Camera & Operator',
-      category: 'cinematography',
-      categoryName: 'Cinematography & Video',
-      pricingMethod: 'per_event',
-      pricingUnit: 'per event',
-      defaultPrice: 8499,
-      description: 'Second synchronized camera angle for key moments (e.g., bride entry, groom reception, and mandap vows).',
-      applicableCategories: ['wedding', 'functions']
-    },
-    {
-      id: 'addon-cine-multicam',
-      name: 'Multi-Camera Video Setup',
-      category: 'cinematography',
-      categoryName: 'Cinematography & Video',
-      pricingMethod: 'per_event',
-      pricingUnit: 'per setup',
-      defaultPrice: 14999,
-      description: '3-camera coordinated setup with switcher and live audio feed, capturing every vantage point without blindspots.',
-      applicableCategories: ['wedding', 'functions']
-    },
-
-    // 3. DRONE & SPECIAL PRODUCTION
-    {
-      id: 'addon-drone-shoot',
-      name: '4K Drone Aerial Shoot',
-      category: 'drone',
-      categoryName: 'Drone & Aerial Production',
-      pricingMethod: 'per_event',
-      pricingUnit: 'per event',
-      defaultPrice: 7499,
-      description: 'Cinematic sweeping aerial perspectives of venue, Jaan Agaman procession, and outdoor vidhis. (Subject to DGCA permissions, airspace, weather & venue feasibility).',
-      applicableCategories: ['wedding', 'prewed', 'functions']
-    },
-    {
-      id: 'addon-drone-extra',
-      name: 'Additional Drone Coverage Session',
-      category: 'drone',
-      categoryName: 'Drone & Aerial Production',
-      pricingMethod: 'per_session',
-      pricingUnit: 'per session',
-      defaultPrice: 4999,
-      description: 'Extended drone battery flight time for nighttime Garba or second day festivities.',
-      applicableCategories: ['wedding', 'functions']
-    },
-    {
-      id: 'addon-drone-venue',
-      name: 'Venue & Establishing Aerial Sequence',
-      category: 'drone',
-      categoryName: 'Drone & Aerial Production',
-      pricingMethod: 'per_unit',
-      pricingUnit: 'per sequence',
-      defaultPrice: 3999,
-      description: 'Short pre-event aerial sequence showcasing the venue architecture, floral mandap, and entrance gates.',
-      applicableCategories: ['wedding', 'prewed']
-    },
-    {
-      id: 'addon-special-cinema',
-      name: 'Special Cinematic Couple Sequence',
-      category: 'drone',
-      categoryName: 'Drone & Aerial Production',
-      pricingMethod: 'per_session',
-      pricingUnit: 'per sequence',
+      pricingUnit: 'per copy',
       defaultPrice: 5999,
-      description: 'Artistic slow-motion visual sequence choreographed before the reception with cinematic lighting effects.',
-      applicableCategories: ['wedding', 'prewed']
+      description: 'A compact 8x12 inch identical duplicate heirloom album printed for parents or in-laws.',
+      applicableCategories: ['wedding']
+    },
+    {
+      id: 'addon-album-prints',
+      name: 'Archival Fine-Art Print Box (25 Mounted Prints)',
+      category: 'albums',
+      categoryName: 'Heirloom Albums & Keepsakes',
+      pricingMethod: 'per_unit',
+      pricingUnit: 'per box',
+      defaultPrice: 3999,
+      description: '25 Master color-graded 6x8 inch fine-art archival prints mounted on acid-free mat board in a handcrafted wooden keepsake box.',
+      applicableCategories: ['wedding', 'prewed', 'engagement']
     },
 
-    // 4. SOCIAL MEDIA CONTENT
+    // 2. SOCIAL MEDIA & VERTICAL REELS
     {
       id: 'addon-reel-single',
       name: 'One Short Vertical Reel (9:16)',
       category: 'social',
-      categoryName: 'Social Media Content',
+      categoryName: 'Social Media & Reels',
       pricingMethod: 'per_unit',
       pricingUnit: 'per reel',
       defaultPrice: 2499,
@@ -710,7 +695,7 @@ const ANANT_CONFIG = {
       id: 'addon-reel-bundle',
       name: 'Three-Reel Social Media Bundle',
       category: 'social',
-      categoryName: 'Social Media Content',
+      categoryName: 'Social Media & Reels',
       pricingMethod: 'per_unit',
       pricingUnit: 'bundle of 3',
       defaultPrice: 5999,
@@ -721,7 +706,7 @@ const ANANT_CONFIG = {
       id: 'addon-reel-extra',
       name: 'Additional Edited Vertical Reel',
       category: 'social',
-      categoryName: 'Social Media Content',
+      categoryName: 'Social Media & Reels',
       pricingMethod: 'per_unit',
       pricingUnit: 'per reel',
       defaultPrice: 2199,
@@ -732,26 +717,26 @@ const ANANT_CONFIG = {
       id: 'addon-reel-same-day',
       name: 'Same-Day Edit Express Reel',
       category: 'social',
-      categoryName: 'Social Media Content',
+      categoryName: 'Social Media & Reels',
       pricingMethod: 'per_unit',
       pricingUnit: 'per reel',
       defaultPrice: 4499,
-      description: 'On-site video editor crafts and delivers an impactful 60-second reel within hours to share at the evening reception.',
+      description: 'On-site video editor crafts and delivers an impactful 60-second reel within hours to premier on stage at the evening reception.',
       applicableCategories: ['wedding', 'engagement']
     },
     {
       id: 'addon-reel-express-highlight',
       name: 'Express 48-Hour Highlight Delivery',
       category: 'social',
-      categoryName: 'Social Media Content',
+      categoryName: 'Social Media & Reels',
       pricingMethod: 'per_unit',
       pricingUnit: 'express turnaround',
       defaultPrice: 6499,
-      description: 'Priority editing queue to receive your complete 3–5 minute highlight film within 48 hours of the wedding.',
+      description: 'Priority editing queue to receive your complete 3–5 minute highlight film within 48 hours of the wedding celebration.',
       applicableCategories: ['wedding']
     },
 
-    // 5. INTERVIEWS & STORYTELLING
+    // 3. INTERVIEWS & STORYTELLING
     {
       id: 'addon-interview-guest',
       name: 'Guest & Family Audio/Video Interviews',
@@ -797,12 +782,23 @@ const ANANT_CONFIG = {
       applicableCategories: ['wedding']
     },
 
-    // 6. POST-PRODUCTION & MASTERS
+    // 4. POST-PRODUCTION & STORAGE
+    {
+      id: 'addon-post-ssd-drive',
+      name: '4K Master SSD Archival Hard Drive',
+      category: 'postproduction',
+      categoryName: 'Post-Production & Masters',
+      pricingMethod: 'per_unit',
+      pricingUnit: 'per 1TB drive',
+      defaultPrice: 4999,
+      description: 'Shockproof 1TB external solid-state drive preloaded with all uncompressed master footage, RAW photo archives, and master cinema exports.',
+      applicableCategories: ['wedding', 'prewed']
+    },
     {
       id: 'addon-post-advanced',
       name: 'Advanced Cinema Sound & Color Master',
       category: 'postproduction',
-      categoryName: 'Post-Production',
+      categoryName: 'Post-Production & Masters',
       pricingMethod: 'per_unit',
       pricingUnit: 'per project',
       defaultPrice: 5999,
@@ -813,77 +809,42 @@ const ANANT_CONFIG = {
       id: 'addon-post-additional-highlight',
       name: 'Extended Feature Film (12–18 Minutes)',
       category: 'postproduction',
-      categoryName: 'Post-Production',
+      categoryName: 'Post-Production & Masters',
       pricingMethod: 'per_unit',
       pricingUnit: 'per film',
       defaultPrice: 7499,
-      description: 'In-depth long-form cinematic chapter film documenting every phase of the two days without rushing.',
+      description: 'In-depth long-form cinematic chapter film documenting every phase of the celebration without rushing.',
+      applicableCategories: ['wedding']
+    },
+    {
+      id: 'addon-cine-highlight',
+      name: 'Cinematic 4K Highlight Film (3–5 Minutes)',
+      category: 'postproduction',
+      categoryName: 'Post-Production & Masters',
+      pricingMethod: 'per_unit',
+      pricingUnit: 'per film',
+      defaultPrice: 8999,
+      description: 'A 3–5 minute cinematic wedding film color-graded in 4K with synchronized Vedic audio, speech highlights, and cinematic music.',
       applicableCategories: ['wedding']
     },
     {
       id: 'addon-post-retouch',
-      name: 'Fine-Art Editorial Photo Retouching (50 Extra Photos)',
+      name: 'Fine-Art Editorial Photo Retouching (Curated Set)',
       category: 'postproduction',
-      categoryName: 'Post-Production',
+      categoryName: 'Post-Production & Masters',
       pricingMethod: 'per_unit',
-      pricingUnit: '50 photos',
+      pricingUnit: 'per collection',
       defaultPrice: 3199,
       description: 'High-end frequency separation, skin tone balancing, and micro-blemish retouching on chosen portraits.',
       applicableCategories: ['wedding', 'prewed', 'engagement']
     },
 
-    // 7. ALBUMS & PHYSICAL HEIRLOOMS
-    {
-      id: 'addon-album-standard',
-      name: 'Printed Heirloom Wedding Album (30 Sheets / 60 Pages)',
-      category: 'albums',
-      categoryName: 'Albums & Physical Keepsakes',
-      pricingMethod: 'per_unit',
-      pricingUnit: 'starting price',
-      defaultPrice: 8999,
-      description: 'Handcrafted hardbound 12x18 inch photo album on luster photo paper with personalized box. Curated layout of 150–200 photos.',
-      applicableCategories: ['wedding', 'engagement']
-    },
-    {
-      id: 'addon-album-premium',
-      name: 'Royal Velvet Master Album Upgrade (40 Sheets / 80 Pages)',
-      category: 'albums',
-      categoryName: 'Albums & Physical Keepsakes',
-      pricingMethod: 'per_unit',
-      pricingUnit: 'per album',
-      defaultPrice: 15999,
-      description: 'Imported Italian velvet or bonded leather cover with laser-engraved gold typography, acrylic cameo window, and padded presentation briefcase.',
-      applicableCategories: ['wedding']
-    },
-    {
-      id: 'addon-album-parent',
-      name: 'Parent / Family Duplicate Keepsake Album',
-      category: 'albums',
-      categoryName: 'Albums & Physical Keepsakes',
-      pricingMethod: 'per_unit',
-      pricingUnit: 'per copy',
-      defaultPrice: 5999,
-      description: 'A compact 8x12 inch identical duplicate album printed for parents or in-laws.',
-      applicableCategories: ['wedding']
-    },
-    {
-      id: 'addon-album-prints',
-      name: 'Archival Fine-Art Print Box (25 Mounted Prints)',
-      category: 'albums',
-      categoryName: 'Albums & Physical Keepsakes',
-      pricingMethod: 'per_unit',
-      pricingUnit: 'per box',
-      defaultPrice: 3999,
-      description: '25 Master color-graded 6x8 inch fine-art archival prints mounted on acid-free mat board in a keepsake wooden box.',
-      applicableCategories: ['wedding', 'prewed', 'engagement']
-    },
-
-    // 8. ADDITIONAL COVERAGE & LOGISTICS
+    // 5. ADDITIONAL COVERAGE & OVERTIME
     {
       id: 'addon-extra-hour',
       name: 'Extra Coverage Hour',
       category: 'coverage',
-      categoryName: 'Coverage & Logistics',
+      categoryName: 'Coverage & Overtime',
       pricingMethod: 'per_hour',
       pricingUnit: 'per hour',
       defaultPrice: 2000,
@@ -891,37 +852,15 @@ const ANANT_CONFIG = {
       applicableCategories: ['wedding', 'functions', 'engagement']
     },
     {
-      id: 'addon-extra-day',
-      name: 'Additional Wedding Day Coverage',
-      category: 'coverage',
-      categoryName: 'Coverage & Logistics',
-      pricingMethod: 'per_day',
-      pricingUnit: 'per day',
-      defaultPrice: 24999,
-      description: 'Full coordinated crew coverage for additional wedding days (e.g. Day 3 reception, standalone Sangeet day, etc.).',
-      applicableCategories: ['wedding']
-    },
-    {
-      id: 'addon-extra-function',
-      name: 'Additional Standalone Function Coverage',
-      category: 'coverage',
-      categoryName: 'Coverage & Logistics',
-      pricingMethod: 'per_event',
-      pricingUnit: 'per function',
-      defaultPrice: 9999,
-      description: 'Coverage for standalone Mosalu, Mehndi afternoon, or morning Mandva held at a separate time or venue.',
-      applicableCategories: ['wedding']
-    },
-    {
       id: 'addon-travel-logistics',
-      name: 'Travel & Accommodation Outside Ahmedabad',
+      name: 'Outstation Travel & Lodging Coordination',
       category: 'coverage',
-      categoryName: 'Coverage & Logistics',
+      categoryName: 'Coverage & Overtime',
       pricingMethod: 'custom',
-      pricingUnit: 'Transparent quote',
-      defaultPrice: null, // Custom quoted
-      description: 'Actuals-only travel and clean hotel lodging for destinations outside Ahmedabad (Vadodara, Surat, Rajkot, etc.). Quoted transparently with zero hidden markups.',
-      applicableCategories: ['wedding', 'prewed', 'engagement', 'functions']
+      pricingUnit: 'Actuals only',
+      defaultPrice: null,
+      description: 'Transparent travel tickets and clean hotel accommodation arranged at actuals with zero hidden agency surcharges.',
+      applicableCategories: ['wedding', 'prewed', 'engagement']
     }
   ],
 
@@ -970,12 +909,12 @@ const ANANT_CONFIG = {
       a: 'Yes! Two-day weddings are our core specialty across Gujarat. Typically, Day 1 covers Mandva Muhurat, Grah Shanti, Pithi, and an evening Garba / Sangeet, while Day 2 covers Jaan Agaman, Pokhana, Mandap rituals (Hasta Melap, Mangal Phera), and the Reception or Vidaai. We customize daily hours to match your family’s exact muhurat timings.'
     },
     {
-      q: 'Can we customize our package with add-ons and extra crew?',
-      a: 'Yes, 100%. Our interactive Quotation Builder lets you add or remove candid photographers, cinematographers, drone coverage, 60-second vertical reels, heirloom printed albums, and extra coverage hours. The total updates in real time with complete price transparency.'
+      q: 'Can we customize our package with add-ons and extra coverage?',
+      a: 'Yes, 100%. Our interactive Quotation Builder lets you select candid photography, cinematic filmmaking, drone aerials, 60-second vertical reels, heirloom printed albums, and extra coverage hours. The total updates in real time with complete price transparency.'
     },
     {
       q: 'What is included in the base package vs optional add-ons?',
-      a: 'Each package tier clearly lists its inclusions. For example, our Signature Wedding includes both 1 candid photographer and 1 cinematographer, 350–500 master edited photos, a 3–5 min 4K highlight film, and 1 vertical reel. Add-ons already included in your chosen tier are marked "Included in Package" (₹0 extra) to avoid duplicate charges.'
+      a: 'Each collection clearly communicates its deliverables. For example, our Signature Wedding includes both candid photography and cinematic filmmaking, all curated ultra-high-resolution RAW photographs, handpicked master edited photographs, a 3–5 min 4K highlight film, and 1 vertical reel. Add-ons already included in your chosen tier are marked "Included in Package" (₹0 extra) to avoid duplicate charges.'
     },
     {
       q: 'How does drone aerial coverage work and are there any restrictions?',
@@ -995,7 +934,7 @@ const ANANT_CONFIG = {
     },
     {
       q: 'Can we build our own package from scratch without selecting a preset plan?',
-      a: 'Absolutely. In Step 3 of the Quotation Builder, simply select "Build Your Own Custom Collection". You can then handpick your exact crew size, coverage hours, deliverables, and add-ons tailored to your budget.'
+      a: 'Absolutely. In Step 3 of the Quotation Builder, simply select "Build Your Own Custom Collection". You can then handpick your exact photography styles, cinematic films, deliverables, and add-ons tailored to your budget.'
     }
   ]
 };

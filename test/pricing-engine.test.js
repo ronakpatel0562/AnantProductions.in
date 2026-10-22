@@ -193,9 +193,11 @@ it('should correctly calculate custom "Build Your Own" package starting at ₹0 
     eventCategory: 'wedding',
     packageId: 'custom',
     eventDetails: { days: 1 },
+    crew: {
+      photo_candid: 1, // 9999
+      drone_pilot: 1   // 7499
+    },
     selectedAddons: {
-      'addon-photo-candid': 1, // 9999
-      'addon-drone-shoot': 1,  // 7499
       'addon-album-standard': 1 // 8999
     }
   });
@@ -239,8 +241,9 @@ it('should serialize and deserialize builder state to URL-safe string', () => {
   const state = {
     eventCategory: 'wedding',
     packageId: 'pkg-wedding-signature',
+    coverageScope: 'both_diff_venues',
     eventDetails: { days: 2, city: 'Vadodara', functions: ['Garba', 'Lagna'] },
-    selectedAddons: { 'addon-drone-shoot': 1, 'addon-reel-single': 2 },
+    selectedAddons: { 'addon-reel-single': 2 },
     crew: { photo_candid: 1 },
     applyLaunchOffer: true
   };
@@ -251,8 +254,9 @@ it('should serialize and deserialize builder state to URL-safe string', () => {
   const restored = engine.deserializeStateFromHash(hash);
   assert.strictEqual(restored.eventCategory, 'wedding');
   assert.strictEqual(restored.packageId, 'pkg-wedding-signature');
+  assert.strictEqual(restored.coverageScope, 'both_diff_venues');
   assert.strictEqual(restored.eventDetails.city, 'Vadodara');
-  assert.strictEqual(restored.selectedAddons['addon-drone-shoot'], 1);
+  assert.strictEqual(restored.selectedAddons['addon-reel-single'], 2);
   assert.strictEqual(restored.applyLaunchOffer, true);
 });
 
@@ -261,17 +265,49 @@ it('should generate a rich, clean WhatsApp inquiry text with line items and refe
   const quote = engine.calculateQuotation(config, {
     eventCategory: 'wedding',
     packageId: 'pkg-wedding-signature',
+    coverageScope: 'both_diff_venues',
     eventDetails: { days: 2, city: 'Ahmedabad', venue: 'Belvedere Club' },
     customer: { names: 'Priyanshi & Harsh', phone: '+91 98765 43210' },
-    selectedAddons: { 'addon-drone-shoot': 1 }
+    crew: { drone_pilot: 1 }
   });
 
   const waMsg = engine.generateWhatsAppMessage(quote, config);
   assert.ok(waMsg.includes('Priyanshi & Harsh'));
   assert.ok(waMsg.includes(quote.referenceId));
   assert.ok(waMsg.includes('Belvedere Club'));
-  assert.ok(waMsg.includes('4K Drone Aerial Shoot'));
+  assert.ok(waMsg.includes('Coverage Scope'));
+  assert.ok(waMsg.includes('Drone Aerial Cinematography'));
   assert.ok(waMsg.includes('Estimated Total'));
+});
+
+// 13. Coverage Scope Pricing (+₹8,500 vs ₹0)
+it('should correctly calculate coverage scope (₹0 for one-side, ₹0 for joint venue, +₹8,500 for separate venues)', () => {
+  const quoteOneSide = engine.calculateQuotation(config, {
+    eventCategory: 'wedding',
+    packageId: 'pkg-wedding-signature',
+    coverageScope: 'one_side'
+  });
+  assert.strictEqual(quoteOneSide.coverageScopeSurcharge, 0);
+  assert.strictEqual(quoteOneSide.subtotal, 49999);
+
+  const quoteJoint = engine.calculateQuotation(config, {
+    eventCategory: 'wedding',
+    packageId: 'pkg-wedding-signature',
+    coverageScope: 'both_same_venue'
+  });
+  assert.strictEqual(quoteJoint.coverageScopeSurcharge, 0);
+  assert.strictEqual(quoteJoint.subtotal, 49999);
+
+  const quoteSeparate = engine.calculateQuotation(config, {
+    eventCategory: 'wedding',
+    packageId: 'pkg-wedding-signature',
+    coverageScope: 'both_diff_venues'
+  });
+  assert.strictEqual(quoteSeparate.coverageScopeSurcharge, 8500);
+  assert.strictEqual(quoteSeparate.subtotal, 49999 + 8500);
+  const scopeLine = quoteSeparate.lineItems.find(i => i.id === 'scope-dual-locations');
+  assert.ok(scopeLine, 'Dual location scope line item exists');
+  assert.strictEqual(scopeLine.totalPrice, 8500);
 });
 
 console.log(`\nResults: ${passedTests}/${totalTests} tests passed.\n`);

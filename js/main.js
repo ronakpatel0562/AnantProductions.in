@@ -84,6 +84,51 @@ document.addEventListener('DOMContentLoaded', () => {
     link.addEventListener('click', closeMobileDrawer);
   });
 
+  // 3B. Dark / Light Theme Mode Management
+  function initTheme() {
+    const savedTheme = localStorage.getItem('anant_theme') || 'dark';
+    applyTheme(savedTheme);
+
+    const desktopToggle = document.getElementById('theme-toggle-btn');
+    const mobileToggle = document.getElementById('mobile-theme-toggle-btn');
+
+    if (desktopToggle) {
+      desktopToggle.addEventListener('click', toggleTheme);
+    }
+    if (mobileToggle) {
+      mobileToggle.addEventListener('click', toggleTheme);
+    }
+  }
+
+  function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+    const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    applyTheme(nextTheme);
+    try {
+      localStorage.setItem('anant_theme', nextTheme);
+    } catch (e) {}
+  }
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const desktopToggle = document.getElementById('theme-toggle-btn');
+    const mobileLabel = document.querySelector('.mobile-theme-label');
+
+    const isLight = theme === 'light';
+    const labelText = isLight ? 'Switch to Dark Mode' : 'Switch to Light Mode';
+
+    if (desktopToggle) {
+      desktopToggle.setAttribute('aria-label', labelText);
+      desktopToggle.setAttribute('title', labelText);
+    }
+
+    if (mobileLabel) {
+      mobileLabel.textContent = isLight ? '🌙 Switch to Dark Mode' : '☀️ Switch to Light Mode';
+    }
+  }
+
+  initTheme();
+
   // 4. Portfolio Category Filtering
   const filterBtns = document.querySelectorAll('.gallery-filters [data-filter]');
   const galleryItems = document.querySelectorAll('.gallery-item');
@@ -187,30 +232,41 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 6. Video Film Preview Modal
+  // 6. Video Film Preview Modal (with live YouTube player)
   const videoCards = document.querySelectorAll('.film-card');
   const videoModal = document.getElementById('video-modal');
   const modalFilmTitle = document.getElementById('modal-film-title');
   const modalFilmDesc = document.getElementById('modal-film-desc');
+  const modalFilmBadge = document.getElementById('modal-film-badge');
+  const modalIframe = document.getElementById('modal-youtube-iframe');
+  const modalYoutubeLink = document.getElementById('modal-youtube-direct-link');
   const modalWhatsappCta = document.getElementById('modal-whatsapp-cta');
   const modalCloseBtn = videoModal ? videoModal.querySelector('.modal-close-btn') : null;
 
   const filmDatabase = {
     'film-1': {
-      title: 'Belvedere Celebration — Ahmedabad, Gujarat',
-      desc: 'Three days of vibrant Mandva Muhurat, high-voltage Dodhiya Garba night, and sunset Hasta Melap under golden temple bells.'
+      title: 'Milan & Rutali | Cinematic Gujarati Wedding Film | 4K',
+      subtitle: 'Cinematic Gujarati Wedding Film',
+      youtubeId: 'H42g8lWrtJg',
+      youtubeUrl: 'https://youtu.be/H42g8lWrtJg',
+      badge: '4K Master Highlight',
+      desc: 'A soulful 4K wedding film capturing intimate mandap vidhis, high-energy Garba celebrations, heartfelt family blessings, and timeless candid moments.'
     },
     'film-2': {
-      title: 'Lakeside Heritage Romance — Surat to Udaipur',
-      desc: 'Opulent lakeside celebrations with Shehnai melodies, traditional silver procession, and emotional Mosalu ceremony honoring maternal roots.'
+      title: 'Harshil & Ankita | A Gujarati Love Story That Felt Like Home ❤️',
+      subtitle: 'A Gujarati Love Story That Felt Like Home',
+      youtubeId: '5WcvmSGh9lo',
+      youtubeUrl: 'https://youtu.be/5WcvmSGh9lo',
+      badge: 'Cinematic Story Film',
+      desc: 'A heartfelt Gujarati celebration capturing genuine emotions, unscripted family laughter, sacred Vedic mantras, and soulful moments that felt like home.'
     },
     'film-3': {
-      title: 'Baroda Haveli Symphony — Vadodara, Gujarat',
-      desc: 'Grandmother’s tearful blessings, soulful Vedic mantras, and authentic Gujarati traditions captured with warm analog cinematic tones.'
-    },
-    'film-4': {
-      title: 'Saurashtra Traditions — Rajkot & Saurashtra',
-      desc: 'Royal Kathiyawadi warmth, silver jewellery, live folk singers, playful nose-pulling during Ponkvu, and an emotional Vidaai.'
+      title: 'The Most Magical Gujarati Royal Wedding ✨ | Trupti & Divyesh Highlights 2026',
+      subtitle: 'The Most Magical Gujarati Royal Wedding',
+      youtubeId: 'wfbBurDthhU',
+      youtubeUrl: 'https://youtu.be/wfbBurDthhU',
+      badge: 'Royal Wedding Highlight',
+      desc: 'An enchanting royal Gujarati wedding featuring a majestic Jaan Agaman procession, opulent decor, emotional Vidaai tears, and royal cinematic storytelling.'
     }
   };
 
@@ -218,8 +274,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const film = filmDatabase[filmId] || filmDatabase['film-1'];
     if (modalFilmTitle) modalFilmTitle.textContent = film.title;
     if (modalFilmDesc) modalFilmDesc.textContent = film.desc;
+    if (modalFilmBadge) modalFilmBadge.textContent = film.badge;
+    if (modalIframe) {
+      modalIframe.src = `https://www.youtube-nocookie.com/embed/${film.youtubeId}?autoplay=1&rel=0`;
+    }
+    if (modalYoutubeLink) {
+      modalYoutubeLink.href = film.youtubeUrl;
+    }
     if (modalWhatsappCta) {
-      const msg = encodeURIComponent(`Hello Anant Productions! I am interested in viewing sample films like "${film.title}". Could you please share the preview links?`);
+      const msg = encodeURIComponent(`Hello Anant Productions! I watched your wedding highlight film "${film.title}". We love your cinematic style and would love to check availability for our celebration!`);
       const phoneRaw = config?.business?.phoneRaw || '918000088819';
       modalWhatsappCta.href = `https://wa.me/${phoneRaw}?text=${msg}`;
     }
@@ -233,6 +296,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (videoModal) {
       videoModal.classList.remove('active');
       document.body.style.overflow = '';
+      if (modalIframe) {
+        modalIframe.src = ''; // Stops video playback immediately
+      }
     }
   }
 
@@ -291,7 +357,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 8. Celebration Functions Selector Pills
   const functionPills = document.querySelectorAll('.function-pill');
+  
+  // Always reset function selection buttons every time user lands on page
   functionPills.forEach(pill => {
+    pill.classList.remove('selected');
     pill.addEventListener('click', () => {
       pill.classList.toggle('selected');
     });

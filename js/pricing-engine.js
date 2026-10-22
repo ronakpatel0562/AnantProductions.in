@@ -137,13 +137,13 @@
           lineItems.push({
             id: 'crew-' + role.id,
             name: role.name,
-            category: 'Production Crew',
-            type: 'crew',
-            unit: role.isPerDay ? `${daysMultiplier} Day(s)` : 'Event',
+            category: 'Coverage Services',
+            type: 'service',
+            unit: role.isPerDay ? `${daysMultiplier} Day(s)` : 'Coverage',
             unitPrice: billableRate,
-            quantity: requestedCount,
-            includedQuantity: baseCount,
-            billableQuantity: extraCount,
+            quantity: 1,
+            includedQuantity: baseCount > 0 ? 1 : 0,
+            billableQuantity: extraCount > 0 ? 1 : 0,
             totalPrice: itemCost,
             isIncluded: (extraCount === 0),
             isCustomQuote: false,
@@ -204,7 +204,36 @@
       }
     });
 
-    // 4. Multi-Day and Extra Functions adjustment (if not using custom packages)
+    // 4. Coverage Scope Adjustment (One-Side vs Both-Sides different venues)
+    const coverageScopeKey = state.coverageScope || 'one_side';
+    let scopeConfig = null;
+    if (Array.isArray(config.coverageScopes)) {
+      scopeConfig = config.coverageScopes.find(s => s.id === coverageScopeKey);
+    } else if (config.coverageScopes) {
+      scopeConfig = config.coverageScopes[coverageScopeKey];
+    }
+    const scopeSurcharge = scopeConfig ? Number(scopeConfig.surcharge ?? scopeConfig.price ?? 0) : (coverageScopeKey === 'both_diff_venues' ? 8500 : 0);
+
+    if (scopeSurcharge > 0) {
+      subtotal += scopeSurcharge;
+      lineItems.push({
+        id: 'scope-dual-locations',
+        name: 'Dual-Side Multi-Location Coverage (+₹8,500)',
+        category: 'Coverage Scope',
+        type: 'scope',
+        unit: 'Celebration',
+        unitPrice: scopeSurcharge,
+        quantity: 1,
+        includedQuantity: 0,
+        billableQuantity: 1,
+        totalPrice: scopeSurcharge,
+        isIncluded: false,
+        isCustomQuote: false,
+        description: 'Simultaneous visual coordination across separate residences, Jaan departure, and bride arrival rituals.'
+      });
+    }
+
+    // 5. Multi-Day and Extra Functions adjustment (if not using custom packages)
     const categoryDefaultDays = (config.packageCategories && config.packageCategories[eventCategory] && config.packageCategories[eventCategory].defaultDays)
       ? config.packageCategories[eventCategory].defaultDays
       : ((basePackage && basePackage.standardDays) ? basePackage.standardDays : (eventCategory === 'wedding' ? 2 : 1));
@@ -228,7 +257,7 @@
         totalPrice: daysTotal,
         isIncluded: false,
         isCustomQuote: false,
-        description: 'Coordinated crew coverage extended for multi-day Gujarati celebrations.'
+        description: 'Coordinated visual documentation extended for multi-day Gujarati celebrations.'
       });
     }
 
@@ -285,6 +314,9 @@
         preferredContact: state.customer?.preferredContact || 'WhatsApp',
         notes: state.customer?.notes || ''
       },
+      coverageScope: coverageScopeKey,
+      coverageScopeLabel: scopeConfig ? (scopeConfig.title || scopeConfig.name) : (coverageScopeKey === 'both_diff_venues' ? 'Both Sides — Different Locations' : (coverageScopeKey === 'both_same_venue' ? 'Both Sides — Joint Venue' : 'One-Side Coverage')),
+      coverageScopeSurcharge: scopeSurcharge,
       lineItems: lineItems,
       subtotal: subtotal,
       subtotalFormatted: formatINR(subtotal),
@@ -309,53 +341,59 @@
 
   /**
    * Generate Clean, Beautifully Structured WhatsApp Message
+   * Strictly adheres to Rules A, B, and C (no crew headcounts, no fixed photo counts)
    */
   function generateWhatsAppMessage(quote, config) {
     const biz = config.business || {};
     const ref = quote.referenceId;
     const cust = quote.customer || {};
     const evt = quote.eventDetails || {};
+    const scopeLabel = quote.coverageScopeLabel || (quote.coverageScope === 'both_diff_venues' ? 'Both Sides (Separate Locations, +₹8,500)' : (quote.coverageScope === 'both_same_venue' ? 'Both Sides (Joint Venue)' : 'One-Side Coverage'));
 
     let msg = `✨ *JAI SHREE KRISHNA / INQUIRY FOR ANANT PRODUCTIONS*\n`;
     msg += `*Quotation Reference:* ${ref}\n\n`;
 
-    msg += `👰🤵 *Couple / Family:* ${cust.names || 'Couple'}\n`;
+    msg += `👰🤵 *Couple / Family:* ${cust.names || 'Honored Couple'}\n`;
     msg += `📱 *WhatsApp:* ${cust.phone || 'Provided via chat'}\n`;
     if (cust.email) msg += `✉️ *Email:* ${cust.email}\n`;
+    msg += `👥 *Coverage Scope:* ${scopeLabel}\n`;
     msg += `📍 *City & Venue:* ${evt.city || 'Gujarat'}${evt.venue ? ' (' + evt.venue + ')' : ''}\n`;
-    msg += `🗓️ *Dates:* ${evt.dates || 'To be confirmed'}\n`;
-    msg += `⏳ *Celebration Days:* ${evt.days || 2} Day(s)\n`;
+    msg += `🗓️ *Celebration Dates:* ${evt.dates || 'To be confirmed'}\n`;
+    msg += `⏳ *Celebration Duration:* ${evt.days || 2} Day(s)\n`;
     if (evt.functions && evt.functions.length > 0) {
-      msg += `🪔 *Functions:* ${evt.functions.join(', ')}\n`;
+      msg += `🪔 *Selected Functions:* ${evt.functions.join(', ')}\n`;
     }
     msg += `\n📦 *SELECTED COLLECTION:* ${quote.basePackageName}\n`;
 
-    // Line items list
-    msg += `\n*ITEMIZED SERVICES & DELIVERABLES:*\n`;
+    // Line items list (service focused, no crew numbers or photo counts)
+    msg += `\n*SELECTED SERVICES & DELIVERABLES:*\n`;
     quote.lineItems.forEach(item => {
       if (item.type === 'package') return; // already mentioned
       if (item.isIncluded) {
-        msg += `• ${item.name} (${item.quantity}x): Included in package\n`;
+        msg += `• ${item.name}: Included in Collection\n`;
       } else if (item.isCustomQuote) {
         msg += `• ${item.name}: Custom Quote Required\n`;
       } else {
-        msg += `• ${item.name} (${item.billableQuantity}x ${item.unit}): ${formatINR(item.totalPrice)}\n`;
+        msg += `• ${item.name}: ${formatINR(item.totalPrice)}\n`;
       }
     });
 
+    msg += `\n📸 *PHOTOGRAPHY PHILOSOPHY:*\n`;
+    msg += `We treat wedding photography as an art, not a numbers game. All curated ultra-high-resolution RAW photographs and handpicked master-edited photographs are delivered with world-class retouching.\n`;
+
     msg += `\n💰 *PRICE SUMMARY:*\n`;
-    msg += `• Subtotal: ${quote.subtotalFormatted}\n`;
+    msg += `• Regular Quotation: ${quote.subtotalFormatted}\n`;
     if (quote.discountAmount > 0) {
-      msg += `• Launch Offer / Savings: -${quote.discountFormatted}\n`;
+      msg += `• Special Approved Offer: -${quote.discountFormatted}\n`;
     }
-    msg += `• *Estimated Total:* *${quote.estimatedTotalFormatted}*\n`;
+    msg += `• *Your Personalized Experience (Estimated Total):* *${quote.estimatedTotalFormatted}*\n`;
 
     if (quote.hasCustomQuote) {
-      msg += `_(Note: Certain custom/special items require final confirmation based on schedule.)_\n`;
+      msg += `_(Note: Certain bespoke services are subject to final schedule confirmation.)_\n`;
     }
 
     if (cust.notes) {
-      msg += `\n📝 *Couple's Vision / Notes:*\n"${cust.notes}"\n`;
+      msg += `\n📝 *Couple's Celebration Notes:*\n"${cust.notes}"\n`;
     }
 
     msg += `\nCould you please check your availability for our dates and share the next steps? Thank you!`;
@@ -372,6 +410,7 @@
       const payload = {
         cat: state.eventCategory,
         pkg: state.packageId,
+        scope: state.coverageScope || 'one_side',
         days: state.eventDetails?.days,
         city: state.eventDetails?.city,
         fns: state.eventDetails?.functions,
@@ -397,6 +436,7 @@
       return {
         eventCategory: parsed.cat,
         packageId: parsed.pkg,
+        coverageScope: parsed.scope || 'one_side',
         eventDetails: {
           days: parsed.days,
           city: parsed.city,

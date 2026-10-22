@@ -31,13 +31,32 @@
   <link rel="icon" type="image/png" href="anant_logo.png">
   <link rel="apple-touch-icon" href="anant_logo.png">
 
+  <!-- Prevent Flash of Unstyled Theme (FOUC) -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('anant_theme');
+        if (saved === 'light' || (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+          if (saved === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+          } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+          }
+        } else {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      } catch (e) {}
+    })();
+  </script>
+
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="css/style.css?v=9">
+  <link rel="stylesheet" href="css/style.css?v=12">
 
   <style>
-    .nav-links { display: flex; align-items: center; gap: clamp(14px, 1.8vw, 24px); list-style: none; }
-    .nav-links li, .nav-link { white-space: nowrap !important; }
-    .nav-actions { gap: 14px !important; }
+    @media (min-width: 961px) {
+      .nav-links { display: flex; align-items: center; gap: clamp(14px, 1.8vw, 24px); list-style: none; }
+      .nav-links li, .nav-link { white-space: nowrap !important; }
+    }
     .nav-brand-img { height: 38px !important; width: auto !important; max-width: 84px !important; object-fit: contain !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; }
   </style>
 
@@ -114,28 +133,43 @@
         </div>
       </a>
 
-      <!-- Desktop Nav Links -->
+      <!-- Desktop Nav Links (Streamlined & Clean) -->
       <nav aria-label="Main Navigation">
         <ul class="nav-links">
-          <li><a href="#hero" class="nav-link">Home</a></li>
           <li><a href="#portfolio" class="nav-link">Our Work</a></li>
+          <li><a href="#films" class="nav-link">Films</a></li>
           <li><a href="#packages" class="nav-link">Packages</a></li>
-          <li><a href="#quotation-builder" class="nav-link" style="color: var(--gold-light);">Estimator</a></li>
-          <li><a href="#addons" class="nav-link">Add-ons</a></li>
-          <li><a href="#about" class="nav-link">About</a></li>
-          <li><a href="#faq" class="nav-link">FAQ</a></li>
-          <li><a href="#contact" class="nav-link">Contact</a></li>
+          <li><a href="about.html" class="nav-link">About</a></li>
+          <li><a href="contact.html" class="nav-link">Contact</a></li>
         </ul>
       </nav>
 
       <!-- Desktop Nav Actions -->
       <div class="nav-actions">
+        <!-- Theme Toggle Button (Light/Dark Mode) -->
+        <button type="button" class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Switch to Light Mode" title="Switch between dark and light mode">
+          <svg class="theme-toggle-icon theme-toggle-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="theme-toggle-icon theme-toggle-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
         <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20are%20planning%20our%20wedding%20and%20would%20love%20to%20check%20your%20date%20availability." target="_blank" rel="noopener" class="btn btn-whatsapp" aria-label="Chat on WhatsApp">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
           WhatsApp
         </a>
         <a href="#quotation-builder" class="btn btn-gold" id="nav-cta-date">
-          Custom Quote Builder
+          Quote Builder
         </a>
         <button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
           ☰
@@ -156,20 +190,21 @@
         </div>
         <button class="mobile-drawer-close" aria-label="Close navigation menu" style="background: none; border: none; color: var(--gold-light); font-size: 1.8rem; cursor: pointer;">✕</button>
       </div>
-      <ul style="list-style: none; display: flex; flex-direction: column; gap: 18px; font-size: 1.05rem; font-family: var(--font-mono);">
-        <li><a href="#hero" class="mobile-nav-link">Home</a></li>
-        <li><a href="#launch-offer" class="mobile-nav-link" style="color: var(--gold-light);">✨ Launch Offer (₹39,999)</a></li>
-        <li><a href="#portfolio" class="mobile-nav-link">Our Work &amp; Films</a></li>
-        <li><a href="#packages" class="mobile-nav-link">Curated Packages</a></li>
-        <li><a href="#quotation-builder" class="mobile-nav-link" style="color: var(--gold-light);">⚡ Quotation Builder</a></li>
-        <li><a href="#addons" class="mobile-nav-link">Add-on Catalogue</a></li>
-        <li><a href="#about" class="mobile-nav-link">Why Anant Productions</a></li>
-        <li><a href="#process" class="mobile-nav-link">Our Process</a></li>
-        <li><a href="#faq" class="mobile-nav-link">FAQ</a></li>
-        <li><a href="#contact" class="mobile-nav-link">Check Wedding Date</a></li>
+      <ul style="list-style: none; display: flex; flex-direction: column; gap: 16px; font-size: 1rem; font-family: var(--font-mono);">
+        <li><a href="index.html" class="mobile-nav-link">Home</a></li>
+        <li><a href="about.html" class="mobile-nav-link" style="color: var(--gold-light);">✦ About Anant Productions</a></li>
+        <li><a href="index.html#portfolio" class="mobile-nav-link">Our Work &amp; Films</a></li>
+        <li><a href="index.html#packages" class="mobile-nav-link">Curated Packages</a></li>
+        <li><a href="index.html#quotation-builder" class="mobile-nav-link" style="color: var(--gold-light);">⚡ Quotation Builder</a></li>
+        <li><a href="contact.html" class="mobile-nav-link">Contact &amp; Studio Location</a></li>
+        <li><a href="terms-and-conditions.html" class="mobile-nav-link" style="font-size: 0.9rem; color: var(--mute);">Terms &amp; Retainer Policies</a></li>
+        <li><a href="privacy-policy.html" class="mobile-nav-link" style="font-size: 0.9rem; color: var(--mute);">Privacy Policy &amp; Vaults</a></li>
       </ul>
     </div>
     <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 24px;">
+      <button type="button" class="btn btn-outline-gold" id="mobile-theme-toggle-btn" style="width: 100%; justify-content: center; gap: 8px;">
+        <span class="mobile-theme-label">☀️ Switch to Light Mode</span>
+      </button>
       <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20would%20love%20to%20check%20your%20availability%20for%20our%20wedding." class="btn btn-whatsapp" style="width: 100%; justify-content: center;">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
         Chat on WhatsApp
@@ -216,10 +251,19 @@
               Explore Our Films
             </a>
             <a href="https://wa.me/918000088819?text=Namaste%20Anant%20Productions!%20We%20are%20planning%20our%20wedding%20and%20would%20love%20to%20discuss%20photography%20and%20films." target="_blank" rel="noopener" class="btn btn-whatsapp" aria-label="Direct Artist WhatsApp">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
               Quick WhatsApp Chat
             </a>
           </div>
+
+          <!-- Hero Section Quick MPA Navigation Links -->
+          <nav class="hero-quick-links" aria-label="Explore Anant Productions">
+            <span class="hero-quick-label">Discover:</span>
+            <a href="about.html" class="hero-quick-link">About Studio &rarr;</a>
+            <a href="contact.html" class="hero-quick-link">Contact &amp; Location &rarr;</a>
+            <a href="terms-and-conditions.html" class="hero-quick-link">Terms &amp; Policies &rarr;</a>
+            <a href="privacy-policy.html" class="hero-quick-link">Privacy &amp; Vaults &rarr;</a>
+          </nav>
 
           <!-- Genuine Value Pillars (Grounded & Authentic) -->
           <div class="hero-stats" style="grid-template-columns: repeat(4, 1fr);">
@@ -267,11 +311,11 @@
               </li>
               <li class="launch-deliverable-item">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                <span><strong>Dedicated team:</strong> 1 Candid Photographer + 1 Cinematographer</span>
+                <span><strong>Included Coverage:</strong> Candid Photography &bull; Cinematic Wedding Filmmaking</span>
               </li>
               <li class="launch-deliverable-item">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                <span><strong>350–500 master color-graded</strong> high-resolution photographs</span>
+                <span><strong>Curated RAW &amp; Handpicked Edits:</strong> All curated ultra-high-resolution RAW photographs &amp; handpicked master retouched images</span>
               </li>
               <li class="launch-deliverable-item">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -441,94 +485,71 @@
         </div>
 
         <div class="films-grid">
-          <!-- Film 1 -->
-          <div class="film-card" data-film-id="film-1" role="button" tabindex="0" aria-label="Preview film story: Belvedere Celebration">
+          <!-- Film 1: Milan & Rutali -->
+          <div class="film-card" data-film-id="film-1" role="button" tabindex="0" aria-label="Watch wedding film: Milan &amp; Rutali">
             <div class="film-poster">
-              <span class="film-location-badge">Ahmedabad, Gujarat</span>
-              <span class="film-badge">4K Cinema Highlight</span>
-              <img src="images/film-aastha-parth.jpg" alt="Ahmedabad wedding film preview" class="film-poster-img" loading="lazy">
+              <span class="film-location-badge">Gujarat</span>
+              <span class="film-badge">4K Master Highlight</span>
+              <img src="images/film-milan-rutali.jpg" alt="Milan &amp; Rutali — Cinematic Gujarati Wedding Film" class="film-poster-img" loading="lazy">
               <div class="film-poster-overlay">
                 <div class="play-button" aria-hidden="true">&#9654;</div>
               </div>
             </div>
             <div class="film-details">
-              <h3 class="film-couples">Belvedere Celebration</h3>
-              <div class="film-tagline">&ldquo;Ahmedabad Traditional Celebration&rdquo;</div>
+              <h3 class="film-couples">Milan &amp; Rutali</h3>
+              <div class="film-tagline">&ldquo;Cinematic Gujarati Wedding Film&rdquo;</div>
               <p style="font-size: 0.88rem; color: var(--body); margin-bottom: 14px;">
-                A traditional Gujarati wedding capturing joyful Mandva rituals, midnight Dodhiya Garba, and emotional Hasta Melap under golden floral mandap bells.
+                A soulful 4K wedding film capturing intimate mandap vidhis, high-energy Garba celebrations, heartfelt family blessings, and timeless candid moments.
               </p>
               <div class="film-meta">
-                <span>Ahmedabad, Gujarat</span>
-                <span style="color: var(--gold-light);">Highlight Film + Reel</span>
+                <span>Gujarat &bull; 4K Ultra HD</span>
+                <span style="color: var(--gold-light);">▶ Watch Highlight</span>
               </div>
             </div>
           </div>
 
-          <!-- Film 2 -->
-          <div class="film-card" data-film-id="film-2" role="button" tabindex="0" aria-label="Preview film story: Lakeside Royal Celebration">
+          <!-- Film 2: Harshil & Ankita -->
+          <div class="film-card" data-film-id="film-2" role="button" tabindex="0" aria-label="Watch wedding film: Harshil &amp; Ankita">
             <div class="film-poster">
-              <span class="film-location-badge">Surat to Rajasthan</span>
-              <span class="film-badge">Lakeside Highlight</span>
-              <img src="images/film-dhwani-harsh.jpg" alt="Lakeside celebration wedding film preview" class="film-poster-img" loading="lazy">
+              <span class="film-location-badge">Gujarat</span>
+              <span class="film-badge">Cinematic Story Film</span>
+              <img src="images/film-harshil-ankita.jpg" alt="Harshil &amp; Ankita — A Gujarati Love Story That Felt Like Home" class="film-poster-img" loading="lazy">
               <div class="film-poster-overlay">
                 <div class="play-button" aria-hidden="true">&#9654;</div>
               </div>
             </div>
             <div class="film-details">
-              <h3 class="film-couples">Lakeside Heritage Romance</h3>
-              <div class="film-tagline">&ldquo;From Tapi Riverbanks to Royal Courtyards&rdquo;</div>
+              <h3 class="film-couples">Harshil &amp; Ankita</h3>
+              <div class="film-tagline">&ldquo;A Gujarati Love Story That Felt Like Home ❤️&rdquo;</div>
               <p style="font-size: 0.88rem; color: var(--body); margin-bottom: 14px;">
-                Rich family customs, acoustic Shehnai melodies, heartfelt Mosalu gifts from the maternal family, and candid couple portraits along tranquil lakeside arches.
+                A heartfelt Gujarati celebration capturing genuine emotions, unscripted family laughter, sacred Vedic mantras, and soulful moments that felt like home.
               </p>
               <div class="film-meta">
-                <span>Surat &bull; Destination</span>
-                <span style="color: var(--gold-light);">4K Highlight Film</span>
+                <span>Gujarat &bull; Cinematic 4K</span>
+                <span style="color: var(--gold-light);">▶ Watch Highlight</span>
               </div>
             </div>
           </div>
 
-          <!-- Film 3 -->
-          <div class="film-card" data-film-id="film-3" role="button" tabindex="0" aria-label="Preview film story: Baroda Heritage Haveli">
+          <!-- Film 3: Trupti & Divyesh -->
+          <div class="film-card" data-film-id="film-3" role="button" tabindex="0" aria-label="Watch wedding film: Trupti &amp; Divyesh">
             <div class="film-poster">
-              <span class="film-location-badge">Vadodara, Gujarat</span>
-              <span class="film-badge">Intimate Heritage</span>
-              <img src="images/film-maitri-bhavin.jpg" alt="Vadodara heritage wedding film preview" class="film-poster-img" loading="lazy">
+              <span class="film-location-badge">Gujarat</span>
+              <span class="film-badge">Royal Celebration</span>
+              <img src="images/film-trupti-divyesh.jpg" alt="Trupti &amp; Divyesh — The Most Magical Gujarati Royal Wedding" class="film-poster-img" loading="lazy">
               <div class="film-poster-overlay">
                 <div class="play-button" aria-hidden="true">&#9654;</div>
               </div>
             </div>
             <div class="film-details">
-              <h3 class="film-couples">Baroda Haveli Symphony</h3>
-              <div class="film-tagline">&ldquo;Intimate Heritage Romance &mdash; Vadodara&rdquo;</div>
+              <h3 class="film-couples">Trupti &amp; Divyesh</h3>
+              <div class="film-tagline">&ldquo;The Most Magical Gujarati Royal Wedding ✨&rdquo;</div>
               <p style="font-size: 0.88rem; color: var(--body); margin-bottom: 14px;">
-                Earthy tones, grandmother's tearful blessings, soulful Vedic chants, and candid family moments preserved with natural skin tones and cinematic restraint.
+                An enchanting royal Gujarati wedding featuring a majestic Jaan Agaman procession, opulent decor, emotional Vidaai tears, and royal cinematic storytelling.
               </p>
               <div class="film-meta">
-                <span>Vadodara, Gujarat</span>
-                <span style="color: var(--gold-light);">Emotional Teaser</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Film 4 -->
-          <div class="film-card" data-film-id="film-4" role="button" tabindex="0" aria-label="Preview film story: Saurashtra Royal Celebration">
-            <div class="film-poster">
-              <span class="film-location-badge">Rajkot &amp; Saurashtra</span>
-              <span class="film-badge">Cultural Grandeur</span>
-              <img src="images/film-priyanshi-yash.jpg" alt="Rajkot Saurashtra wedding film preview" class="film-poster-img" loading="lazy">
-              <div class="film-poster-overlay">
-                <div class="play-button" aria-hidden="true">&#9654;</div>
-              </div>
-            </div>
-            <div class="film-details">
-              <h3 class="film-couples">Saurashtra Traditions</h3>
-              <div class="film-tagline">&ldquo;Kathiyawadi Warmth &amp; Sacred Pheras&rdquo;</div>
-              <p style="font-size: 0.88rem; color: var(--body); margin-bottom: 14px;">
-                Traditional turbans, silver jewellery, live folk singers, Ponkvu nose-pulling banter, and an emotional Vidaai captured in breathtaking high-definition cinema.
-              </p>
-              <div class="film-meta">
-                <span>Rajkot, Gujarat</span>
-                <span style="color: var(--gold-light);">Highlight + Reels</span>
+                <span>Gujarat &bull; Royal Wedding</span>
+                <span style="color: var(--gold-light);">▶ Watch Highlight</span>
               </div>
             </div>
           </div>
@@ -704,12 +725,13 @@
                     Ideal for intimate two-day Gujarati ceremonies focusing on authentic emotional stills, ritual documentation, and family portraits.
                   </p>
                 </div>
-                <div class="package-crew">
-                  <strong>Crew:</strong> 1 Dedicated Senior Traditional Photographer
+                <div class="package-services">
+                  <strong>Included Coverage:</strong> Traditional Photography &amp; Ritual Documentation
                 </div>
                 <ul class="package-features">
                   <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Two-day coverage</strong> (up to 6 hours per day).</span></li>
-                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>300–400 master edited photographs</strong> in high resolution.</span></li>
+                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Curated Ultra-High-Resolution RAW Photographs:</strong> Full collection delivered after quality filtering.</span></li>
+                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Handpicked Master Edits:</strong> Professionally retouched master photographs with artistic color grading.</span></li>
                   <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Full ceremony stills:</strong> Mandva, Pithi, Garba, Mandap, and Vidaai.</span></li>
                   <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Private cloud gallery</strong> with instant family sharing &amp; full print rights.</span></li>
                   <li class="package-feature" style="opacity: 0.7;"><span style="color: var(--mute); font-size: 0.82rem;">Note: Cinematography not included (available as add-on).</span></li>
@@ -741,13 +763,13 @@
                     The balanced choice for couples wanting both breathtaking fine-art stills and an emotional 4K highlight film from one coordinated team.
                   </p>
                 </div>
-                <div class="package-crew" style="border-color: rgba(212,175,55,0.3);">
-                  <strong>Crew:</strong> 1 Candid Photographer + 1 Master Cinematographer
+                <div class="package-services" style="border-color: rgba(212,175,55,0.3);">
+                  <strong>Included Coverage:</strong> Candid Photography &bull; Cinematic Wedding Filmmaking
                 </div>
                 <ul class="package-features">
                   <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Two-day coverage</strong> (up to 6 hours per day).</span></li>
-                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>1 Candid Photographer + 1 Cinematographer</strong> working in harmony.</span></li>
-                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>350–500 master color-graded</strong> high-resolution photographs.</span></li>
+                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Synchronized Photo &amp; Cinema Storytelling</strong> working in seamless harmony.</span></li>
+                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Curated RAW &amp; Handpicked Edits:</strong> All curated ultra-high-resolution RAW photographs plus handpicked master color-graded portraits.</span></li>
                   <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>One 3–5 minute cinematic highlight film</strong> with custom licensed music.</span></li>
                   <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>One short vertical 9:16 social media reel</strong> for WhatsApp family sharing &amp; Instagram.</span></li>
                   <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Private online gallery</strong> with instant downloads.</span></li>
@@ -778,12 +800,12 @@
                     Extended hours designed for elaborate Gujarati functions where early morning Mandva and late midnight Garba require unhurried coverage.
                   </p>
                 </div>
-                <div class="package-crew">
-                  <strong>Crew:</strong> 1 Senior Photographer + 1 Senior Cinematographer + Assistant
+                <div class="package-services">
+                  <strong>Included Coverage:</strong> Candid Photography &bull; Cinematic Filmmaking &bull; Lighting Support
                 </div>
                 <ul class="package-features">
                   <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Two-day coverage</strong> (up to 8 hours per day).</span></li>
-                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>500–700 master edited photographs</strong> in full resolution.</span></li>
+                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Curated RAW &amp; Handpicked Edits:</strong> Full curated ultra-high-resolution RAW collection &amp; handpicked master retouched images.</span></li>
                   <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Cinematic highlight film</strong> with personalized sound design.</span></li>
                   <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Two short social media vertical reels</strong> for Instagram &amp; WhatsApp.</span></li>
                   <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Dedicated couple portrait session &amp; extended family portraits setup.</strong></span></li>
@@ -815,12 +837,12 @@
                 <div class="package-hours-badge">⏱ 1 Session &bull; Up to 3 hrs</div>
                 <p class="package-scope" style="margin-top: 12px;">Relaxed local photoshoot session at one scenic Ahmedabad or Gujarat heritage location.</p>
               </div>
-              <div class="package-crew"><strong>Crew:</strong> 1 Creative Portrait Photographer</div>
+              <div class="package-services"><strong>Included Coverage:</strong> Creative Portraiture &bull; Fine-Art Couple Photography</div>
               <ul class="package-features">
-                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>25–35 Master color-graded fine-art portraits</span></li>
+                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Curated Ultra-High-Resolution RAW Photographs after quality filtering</span></li>
+                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Handpicked Master Portraits with artistic fine-art grading</span></li>
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>1 Scenic backdrop (Heritage Pols, Riverfront, Stepwell)</span></li>
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>High-speed private gallery delivery</span></li>
-                <li class="package-feature" style="opacity: 0.7;"><span style="color: var(--mute); font-size: 0.82rem;">Note: Cinematic film not included unless added.</span></li>
               </ul>
               <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px;">
                 <button type="button" class="btn btn-gold" data-customize-package="pkg-prewed-essential" data-category="prewed" style="width: 100%; justify-content: center;">Customize in Quotation Builder</button>
@@ -839,10 +861,10 @@
                 <div class="package-hours-badge">⏱ Half-day &bull; Up to 5 hrs</div>
                 <p class="package-scope" style="margin-top: 12px;">Extended session across 2 locations with outfit changes, creative direction, and a 60s romantic reel.</p>
               </div>
-              <div class="package-crew"><strong>Crew:</strong> 1 Senior Photographer + 1 Cinematographer</div>
+              <div class="package-services"><strong>Included Coverage:</strong> Fine-Art Portraiture &bull; Cinematic Vertical Reel</div>
               <ul class="package-features">
-                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>50–70 Master color-graded fine-art portraits</span></li>
-                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>One 60-second vertical 9:16 cinematic reel</span></li>
+                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Curated Ultra-High-Resolution RAW Photographs &amp; handpicked master portraits</span></li>
+                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>One 60-second vertical 9:16 cinematic reel with trending romantic music</span></li>
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Up to 2 scenic locations with 3 costume changes</span></li>
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>High-speed cloud downloads</span></li>
               </ul>
@@ -862,9 +884,9 @@
                 <div class="package-hours-badge">⏱ Full-day &bull; Up to 8 hrs</div>
                 <p class="package-scope" style="margin-top: 12px;">Full cinematic production with dialogue audio, sunrise-to-sunset lighting, drone aerials, and 2 reels.</p>
               </div>
-              <div class="package-crew"><strong>Crew:</strong> 1 Lead Photographer + 1 Master Cinematographer + Assistant</div>
+              <div class="package-services"><strong>Included Coverage:</strong> Fine-Art Portraiture &bull; 4K Cinematic Narrative Film &bull; Aerial Drone</div>
               <ul class="package-features">
-                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>80–120 Color-graded master editorial portraits</span></li>
+                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Curated RAW photographs &amp; handpicked master editorial portraits</span></li>
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>2–3 Minute 4K cinematic concept film with couple audio</span></li>
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Two vertical 9:16 social media teaser reels</span></li>
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Drone establishing aerial shots (where permitted)</span></li>
@@ -890,9 +912,10 @@
                 <div class="package-hours-badge">⏱ Single Function &bull; Up to 4 hrs</div>
                 <p class="package-scope" style="margin-top: 12px;">Complete photography coverage for intimate engagement ceremonies, ring exchange, and family portraiture.</p>
               </div>
-              <div class="package-crew"><strong>Crew:</strong> 1 Senior Candid Photographer</div>
+              <div class="package-services"><strong>Included Coverage:</strong> Candid Engagement Photography &bull; Sacred Ritual Stills</div>
               <ul class="package-features">
-                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>150–200 Color-graded high-resolution photos</span></li>
+                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Curated Ultra-High-Resolution RAW Photographs after quality filtering</span></li>
+                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Handpicked Master Photographs with artistic color grading</span></li>
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Coverage of Sakar Pudo, Gol Dhana &amp; Ring Exchange</span></li>
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>High-speed digital cloud delivery</span></li>
               </ul>
@@ -913,12 +936,12 @@
                 <div class="package-hours-badge">⏱ Extended &bull; Up to 5 hrs</div>
                 <p class="package-scope" style="margin-top: 12px;">Both emotional photography and a 2–3 minute 4K cinematic film capturing the joy and family banter.</p>
               </div>
-              <div class="package-crew"><strong>Crew:</strong> 1 Candid Photographer + 1 Cinematographer</div>
+              <div class="package-services"><strong>Included Coverage:</strong> Candid Photography &bull; Cinematic Highlight Film</div>
               <ul class="package-features">
-                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>250–350 Master color-graded photographs</span></li>
+                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Curated Ultra-High-Resolution RAW Photographs after quality filtering</span></li>
+                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Handpicked Master Photographs with artistic color grading</span></li>
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>One 2–3 minute cinematic highlight film in 4K</span></li>
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>One vertical social media reel for WhatsApp</span></li>
-                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Private online gallery access</span></li>
               </ul>
               <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px;">
                 <button type="button" class="btn btn-gold" data-customize-package="pkg-engagement-signature" data-category="engagement" style="width: 100%; justify-content: center;">Customize in Quotation Builder</button>
@@ -936,9 +959,9 @@
                 <div class="package-hours-badge">⏱ Gala &bull; Up to 6 hrs</div>
                 <p class="package-scope" style="margin-top: 12px;">Full evening gala coverage with stage ceremonies, dance performances, and pre-event couple portraits.</p>
               </div>
-              <div class="package-crew"><strong>Crew:</strong> 2 Photographers + 1 Cinematographer + Assistant</div>
+              <div class="package-services"><strong>Included Coverage:</strong> Dual Photography &bull; Cinematic Filmmaking &bull; Lighting Support</div>
               <ul class="package-features">
-                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>400–500 Master color-graded photographs</span></li>
+                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Comprehensive curated RAW gallery &amp; handpicked master retouched images</span></li>
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Cinematic highlight film (3–4 minutes)</span></li>
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Two vertical 9:16 social media reels</span></li>
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Dedicated couple portraiture session before guest arrival</span></li>
@@ -964,9 +987,10 @@
                 <div class="package-hours-badge">⏱ Up to 4 hrs</div>
                 <p class="package-scope" style="margin-top: 12px;">Ideal for Haldi/Pithi, Mosalu, Mehndi afternoon, or intimate home pujas.</p>
               </div>
-              <div class="package-crew"><strong>Crew:</strong> 1 Senior Candid Photographer</div>
+              <div class="package-services"><strong>Included Coverage:</strong> Candid Function Photography &bull; Sacred Ritual Stills</div>
               <ul class="package-features">
-                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>150–250 Master edited photographs</span></li>
+                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Curated Ultra-High-Resolution RAW Photographs after quality filtering</span></li>
+                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Handpicked Master Photographs with artistic color grading</span></li>
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Full ritual coverage and candid moments</span></li>
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>High-speed digital delivery</span></li>
               </ul>
@@ -987,12 +1011,12 @@
                 <div class="package-hours-badge">⏱ Up to 5 hrs</div>
                 <p class="package-scope" style="margin-top: 12px;">Specially tuned for high-energy Raas Garba nights, Sangeet dance performances, or Receptions.</p>
               </div>
-              <div class="package-crew"><strong>Crew:</strong> 1 Candid Photographer + 1 Cinematographer</div>
+              <div class="package-services"><strong>Included Coverage:</strong> Candid Photography &bull; High-Energy Cinematic Film</div>
               <ul class="package-features">
-                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>250–350 Master edited photographs</span></li>
+                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Curated Ultra-High-Resolution RAW Photographs after quality filtering</span></li>
+                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Handpicked Master Photographs with artistic color grading</span></li>
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>One 2–3 minute high-energy highlight film</span></li>
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>One vertical social media reel for WhatsApp</span></li>
-                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Private online cloud gallery</span></li>
               </ul>
               <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px;">
                 <button type="button" class="btn btn-gold" data-customize-package="pkg-fn-signature" data-category="functions" style="width: 100%; justify-content: center;">Customize in Quotation Builder</button>
@@ -1010,9 +1034,9 @@
                 <div class="package-hours-badge">⏱ Up to 6 hrs</div>
                 <p class="package-scope" style="margin-top: 12px;">Expanded team coverage for lavish midnight Garba nights or formal Receptions with 500+ guests.</p>
               </div>
-              <div class="package-crew"><strong>Crew:</strong> 2 Photographers + 1 Cinematographer</div>
+              <div class="package-services"><strong>Included Coverage:</strong> Dual Photography &bull; Cinematic Wedding Filmmaking</div>
               <ul class="package-features">
-                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>400–550 Master edited photographs</span></li>
+                <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Comprehensive curated RAW gallery &amp; handpicked master retouched images</span></li>
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Cinematic highlight film with sound design</span></li>
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Two vertical 9:16 social reels for instant sharing</span></li>
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Priority delivery turnaround</span></li>
@@ -1026,7 +1050,7 @@
         </div>
 
         <div class="package-transparency-note">
-          <strong>Important Coverage Transparency:</strong> Proposed launch prices are indicative. The exact number of functions, coverage schedule, deliverables, and final quotation are confirmed before booking based on your specific requirements. Traditional full-length video coverage, printed albums, additional photographers, drone coverage, accommodation, travel, or extra hours are available as optional add-ons below.
+          <strong>Important Coverage Transparency:</strong> Proposed launch prices are indicative. The exact number of functions, coverage schedule, deliverables, and final quotation are confirmed before booking based on your specific requirements. Traditional full-length video coverage, printed heirloom albums, drone cinematography, accommodation, travel, or extra coverage hours are available as optional add-ons below.
         </div>
       </div>
     </section>
@@ -1041,8 +1065,29 @@
             <span class="gujarati-quote">તમારા બજેટ અને જરૂરિયાત મુજબ સંપૂર્ણ પારદર્શક પેકેજ ડિઝાઇન કરો</span>
           </h2>
           <p class="section-desc">
-            Explore tiers, handpick photographers &amp; cinematographers, add 4K drone footage, heirloom albums, or vertical reels, and get an instant itemized price breakdown. Save, share with family, or send directly to WhatsApp.
+            Explore tiers, select customized photography &amp; cinematography coverage styles, add drone aerials, luxury heirloom albums, or vertical reels, and get an instant itemized price breakdown. Save, share with family, or send directly to WhatsApp.
           </p>
+        </div>
+
+        <!-- Prominent Photography Philosophy Banner -->
+        <div class="photography-philosophy-card" style="margin: 0 auto 36px; max-width: 900px; padding: 24px 28px; background: rgba(212, 175, 55, 0.07); border-left: 4px solid var(--gold-primary); border-radius: 8px;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+            <span style="font-size: 1.3rem;">✨</span>
+            <h3 style="font-family: 'Cinzel', serif; font-size: 1.15rem; color: var(--gold-light); margin: 0; letter-spacing: 0.04em;">OUR PHOTOGRAPHY PHILOSOPHY</h3>
+          </div>
+          <p style="font-size: 0.95rem; line-height: 1.7; color: var(--foreground); margin: 0 0 16px 0; font-style: italic;">
+            "We believe in capturing genuine emotions, unscripted moments, and the true essence of your wedding rather than setting artificial limits on the number of pictures taken. Every meaningful ritual, family blessing, laughter, and tear will be thoroughly documented."
+          </p>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; font-size: 0.84rem; color: var(--mute);">
+            <div style="background: rgba(0, 0, 0, 0.35); padding: 12px 16px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.05);">
+              <strong style="color: var(--gold-light); display: block; margin-bottom: 3px;">📸 Ultra-High-Resolution RAW Photographs:</strong>
+              All original, uncompressed, full-resolution RAW photographs captured across every function of your celebration, meticulously organized for complete family archival.
+            </div>
+            <div style="background: rgba(0, 0, 0, 0.35); padding: 12px 16px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.05);">
+              <strong style="color: var(--gold-light); display: block; margin-bottom: 3px;">🎨 Handpicked Master Retouched Photographs:</strong>
+              A signature curated collection of your finest couple portraits, ritual highlights, and family group portraits, individually color-graded and retouched to print perfection.
+            </div>
+          </div>
         </div>
 
         <!-- Mount Target for js/quotation-builder.js -->
@@ -1071,7 +1116,7 @@
               <div class="addon-header">
                 <div>
                   <span class="qb-addon-cat-tag">Photography</span>
-                  <h3 class="addon-title">Traditional Photography</h3>
+                  <h3 class="addon-title">Traditional Photography Coverage</h3>
                 </div>
                 <div style="text-align: right;">
                   <span class="addon-price">₹9,999</span>
@@ -1079,7 +1124,7 @@
                 </div>
               </div>
               <p class="addon-desc">
-                Dedicated senior photographer for formal stage family portraits, elder blessings, and complete ritual documentation.
+                Specialized coverage for formal stage family portraits, elder blessings, and complete ritual documentation.
               </p>
             </div>
           </div>
@@ -1090,7 +1135,7 @@
               <div class="addon-header">
                 <div>
                   <span class="qb-addon-cat-tag">Photography</span>
-                  <h3 class="addon-title">Additional Candid Photographer</h3>
+                  <h3 class="addon-title">Candid Photography Coverage</h3>
                 </div>
                 <div style="text-align: right;">
                   <span class="addon-price">₹9,999</span>
@@ -1098,7 +1143,7 @@
                 </div>
               </div>
               <p class="addon-desc">
-                Captures spontaneous tears during Hasta Melap, laughter among cousins, and candid bride &amp; groom moments.
+                Captures spontaneous tears during Hasta Melap, laughter among cousins, and candid bride &amp; groom moments with dedicated prime lenses.
               </p>
             </div>
           </div>
@@ -1109,7 +1154,7 @@
               <div class="addon-header">
                 <div>
                   <span class="qb-addon-cat-tag">Cinematography</span>
-                  <h3 class="addon-title">4K Cinematographer</h3>
+                  <h3 class="addon-title">Cinematic Wedding Filmmaking</h3>
                 </div>
                 <div style="text-align: right;">
                   <span class="addon-price">₹12,499</span>
@@ -1117,7 +1162,7 @@
                 </div>
               </div>
               <p class="addon-desc">
-                Artistic cinema camera operator with prime cinema glass, motorized gimbals, and dedicated audio recording.
+                Artistic fine-art cinematography with prime cinema glass, motorized gimbals, and dedicated multi-channel audio recording.
               </p>
             </div>
           </div>
@@ -1563,6 +1608,80 @@
       </div>
     </section>
 
+    <!-- SECTION: EXPLORE OUR STUDIO & TRANSPARENCY (MPA SHOWCASE) -->
+    <section class="studio-pages-section" style="padding: 80px 0; border-top: 1px solid var(--hairline); background: rgba(0, 0, 0, 0.2);">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-tag">DEDICATED PAGES &bull; STUDIO STANDARDS</div>
+          <h2 class="section-title">
+            Transparency, Artistry &amp; <span class="gold-text">Sacred Trust</span>
+            <span class="gujarati-quote">પારદર્શક નીતિઓ, અમૂલ્ય વિશ્વાસ અને કલાત્મક વારસો</span>
+          </h2>
+          <p class="section-desc">
+            Explore our studio story, visit our Ahmedabad address, review our transparent date reservation terms, or learn how we safeguard your family's private wedding vaults.
+          </p>
+        </div>
+
+        <div class="studio-trust-grid">
+          <!-- Card 1: About Us -->
+          <article class="trust-page-card">
+            <div>
+              <div class="contact-icon-bubble" style="margin-bottom: 16px;">✦</div>
+              <h3 style="font-family: var(--font-serif); font-size: 1.25rem; color: var(--ink); margin-bottom: 8px;">About Anant Productions</h3>
+              <p style="font-size: 0.86rem; color: var(--body); line-height: 1.6; margin-bottom: 18px;">
+                Our core philosophy, Vedic ritual fluency, Ahmedabad roots, and why we treat your wedding as an eternal family milestone rather than a commercial headcount.
+              </p>
+            </div>
+            <a href="about.html" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.82rem;">
+              Read Our Story &rarr;
+            </a>
+          </article>
+
+          <!-- Card 2: Contact Us -->
+          <article class="trust-page-card">
+            <div>
+              <div class="contact-icon-bubble" style="margin-bottom: 16px;">📍</div>
+              <h3 style="font-family: var(--font-serif); font-size: 1.25rem; color: var(--ink); margin-bottom: 8px;">Studio &amp; Date Availability</h3>
+              <p style="font-size: 0.86rem; color: var(--body); line-height: 1.6; margin-bottom: 18px;">
+                Visit our studio in Bodakdev, Sindhu Bhavan Road, Ahmedabad, connect directly on WhatsApp with our founders, or check your 2026–2027 Muhurat date.
+              </p>
+            </div>
+            <a href="contact.html" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.82rem;">
+              Contact Our Studio &rarr;
+            </a>
+          </article>
+
+          <!-- Card 3: Terms & Conditions -->
+          <article class="trust-page-card">
+            <div>
+              <div class="contact-icon-bubble" style="margin-bottom: 16px;">📜</div>
+              <h3 style="font-family: var(--font-serif); font-size: 1.25rem; color: var(--ink); margin-bottom: 8px;">Terms &amp; Booking Policies</h3>
+              <p style="font-size: 0.86rem; color: var(--body); line-height: 1.6; margin-bottom: 18px;">
+                Clear written guarantees: date reservation advance, deliverable turnaround schedules, personal usage rights, and fair rescheduling terms.
+              </p>
+            </div>
+            <a href="terms-and-conditions.html" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.82rem;">
+              Review Studio Terms &rarr;
+            </a>
+          </article>
+
+          <!-- Card 4: Privacy Policy -->
+          <article class="trust-page-card">
+            <div>
+              <div class="contact-icon-bubble" style="margin-bottom: 16px;">🔒</div>
+              <h3 style="font-family: var(--font-serif); font-size: 1.25rem; color: var(--ink); margin-bottom: 8px;">Privacy Policy &amp; Vaults</h3>
+              <p style="font-size: 0.86rem; color: var(--body); line-height: 1.6; margin-bottom: 18px;">
+                Our solemn promise: password-protected private cloud galleries, zero commercial photo usage without couple consent, and multi-redundant archival security.
+              </p>
+            </div>
+            <a href="privacy-policy.html" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.82rem;">
+              View Privacy Policy &rarr;
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <!-- SECTION: FINAL CALL TO ACTION (SECTION K) -->
     <section class="final-cta-section" style="padding: 70px 0; background: linear-gradient(180deg, var(--canvas) 0%, rgba(20, 18, 14, 0.95) 100%); border-top: 1px solid var(--hairline-gold);">
       <div class="container" style="text-align: center; max-width: 800px;">
@@ -1728,12 +1847,12 @@
                 <div class="form-group full-width">
                   <span class="function-pills-label">Functions to be Covered (Select all that apply):</span>
                   <div class="function-pills-wrap" id="functions-pills-container">
-                    <button type="button" class="function-pill selected" data-fn="Mandva / Grah Shanti">Mandva / Grah Shanti</button>
-                    <button type="button" class="function-pill selected" data-fn="Haldi / Pithi">Haldi / Pithi</button>
+                    <button type="button" class="function-pill" data-fn="Mandva / Grah Shanti">Mandva / Grah Shanti</button>
+                    <button type="button" class="function-pill" data-fn="Haldi / Pithi">Haldi / Pithi</button>
                     <button type="button" class="function-pill" data-fn="Mehndi">Mehndi</button>
-                    <button type="button" class="function-pill selected" data-fn="Garba / Sangeet Night">Garba / Sangeet Night</button>
-                    <button type="button" class="function-pill selected" data-fn="Lagna / Mandap Ceremony">Lagna / Mandap Ceremony</button>
-                    <button type="button" class="function-pill selected" data-fn="Reception">Reception</button>
+                    <button type="button" class="function-pill" data-fn="Garba / Sangeet Night">Garba / Sangeet Night</button>
+                    <button type="button" class="function-pill" data-fn="Lagna / Mandap Ceremony">Lagna / Mandap Ceremony</button>
+                    <button type="button" class="function-pill" data-fn="Reception">Reception</button>
                     <button type="button" class="function-pill" data-fn="Mosalu / Mameru">Mosalu / Mameru</button>
                     <button type="button" class="function-pill" data-fn="Pre-Wedding Shoot">Pre-Wedding Shoot</button>
                   </div>
@@ -1802,14 +1921,14 @@
         <div>
           <h4 class="footer-col-title">Navigation</h4>
           <ul class="footer-links">
-            <li><a href="#hero" class="footer-link">Home</a></li>
-            <li><a href="#launch-offer" class="footer-link">Launch Offer (₹39,999)</a></li>
+            <li><a href="index.html" class="footer-link">Home</a></li>
+            <li><a href="about.html" class="footer-link">About Us &amp; Story</a></li>
             <li><a href="#portfolio" class="footer-link">Portfolio &amp; Work</a></li>
             <li><a href="#packages" class="footer-link">Two-Day Packages</a></li>
-            <li><a href="#addons" class="footer-link">Additional Services</a></li>
-            <li><a href="#about" class="footer-link">Why Choose Us</a></li>
-            <li><a href="#faq" class="footer-link">FAQ</a></li>
-            <li><a href="#contact" class="footer-link">Check Wedding Date</a></li>
+            <li><a href="#quotation-builder" class="footer-link">Live Quotation Builder</a></li>
+            <li><a href="contact.html" class="footer-link">Contact &amp; Studio Location</a></li>
+            <li><a href="terms-and-conditions.html" class="footer-link">Terms &amp; Retainer Policies</a></li>
+            <li><a href="privacy-policy.html" class="footer-link">Privacy Policy &amp; Vaults</a></li>
           </ul>
         </div>
 
@@ -1817,13 +1936,13 @@
         <div>
           <h4 class="footer-col-title">Gujarat Service Hubs</h4>
           <ul class="footer-links">
-            <li><a href="#contact" class="footer-link">Ahmedabad Wedding Photography</a></li>
-            <li><a href="#contact" class="footer-link">Vadodara Heritage Celebrations</a></li>
-            <li><a href="#contact" class="footer-link">Surat Luxury Wedding Cinema</a></li>
-            <li><a href="#contact" class="footer-link">Anand &amp; Kheda Celebrations</a></li>
-            <li><a href="#contact" class="footer-link">Rajkot &amp; Saurashtra Weddings</a></li>
-            <li><a href="#contact" class="footer-link">Bharuch &amp; Ankleshwar Weddings</a></li>
-            <li><a href="#contact" class="footer-link">Gandhinagar Resort Weddings</a></li>
+            <li><a href="contact.html" class="footer-link">Ahmedabad Wedding Photography</a></li>
+            <li><a href="contact.html" class="footer-link">Vadodara Heritage Celebrations</a></li>
+            <li><a href="contact.html" class="footer-link">Surat Luxury Wedding Cinema</a></li>
+            <li><a href="contact.html" class="footer-link">Anand &amp; Kheda Celebrations</a></li>
+            <li><a href="contact.html" class="footer-link">Rajkot &amp; Saurashtra Weddings</a></li>
+            <li><a href="contact.html" class="footer-link">Bharuch &amp; Ankleshwar Weddings</a></li>
+            <li><a href="contact.html" class="footer-link">Gandhinagar Resort Weddings</a></li>
           </ul>
         </div>
 
@@ -1851,6 +1970,8 @@
       <div class="footer-bottom">
         <div>
           &copy; 2026 Anant Productions. All Rights Reserved. Crafted for Gujarati Weddings across Gujarat &amp; India.
+          &bull; <a href="privacy-policy.html" style="color: var(--mute); text-decoration: underline;">Privacy Policy</a>
+          &bull; <a href="terms-and-conditions.html" style="color: var(--mute); text-decoration: underline;">Terms &amp; Conditions</a>
         </div>
         <div style="font-family: var(--font-gujarati); color: var(--gold-light); font-size: 0.88rem;">
           શુભ લગ્ન &bull; અનંત પ્રેમ &bull; અવિસ્મરણીય ક્ષણો
@@ -1875,24 +1996,34 @@
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
   </a>
 
-  <!-- VIDEO MODAL PREVIEW LIGHTBOX -->
+  <!-- VIDEO MODAL PREVIEW LIGHTBOX (YOUTUBE EMBED PLAYER) -->
   <div class="modal-backdrop" id="video-modal" role="dialog" aria-modal="true" aria-labelledby="modal-film-title">
-    <div class="modal-content">
+    <div class="modal-content" style="max-width: 860px; width: 95%;">
       <button class="modal-close-btn" aria-label="Close modal">&#x2715;</button>
-      <div style="padding: 28px; background: var(--canvas-elevated);">
-        <span class="launch-badge" style="margin-bottom: 12px;">Wedding Film Spotlight</span>
-        <h3 id="modal-film-title" style="font-family: var(--font-serif); font-size: 1.4rem; color: var(--ink); margin-bottom: 10px;">Wedding Film</h3>
-        <p id="modal-film-desc" style="font-size: 0.92rem; color: var(--body); line-height: 1.6; margin-bottom: 20px;"></p>
-        
-        <div style="background: rgba(0,0,0,0.4); border: 1px solid var(--hairline-gold); border-radius: var(--radius-md); padding: 20px; text-align: center; margin-bottom: 20px;">
-          <p style="font-size: 0.88rem; color: #d4d4d8; margin-bottom: 14px;">
-            Full private 4K highlight films and vertical social reels are available for viewing on request.
-          </p>
-          <a href="#" id="modal-whatsapp-cta" target="_blank" rel="noopener" class="btn btn-whatsapp" style="display: inline-flex; justify-content: center;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-            Request Private Film Reel on WhatsApp
-          </a>
+      <div style="padding: 24px; background: var(--canvas-elevated); border-radius: var(--radius-lg);">
+        <!-- 16:9 Responsive Video Container -->
+        <div class="modal-video-wrap" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-bottom: 18px; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.6);">
+          <iframe id="modal-youtube-iframe" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" src="" title="Anant Productions Wedding Film" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; flex-wrap: wrap; margin-bottom: 8px;">
+          <div>
+            <span class="launch-badge" id="modal-film-badge" style="margin-bottom: 8px; display: inline-block;">4K Master Highlight</span>
+            <h3 id="modal-film-title" style="font-family: var(--font-serif); font-size: 1.35rem; color: var(--ink); margin: 0 0 6px 0;">Wedding Film</h3>
+          </div>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <a href="#" id="modal-youtube-direct-link" target="_blank" rel="noopener" class="btn btn-outline-gold" style="font-size: 0.82rem; padding: 8px 16px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              Watch on YouTube
+            </a>
+            <a href="#" id="modal-whatsapp-cta" target="_blank" rel="noopener" class="btn btn-whatsapp" style="font-size: 0.82rem; padding: 8px 16px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+              Inquire via WhatsApp
+            </a>
+          </div>
+        </div>
+
+        <p id="modal-film-desc" style="font-size: 0.9rem; color: var(--body); line-height: 1.6; margin: 0;"></p>
       </div>
     </div>
   </div>
@@ -1905,9 +2036,9 @@
   </div>
 
   <!-- Central Configuration, Pricing Engine & Main JavaScript -->
-  <script src="js/config.js?v=9"></script>
-  <script src="js/pricing-engine.js?v=9"></script>
-  <script src="js/quotation-builder.js?v=9"></script>
-  <script src="js/main.js?v=9"></script>
+  <script src="js/config.js?v=11"></script>
+  <script src="js/pricing-engine.js?v=11"></script>
+  <script src="js/quotation-builder.js?v=12"></script>
+  <script src="js/main.js?v=11"></script>
 </body>
 </html>

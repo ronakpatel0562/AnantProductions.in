@@ -1,27 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- 1. Homepage & Live Experience -->
   <url>
     <loc>https://anantproductions.in/</loc>
-    <lastmod>2026-10-21</lastmod>
+    <lastmod>2026-10-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://anantproductions.in/anant_logo.png</image:loc>
+      <image:title>Anant Productions — Gujarati Wedding Photography &amp; Cinematography</image:title>
+      <image:caption>Premier wedding photography and cinema studio rooted in Ahmedabad, Gujarat.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://anantproductions.in/images/hero-wedding.jpg</image:loc>
+      <image:title>Heirloom Gujarati Wedding Portrait</image:title>
+      <image:caption>Fine-art wedding portraiture captured across Gujarat.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://anantproductions.in/images/rituals/ritual-07-hasta-melap.jpg</image:loc>
+      <image:title>Hasta Melap Sacred Ceremony</image:title>
+      <image:caption>Emotional Hasta Melap Vedic ritual moment at a Gujarati wedding.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://anantproductions.in/images/rituals/ritual-08-vidaai.jpg</image:loc>
+      <image:title>Emotional Vidaai Farewell</image:title>
+      <image:caption>Candid bride farewell and family blessing.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://anantproductions.in/images/rituals/ritual-05-garba.jpg</image:loc>
+      <image:title>Raas Garba &amp; Sangeet Night</image:title>
+      <image:caption>Vibrant Gujarati Sangeet and Raas Garba celebration.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://anantproductions.in/images/rituals/ritual-03-pithi.jpg</image:loc>
+      <image:title>Pithi &amp; Haldi Ritual</image:title>
+      <image:caption>Intimate family Haldi and Pithi ceremony in Ahmedabad.</image:caption>
+    </image:image>
   </url>
+
+  <!-- 2. About Us & Studio Philosophy -->
   <url>
-    <loc>https://anantproductions.in/#packages</loc>
-    <lastmod>2026-10-21</lastmod>
+    <loc>https://anantproductions.in/about.html</loc>
+    <lastmod>2026-10-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://anantproductions.in/anant_logo.png</image:loc>
+      <image:title>About Anant Productions</image:title>
+      <image:caption>Ahmedabad wedding photography studio dedicated to Vedic ritual fluency and elder reverence.</image:caption>
+    </image:image>
   </url>
+
+  <!-- 3. Contact Us & Studio Location -->
   <url>
-    <loc>https://anantproductions.in/#portfolio</loc>
-    <lastmod>2026-10-21</lastmod>
+    <loc>https://anantproductions.in/contact.html</loc>
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://anantproductions.in/anant_logo.png</image:loc>
+      <image:title>Contact Anant Productions Studio</image:title>
+      <image:caption>Sindhu Bhavan Road, Bodakdev, Ahmedabad studio location and date availability inquiries.</image:caption>
+    </image:image>
+  </url>
+
+  <!-- 4. Terms of Service & Retainer Policies -->
+  <url>
+    <loc>https://anantproductions.in/terms-and-conditions.html</loc>
+    <lastmod>2026-10-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+
+  <!-- 5. Privacy Policy & Client Vault Protection -->
   <url>
-    <loc>https://anantproductions.in/#contact</loc>
-    <lastmod>2026-10-21</lastmod>
+    <loc>https://anantproductions.in/privacy-policy.html</loc>
+    <lastmod>2026-10-22</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.8</priority>
   </url>
+
 </urlset>
