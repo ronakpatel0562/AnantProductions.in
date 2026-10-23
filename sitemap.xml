@@ -82,4 +82,17 @@
     <priority>0.8</priority>
   </url>
 
+  <!-- 6. Interactive Quotation Builder Studio -->
+  <url>
+    <loc>https://anantproductions.in/quote.html</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://anantproductions.in/anant_logo.png</image:loc>
+      <image:title>Interactive Wedding Quotation Builder — Anant Productions</image:title>
+      <image:caption>Instant transparent Gujarati wedding photography and cinematography quotation calculator.</image:caption>
+    </image:image>
+  </url>
+
 </urlset>

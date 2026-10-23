@@ -42,7 +42,7 @@ const configFn = new Function('window', configCode + '; return ANANT_CONFIG;');
 const config = configFn(sandbox);
 
 // 3. Verify coverageScopes exists in config
-it('config should have coverageScopes with one_side, both_same_venue, both_diff_venues', () => {
+it('config should have coverageScopes with one_side, both_same_venue, both_diff_venues and multipliers', () => {
   assert.ok(config.coverageScopes, 'coverageScopes exists');
   const scopes = Array.isArray(config.coverageScopes) ? config.coverageScopes : Object.values(config.coverageScopes);
   const oneSide = scopes.find(s => s.id === 'one_side');
@@ -50,13 +50,13 @@ it('config should have coverageScopes with one_side, both_same_venue, both_diff_
   const bothDiff = scopes.find(s => s.id === 'both_diff_venues');
 
   assert.ok(oneSide, 'one_side exists');
-  assert.strictEqual(oneSide.surcharge, 0);
+  assert.strictEqual(oneSide.multiplier, 1.0);
 
   assert.ok(bothSame, 'both_same_venue exists');
-  assert.strictEqual(bothSame.surcharge, 0);
+  assert.strictEqual(bothSame.multiplier, 1.4);
 
   assert.ok(bothDiff, 'both_diff_venues exists');
-  assert.strictEqual(bothDiff.surcharge, 8500);
+  assert.strictEqual(bothDiff.multiplier, 1.85);
 });
 
 // 4. Verify addOnCatalog has NO coverage services
@@ -76,44 +76,64 @@ it('config.addOnCatalog should NOT contain any coverage service modules', () => 
   });
 });
 
-// 5. Verify Step 4 has NO duplicate photography philosophy card in quotation-builder.js
-it('quotation-builder.js Step 4 should NOT contain the duplicate photography philosophy card', () => {
+// 5. Verify Services step is removed and wizard operates on dynamic steps
+it('quotation-builder.js should remove redundant Services step and operate on dynamic steps', () => {
   const qbCode = fs.readFileSync(qbPath, 'utf8');
   
-  // Extract renderStep4_CrewConfig function
-  const step4Match = qbCode.match(/function renderStep4_CrewConfig\(\)\s*\{([\s\S]*?)function renderStep5_DeliverablesAddons/);
-  assert.ok(step4Match, 'Found renderStep4_CrewConfig function');
-  const step4Body = step4Match[1];
-
-  assert.ok(!step4Body.includes('photography-philosophy-card'), 'Step 4 must not contain photography-philosophy-card');
-  assert.ok(!step4Body.includes('OUR PHOTOGRAPHY PHILOSOPHY'), 'Step 4 must not contain OUR PHOTOGRAPHY PHILOSOPHY title');
+  // Verify renderStep4_CrewConfig is removed
+  assert.ok(!qbCode.includes('function renderStep4_CrewConfig'), 'renderStep4_CrewConfig must be removed');
+  assert.ok(!qbCode.includes("title: 'Services'"), 'Services step tab must be removed');
+  
+  // Verify dynamic step generation via getStepList
+  assert.ok(qbCode.includes('function getStepList'), 'getStepList function exists');
+  assert.ok(qbCode.includes("id: 'coverage_scope', title: 'Coverage Scope'"), 'Coverage Scope step is defined in getStepList');
+  assert.ok(qbCode.includes("id: 'addons', title: 'Add-ons'"), 'Add-ons step is defined in getStepList');
 });
 
-// 6. Verify Step 5 filters out items already included in previous window
-it('quotation-builder.js Step 5 should filter out already-included deliverables', () => {
+// 6. Verify Step 4 filters out items already included in base package
+it('quotation-builder.js Step 4 should filter out already-included deliverables', () => {
   const qbCode = fs.readFileSync(qbPath, 'utf8');
-  assert.ok(qbCode.includes('availableAddons = (config.addOnCatalog || []).filter'), 'Step 5 filters addOnCatalog');
-  assert.ok(qbCode.includes('includedQty === 0'), 'Step 5 excludes items with includedQty > 0');
+  assert.ok(qbCode.includes('availableAddons = (config.addOnCatalog || []).filter'), 'Step 4 filters addOnCatalog');
+  assert.ok(qbCode.includes('includedQty === 0'), 'Step 4 excludes items with includedQty > 0');
 });
 
-// 7. Verify Step 1 includes Coverage Scope Filter
-it('quotation-builder.js Step 1 should render the Coverage Scope Filter upfront', () => {
+// 7. Verify Coverage Scope is in its own dedicated step for wedding only with With Extra Charge badge
+it('quotation-builder.js should render Coverage Scope in its own separate step for wedding only', () => {
   const qbCode = fs.readFileSync(qbPath, 'utf8');
-  const step1Match = qbCode.match(/function renderStep1_EventType\(\)\s*\{([\s\S]*?)function renderStep2_EventDetails/);
+  assert.ok(qbCode.includes('function renderStep_CoverageScope'), 'Dedicated renderStep_CoverageScope function exists');
+  
+  // Verify Step 1 is Event Type only
+  const step1Match = qbCode.match(/function renderStep1_EventType[\s\S]*?\{([\s\S]*?)function renderStep_CoverageScope/);
   assert.ok(step1Match, 'Found renderStep1_EventType function');
   const step1Body = step1Match[1];
+  assert.ok(step1Body.includes('CELEBRATION CATEGORY'), 'Step 1 includes celebration category');
+  assert.ok(!step1Body.includes('data-select-scope'), 'Step 1 does not contain data-select-scope (moved to its own step)');
 
-  assert.ok(step1Body.includes('COVERAGE SCOPE FILTER'), 'Step 1 includes COVERAGE SCOPE FILTER kicker');
-  assert.ok(step1Body.includes('data-select-scope'), 'Step 1 includes data-select-scope cards');
-  assert.ok(step1Body.includes('+₹8,500'), 'Step 1 displays +₹8,500 fee for dual locations');
+  // Verify dedicated Coverage Scope step
+  const scopeMatch = qbCode.match(/function renderStep_CoverageScope[\s\S]*?\{([\s\S]*?)function renderStep2_EventDetails/);
+  assert.ok(scopeMatch, 'Found renderStep_CoverageScope body');
+  const scopeBody = scopeMatch[1];
+  assert.ok(scopeBody.includes('data-select-scope'), 'Coverage Scope step includes data-select-scope cards');
+  assert.ok(scopeBody.includes('With Extra Charge'), 'Coverage Scope displays With Extra Charge badge');
+  assert.ok(!scopeBody.includes('1.4x Price'), 'Coverage Scope does not display 1.4x Price badge');
+  assert.ok(!scopeBody.includes('1.85x Price'), 'Coverage Scope does not display 1.85x Price badge');
+
+  // Verify dynamic step lists: 8 steps for wedding, 7 for non-wedding
+  assert.ok(qbCode.includes("id: 'coverage_scope'"), 'coverage_scope step exists in wedding step list');
 });
 
-// 8. Verify Pricing Engine charges +₹8,500 for both_diff_venues
-it('Pricing Engine should add ₹8,500 and line item for both_diff_venues', () => {
+// 8. Verify Pricing Engine charges 1.4x for joint venue and 1.85x for different locations
+it('Pricing Engine should calculate 1.4x for both_same_venue and 1.85x for both_diff_venues', () => {
   const baseQuote = engine.calculateQuotation(config, {
     eventCategory: 'wedding',
     packageId: 'pkg-wedding-signature',
     coverageScope: 'one_side'
+  });
+
+  const jointQuote = engine.calculateQuotation(config, {
+    eventCategory: 'wedding',
+    packageId: 'pkg-wedding-signature',
+    coverageScope: 'both_same_venue'
   });
 
   const dualQuote = engine.calculateQuotation(config, {
@@ -122,17 +142,22 @@ it('Pricing Engine should add ₹8,500 and line item for both_diff_venues', () =
     coverageScope: 'both_diff_venues'
   });
 
-  assert.strictEqual(dualQuote.subtotal, baseQuote.subtotal + 8500);
-  assert.strictEqual(dualQuote.estimatedTotal, baseQuote.estimatedTotal + 8500);
-  assert.ok(dualQuote.lineItems.some(item => item.id === 'scope-dual-locations' && item.totalPrice === 8500), 'Contains scope-dual-locations line item');
-  assert.strictEqual(dualQuote.coverageScopeLabel, 'Both Sides — Different Locations');
+  // Base is 75000. 1.4x = 105000 (+30000). 1.85x = 138750 (+63750).
+  assert.strictEqual(jointQuote.subtotal, Math.round(baseQuote.subtotal * 1.4));
+  assert.strictEqual(jointQuote.coverageScopeSurcharge, Math.round(baseQuote.subtotal * 0.4));
+  assert.ok(jointQuote.lineItems.some(item => item.id === 'scope-joint-venue'), 'Contains scope-joint-venue line item');
+
+  assert.strictEqual(dualQuote.subtotal, Math.round(baseQuote.subtotal * 1.85));
+  assert.strictEqual(dualQuote.coverageScopeSurcharge, Math.round(baseQuote.subtotal * 0.85));
+  assert.ok(dualQuote.lineItems.some(item => item.id === 'scope-dual-locations'), 'Contains scope-dual-locations line item');
+  assert.ok(dualQuote.coverageScopeLabel.includes('Both Sides — Different Locations'));
 });
 
-// 9. Verify Step 5 selects Heirloom Albums by default
-it('quotation-builder.js Step 5 should select Heirloom Albums by default', () => {
+// 9. Verify Step 4 selects Heirloom Albums by default
+it('quotation-builder.js Step 4 should select Heirloom Albums by default', () => {
   const qbCode = fs.readFileSync(qbPath, 'utf8');
   assert.ok(qbCode.includes("activeAddonCategory: 'albums'"), 'defaultState includes activeAddonCategory: albums');
-  assert.ok(qbCode.includes("builderState.activeAddonCategory = 'albums'"), 'Step 5 navigation sets activeAddonCategory to albums');
+  assert.ok(qbCode.includes("builderState.activeAddonCategory = 'albums'"), 'Step 4 navigation sets activeAddonCategory to albums');
   assert.ok(qbCode.includes("const isActive = (builderState.activeAddonCategory === c.id)"), 'Category button gets active class for active category');
 });
 
@@ -168,7 +193,7 @@ it('should have dedicated MPA pages with SEO metadata, canonical links, and Sche
   });
 });
 
-it('index.html should link to all 4 MPA pages in hero, navbar, showcase section, and footer', () => {
+it('index.html should link to all 4 MPA pages in hero, navbar, and footer', () => {
   const html = fs.readFileSync(path.join(__dirname, '../index.html'), 'utf8');
   const mpaPages = ['about.html', 'contact.html', 'privacy-policy.html', 'terms-and-conditions.html'];
   
@@ -177,10 +202,6 @@ it('index.html should link to all 4 MPA pages in hero, navbar, showcase section,
   mpaPages.forEach(page => {
     assert.ok(html.includes(`href="${page}"`), `index.html must link to ${page}`);
   });
-
-  // Verify dedicated showcase section
-  assert.ok(html.includes('studio-trust-grid'), 'index.html must feature dedicated MPA showcase cards');
-  assert.ok(html.includes('EXPLORE OUR STUDIO & TRANSPARENCY'), 'index.html must feature studio transparency showcase section');
 
   // Verify footer links
   assert.ok(html.includes('Terms &amp; Retainer Policies') || html.includes('Terms & Conditions'), 'Footer has terms link');
@@ -229,6 +250,90 @@ it('should have a valid robots.txt with sitemap directive and crawl rules', () =
   assert.ok(txt.includes('Sitemap: https://anantproductions.in/sitemap.xml'), 'robots.txt links to sitemap.xml');
   assert.ok(txt.includes('Disallow: /404.html'), 'robots.txt disallows 404 page');
   assert.ok(txt.includes('Disallow: /500.html'), 'robots.txt disallows 500 page');
+});
+
+// 15. Verify 3 wedding plans have original prices 50k, 1L, 1.5L and discounted rates 40k, 75k, 1L, and launch offer is in introductory offer
+it('wedding packages should have original prices 50k, 1L, 1.5L with discounted rates 40k, 75k, 1L and launch offer in introductory offer section', () => {
+  const html = fs.readFileSync(path.join(__dirname, '../index.html'), 'utf8');
+  
+  // Verify card-pkg-signature does NOT show Launch Offer badge
+  const sigCardMatch = html.match(/id="card-pkg-signature"[\s\S]*?id="card-pkg-premium"/);
+  assert.ok(sigCardMatch, 'Found signature card block in HTML');
+  const sigCard = sigCardMatch[0];
+  assert.ok(!sigCard.includes('Launch Offer</span>'), 'Signature card must not show Launch Offer badge');
+  assert.ok(sigCard.includes('₹75,000'), 'Signature card shows discounted rate ₹75,000');
+  assert.ok(sigCard.includes('₹1,00,000'), 'Signature card shows original price ₹1,00,000');
+  assert.ok(sigCard.includes('line-through'), 'Signature card strikes through original price');
+
+  // Verify Essential card
+  const essCardMatch = html.match(/id="card-pkg-essential"[\s\S]*?id="card-pkg-signature"/);
+  assert.ok(essCardMatch, 'Found essential card block in HTML');
+  const essCard = essCardMatch[0];
+  assert.ok(essCard.includes('₹40,000'), 'Essential card shows discounted rate ₹40,000');
+  assert.ok(essCard.includes('₹50,000'), 'Essential card shows original price ₹50,000');
+
+  // Verify Premium card
+  const premCardMatch = html.match(/id="card-pkg-premium"[\s\S]*?<!-- 2\. PRE-WEDDING PACKAGES/);
+  assert.ok(premCardMatch, 'Found premium card block in HTML');
+  const premCard = premCardMatch[0];
+  assert.ok(premCard.includes('₹1,00,000'), 'Premium card shows discounted rate ₹1,00,000');
+  assert.ok(premCard.includes('₹1,50,000'), 'Premium card shows original price ₹1,50,000');
+
+  // Verify Introductory Offer section (#launch-offer) contains the Founding Couple Launch Offer
+  const introMatch = html.match(/id="launch-offer"[\s\S]*?id="portfolio"/);
+  assert.ok(introMatch, 'Found launch offer section');
+  const intro = introMatch[0];
+  assert.ok(intro.includes('Founding Couple Launch Offer'), 'Introductory offer section contains Founding Couple Launch Offer');
+  assert.ok(intro.includes('₹50,000'), 'Introductory offer displays ₹50,000');
+  assert.ok(intro.includes('₹75,000'), 'Introductory offer displays regular ₹75,000');
+});
+
+// 16. Verify Pre-Wedding packages have original prices 20k, 45k, 75k and discounted rates 15k, 30k, 50k
+it('pre-wedding packages should have original prices 20k, 45k, 75k with discounted rates 15k, 30k, 50k', () => {
+  const html = fs.readFileSync(path.join(__dirname, '../index.html'), 'utf8');
+  
+  const prewedPanelMatch = html.match(/id="tab-panel-prewed"[\s\S]*?id="tab-panel-engagement"/);
+  assert.ok(prewedPanelMatch, 'Found prewed panel in HTML');
+  const panel = prewedPanelMatch[0];
+
+  assert.ok(panel.includes('₹15,000'), 'Essential couple shoot shows ₹15,000');
+  assert.ok(panel.includes('₹20,000'), 'Essential couple shoot shows original ₹20,000');
+  assert.ok(panel.includes('₹30,000'), 'Signature pre-wedding shows ₹30,000');
+  assert.ok(panel.includes('₹45,000'), 'Signature pre-wedding shows original ₹45,000');
+  assert.ok(panel.includes('₹50,000'), 'Premium pre-wedding shows ₹50,000');
+  assert.ok(panel.includes('₹75,000'), 'Premium pre-wedding shows original ₹75,000');
+});
+
+// 17. Verify Engagement packages have original prices 28k, 50k, 85k and discounted rates 20k, 35k, 60k
+it('engagement packages should have original prices 28k, 50k, 85k with discounted rates 20k, 35k, 60k', () => {
+  const html = fs.readFileSync(path.join(__dirname, '../index.html'), 'utf8');
+  
+  const engPanelMatch = html.match(/id="tab-panel-engagement"[\s\S]*?id="tab-panel-functions"/);
+  assert.ok(engPanelMatch, 'Found engagement panel in HTML');
+  const panel = engPanelMatch[0];
+
+  assert.ok(panel.includes('₹20,000'), 'Essential engagement shows ₹20,000');
+  assert.ok(panel.includes('₹28,000'), 'Essential engagement shows original ₹28,000');
+  assert.ok(panel.includes('₹35,000'), 'Signature engagement shows ₹35,000');
+  assert.ok(panel.includes('₹50,000'), 'Signature engagement shows original ₹50,000');
+  assert.ok(panel.includes('₹60,000'), 'Premium engagement shows ₹60,000');
+  assert.ok(panel.includes('₹85,000'), 'Premium engagement shows original ₹85,000');
+});
+
+// 18. Verify Individual Functions packages have original prices 20k, 45k, 75k and discounted rates 15k, 30k, 50k
+it('individual functions packages should have original prices 20k, 45k, 75k with discounted rates 15k, 30k, 50k', () => {
+  const html = fs.readFileSync(path.join(__dirname, '../index.html'), 'utf8');
+  
+  const fnPanelMatch = html.match(/id="tab-panel-functions"[\s\S]*?class="package-transparency-note"/);
+  assert.ok(fnPanelMatch, 'Found functions panel in HTML');
+  const panel = fnPanelMatch[0];
+
+  assert.ok(panel.includes('₹15,000'), 'Essential function shows ₹15,000');
+  assert.ok(panel.includes('₹20,000'), 'Essential function shows original ₹20,000');
+  assert.ok(panel.includes('₹30,000'), 'Signature function shows ₹30,000');
+  assert.ok(panel.includes('₹45,000'), 'Signature function shows original ₹45,000');
+  assert.ok(panel.includes('₹50,000'), 'Premium function shows ₹50,000');
+  assert.ok(panel.includes('₹75,000'), 'Premium function shows original ₹75,000');
 });
 
 console.log(`\nResults: ${passedTests}/${totalTests} tests passed.\n`);

@@ -465,4 +465,74 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // 12. Professional Clean In-Page Routing
+  document.querySelectorAll('a[href^="#"], a[href^="./#"], a[href^="index.html#"]').forEach(anchor => {
+    anchor.addEventListener('click', (e) => {
+      const href = anchor.getAttribute('href');
+      const hashIndex = href.indexOf('#');
+      if (hashIndex !== -1) {
+        const hash = href.substring(hashIndex);
+        if (hash === '#') return;
+        const targetEl = document.querySelector(hash);
+        const isHomePage = window.location.pathname === '/' || window.location.pathname.endsWith('/index.html') || window.location.pathname === '';
+
+        if (targetEl && isHomePage) {
+          e.preventDefault();
+          const navHeight = document.querySelector('.navbar')?.offsetHeight || 70;
+          const targetY = targetEl.getBoundingClientRect().top + window.pageYOffset - navHeight - 12;
+          window.scrollTo({
+            top: Math.max(0, targetY),
+            behavior: 'smooth'
+          });
+          // Update URL bar cleanly without 'index.html'
+          window.history.replaceState(null, document.title, '/' + hash);
+        }
+      }
+    });
+  });
+
+  // 13. Floating Return to Top Button
+  const scrollTopBtn = document.getElementById('scroll-to-top');
+  if (scrollTopBtn) {
+    let scrollTicking = false;
+    const toggleScrollBtn = () => {
+      const scrollY = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+      if (scrollY > 250) {
+        scrollTopBtn.classList.add('visible');
+      } else {
+        scrollTopBtn.classList.remove('visible');
+      }
+      scrollTicking = false;
+    };
+
+    window.addEventListener('scroll', () => {
+      if (!scrollTicking) {
+        window.requestAnimationFrame(toggleScrollBtn);
+        scrollTicking = true;
+      }
+    }, { passive: true });
+
+    document.addEventListener('scroll', () => {
+      if (!scrollTicking) {
+        window.requestAnimationFrame(toggleScrollBtn);
+        scrollTicking = true;
+      }
+    }, { passive: true });
+
+    // Initial check on load
+    toggleScrollBtn();
+
+    scrollTopBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+      if (document.documentElement && document.documentElement.scrollTop > 0) {
+        document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+  }
 });
+

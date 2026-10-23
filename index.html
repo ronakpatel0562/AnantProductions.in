@@ -50,7 +50,7 @@
   </script>
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="css/style.css?v=21">
+  <link rel="stylesheet" href="css/style.css?v=42">
 
   <style>
     @media (min-width: 961px) {
@@ -108,6 +108,21 @@
     "description": "Professional Gujarati wedding photography and cinematic films preserving rituals, emotions, and traditions across Gujarat."
   }
   </script>
+  <!-- Professional Clean Routing & URL Normalizer -->
+  <script>
+    (function () {
+      try {
+        var p = window.location.pathname;
+        if (p.endsWith('/index.html') || p === '/index.html' || p === 'index.html') {
+          var clean = p.replace(/\/?index\.html\/?$/i, '/') || '/';
+          window.history.replaceState(null, document.title, clean + window.location.search + window.location.hash);
+        } else if (p.endsWith('.html')) {
+          var clean = p.replace(/\.html$/i, '');
+          window.history.replaceState(null, document.title, clean + window.location.search + window.location.hash);
+        }
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body>
 
@@ -118,7 +133,7 @@
   <div class="top-banner">
     <div class="container" style="display: flex; justify-content: center; align-items: center; text-align: center;">
       <span>
-        <strong>Founding Couple Launch Offer:</strong> Signature Two-Day Photo + Cinema at <strong>₹39,999</strong> for 2026–2027 Weddings &bull; <a href="#launch-offer" style="color: var(--gold-light); text-decoration: underline;">View Offer Details</a> &bull; <a href="#contact" style="color: var(--gold-light); text-decoration: underline;">Check Your Date</a>
+        <strong>Founding Couple Launch Offer:</strong> Signature Two-Day Photo + Cinema at <strong>₹50,000</strong> (Regular ₹75,000 &bull; Save ₹25,000) for 2026–2027 Weddings &bull; <a href="#launch-offer" style="color: var(--gold-light); text-decoration: underline;">View Offer Details</a> &bull; <a href="contact.html" style="color: var(--gold-light); text-decoration: underline;">Check Your Date</a>
       </span>
     </div>
   </div>
@@ -136,7 +151,6 @@
       <!-- Desktop Nav Links (Streamlined & Clean) -->
       <nav aria-label="Main Navigation">
         <ul class="nav-links">
-          <li><a href="#portfolio" class="nav-link">Our Work</a></li>
           <li><a href="#films" class="nav-link">Films</a></li>
           <li><a href="#packages" class="nav-link">Packages</a></li>
           <li><a href="about.html" class="nav-link">About</a></li>
@@ -168,7 +182,7 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
           WhatsApp
         </a>
-        <a href="#quotation-builder" class="btn btn-gold" id="nav-cta-date">
+        <a href="quote.html" class="btn btn-gold" id="nav-cta-date">
           Quote Builder
         </a>
         <button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
@@ -191,11 +205,11 @@
         <button class="mobile-drawer-close" aria-label="Close navigation menu" style="background: none; border: none; color: var(--gold-light); font-size: 1.8rem; cursor: pointer;">✕</button>
       </div>
       <ul style="list-style: none; display: flex; flex-direction: column; gap: 16px; font-size: 1rem; font-family: var(--font-mono);">
-        <li><a href="index.html" class="mobile-nav-link">Home</a></li>
+        <li><a href="./" class="mobile-nav-link">Home</a></li>
         <li><a href="about.html" class="mobile-nav-link" style="color: var(--gold-light);">✦ About Anant Productions</a></li>
-        <li><a href="index.html#portfolio" class="mobile-nav-link">Our Work &amp; Films</a></li>
-        <li><a href="index.html#packages" class="mobile-nav-link">Curated Packages</a></li>
-        <li><a href="index.html#quotation-builder" class="mobile-nav-link" style="color: var(--gold-light);">⚡ Quotation Builder</a></li>
+        <li><a href="#films" class="mobile-nav-link">Wedding Films &amp; Cinema</a></li>
+        <li><a href="#packages" class="mobile-nav-link">Curated Packages</a></li>
+        <li><a href="quote.html" class="mobile-nav-link" style="color: var(--gold-light);">⚡ Quotation Builder</a></li>
         <li><a href="contact.html" class="mobile-nav-link">Contact &amp; Studio Location</a></li>
         <li><a href="terms-and-conditions.html" class="mobile-nav-link" style="font-size: 0.9rem; color: var(--mute);">Terms &amp; Retainer Policies</a></li>
         <li><a href="privacy-policy.html" class="mobile-nav-link" style="font-size: 0.9rem; color: var(--mute);">Privacy Policy &amp; Vaults</a></li>
@@ -244,7 +258,10 @@
           </p>
 
           <div class="hero-actions">
-            <a href="#contact" class="btn btn-gold" id="hero-cta-primary">
+            <a href="quote.html" class="btn btn-gold" id="hero-cta-quote">
+              ⚡ Design Your Quotation &rarr;
+            </a>
+            <a href="#contact" class="btn btn-outline-gold" id="hero-cta-primary">
               Check Your Wedding Date
             </a>
             <a href="#films" class="btn btn-outline-gold">
@@ -266,21 +283,21 @@
           </nav>
 
           <!-- Genuine Value Pillars (Grounded & Authentic) -->
-          <div class="hero-stats" style="grid-template-columns: repeat(4, 1fr);">
+          <div class="hero-stats">
             <div class="stat-item">
-              <span class="stat-num" style="font-size: 1.35rem; color: var(--gold-light);">Emotion-First</span>
+              <span class="stat-num" style="color: var(--gold-light);">Emotion-First</span>
               <span class="stat-label">Candid &amp; Family Moments</span>
             </div>
             <div class="stat-item">
-              <span class="stat-num" style="font-size: 1.35rem; color: var(--gold-light);">Vedic Fluency</span>
+              <span class="stat-num" style="color: var(--gold-light);">Vedic Fluency</span>
               <span class="stat-label">Authentic Gujarati Vidhis</span>
             </div>
             <div class="stat-item">
-              <span class="stat-num" style="font-size: 1.35rem; color: var(--gold-light);">Photo + Cinema</span>
+              <span class="stat-num" style="color: var(--gold-light);">Photo + Cinema</span>
               <span class="stat-label">One Harmonized Team</span>
             </div>
             <div class="stat-item">
-              <span class="stat-num" style="font-size: 1.35rem; color: var(--gold-light);">Transparent</span>
+              <span class="stat-num" style="color: var(--gold-light);">Transparent</span>
               <span class="stat-label">Two-Day Wedding Packages</span>
             </div>
           </div>
@@ -340,12 +357,12 @@
           <div class="launch-pricing-box">
             <span class="launch-price-label" style="color: #d4d4d8 !important;">Introductory Launch Investment</span>
             <div class="launch-price-row">
-              <span class="launch-price-current" id="launch-price-display">₹39,999</span>
-              <span class="launch-price-regular" id="launch-regular-display" style="color: #a1a1aa !important;">₹49,999</span>
+              <span class="launch-price-current" id="launch-price-display">₹50,000</span>
+              <span class="launch-price-regular" id="launch-regular-display" style="color: #a1a1aa !important;">₹75,000</span>
             </div>
-            <div class="launch-savings-badge" id="launch-savings-display">Save ₹10,000 for Early Booking</div>
+            <div class="launch-savings-badge" id="launch-savings-display">Save ₹25,000 for Early Booking</div>
 
-            <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20I%20saw%20your%20Founding%20Couple%20Launch%20Offer%20(₹39,999%20for%20Signature%20Photo%20%2B%20Cinema).%20We%20are%20planning%20our%20wedding%20and%20would%20love%20to%20check%20date%20availability!" target="_blank" rel="noopener" class="btn btn-gold" id="launch-cta-btn" style="width: 100%; justify-content: center; padding: 14px 20px;">
+            <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20I%20saw%20your%20Founding%20Couple%20Launch%20Offer%20(₹50,000%20for%20Signature%20Photo%20%2B%20Cinema%2C%20Regular%20₹75,000).%20We%20are%20planning%20our%20wedding%20and%20would%20love%20to%20check%20date%20availability!" target="_blank" rel="noopener" class="btn btn-gold" id="launch-cta-btn" style="width: 100%; justify-content: center; padding: 14px 20px;">
               Claim Launch Offer via WhatsApp
             </a>
 
@@ -361,8 +378,8 @@
       </div>
     </section>
 
-    <!-- SECTION: FEATURED PORTFOLIO & FILMS (SECTION C) -->
-    <section class="gallery-section" id="portfolio">
+    <!-- SECTION: FEATURED PORTFOLIO & FILMS (Temporarily hidden per client request; photo portfolio will be added later) -->
+    <section class="gallery-section" id="portfolio" style="display: none;" aria-hidden="true">
       <div class="container">
         <div class="section-header">
           <div class="section-tag">REAL WEDDING ARCHIVE</div>
@@ -716,32 +733,28 @@
                 <div class="package-header">
                   <span class="package-tag">TWO-DAY PHOTOGRAPHY</span>
                   <h3 class="package-title">Essential Wedding</h3>
-                  <div class="package-price-wrap">
-                    <span class="package-price">₹29,999</span>
+                  <div class="package-price-wrap" style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                    <span class="package-price" style="color: var(--gold-light);">₹40,000</span>
+                    <span style="font-size: 1.1rem; color: #888891; text-decoration: line-through; font-family: 'Cinzel', serif;">₹50,000</span>
+                    <span class="package-save-pill">Special Rate</span>
                   </div>
-                  <div class="package-price-range">Indicative Range: ₹29,999 – ₹34,999</div>
                   <div class="package-hours-badge">⏱ Two-day coverage &bull; Up to 6 hrs/day</div>
-                  <p class="package-scope" style="margin-top: 12px;">
+                  <p class="package-scope" style="margin-top: 10px;">
                     Ideal for intimate two-day Gujarati ceremonies focusing on authentic emotional stills, ritual documentation, and family portraits.
                   </p>
                 </div>
-                <div class="package-services">
-                  <strong>Included Coverage:</strong> Traditional Photography &amp; Ritual Documentation
-                </div>
                 <ul class="package-features">
-                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Two-day coverage</strong> (up to 6 hours per day).</span></li>
-                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Curated Ultra-High-Resolution RAW Photographs:</strong> Full collection delivered after quality filtering.</span></li>
-                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Handpicked Master Edits:</strong> Professionally retouched master photographs with artistic color grading.</span></li>
-                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Full ceremony stills:</strong> Mandva, Pithi, Garba, Mandap, and Vidaai.</span></li>
+                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Traditional Photography &amp; Ritual Documentation</strong> (Mandva, Pithi, Garba, Mandap &amp; Vidaai).</span></li>
+                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Curated RAW Photographs:</strong> Full collection delivered after rigorous quality filtering.</span></li>
+                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Handpicked Master Edits:</strong> Professionally retouched master portraits with artistic color grading.</span></li>
                   <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Private cloud gallery</strong> with instant family sharing &amp; full print rights.</span></li>
-                  <li class="package-feature" style="opacity: 0.7;"><span style="color: var(--mute); font-size: 0.82rem;">Note: Cinematography not included (available as add-on).</span></li>
                 </ul>
               </div>
               <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px;">
-                <button type="button" class="btn btn-gold" data-customize-package="pkg-wedding-essential" data-category="wedding" style="width: 100%; justify-content: center;">
-                  Customize in Quotation Builder
-                </button>
-                <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20would%20love%20to%20check%20availability%20for%20the%20Essential%20Wedding%20Package%20(₹29,999)." target="_blank" rel="noopener" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.84rem;">
+                <a href="quote.html" class="btn btn-gold" style="width: 100%; justify-content: center;">
+                  Customize in Quotation Studio &rarr;
+                </a>
+                <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20would%20love%20to%20check%20availability%20for%20the%20Essential%20Wedding%20Package%20(Special%20Rate:%20₹40,000,%20Original:%20₹50,000)." target="_blank" rel="noopener" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.84rem;">
                   Inquire via WhatsApp
                 </a>
               </div>
@@ -754,32 +767,28 @@
                 <div class="package-header">
                   <span class="package-tag">RECOMMENDED COLLECTION</span>
                   <h3 class="package-title">Signature Wedding</h3>
-                  <div class="package-price-wrap">
-                    <span class="package-price" style="color: var(--gold-light);">₹49,999</span>
+                  <div class="package-price-wrap" style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                    <span class="package-price" style="color: var(--gold-light);">₹75,000</span>
+                    <span style="font-size: 1.1rem; color: #888891; text-decoration: line-through; font-family: 'Cinzel', serif;">₹1,00,000</span>
+                    <span class="package-save-pill">Special Rate</span>
                   </div>
-                  <div class="package-price-range">Indicative Range: ₹49,999 – ₹59,999</div>
                   <div class="package-hours-badge" style="background: rgba(212,175,55,0.15); border-color: var(--gold-primary);">⏱ Two-day coverage &bull; Up to 6 hrs/day</div>
-                  <p class="package-scope" style="margin-top: 12px;">
+                  <p class="package-scope" style="margin-top: 10px;">
                     The balanced choice for couples wanting both breathtaking fine-art stills and an emotional 4K highlight film from one coordinated team.
                   </p>
                 </div>
-                <div class="package-services" style="border-color: rgba(212,175,55,0.3);">
-                  <strong>Included Coverage:</strong> Candid Photography &bull; Cinematic Wedding Filmmaking
-                </div>
                 <ul class="package-features">
-                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Two-day coverage</strong> (up to 6 hours per day).</span></li>
-                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Synchronized Photo &amp; Cinema Storytelling</strong> working in seamless harmony.</span></li>
-                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Curated RAW &amp; Handpicked Edits:</strong> All curated ultra-high-resolution RAW photographs plus handpicked master color-graded portraits.</span></li>
-                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>One 3–5 minute cinematic highlight film</strong> with custom licensed music.</span></li>
-                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>One short vertical 9:16 social media reel</strong> for WhatsApp family sharing &amp; Instagram.</span></li>
-                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Private online gallery</strong> with instant downloads.</span></li>
+                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Synchronized Candid Photography &amp; 4K Cinema</strong> working in seamless harmony.</span></li>
+                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Curated RAW &amp; Master Edits:</strong> Complete ultra-high-resolution RAW gallery plus master retouched portraits.</span></li>
+                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>One 3–5 minute cinematic 4K highlight film</strong> with personalized licensed soundtrack.</span></li>
+                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>One vertical 9:16 social reel</strong> crafted for WhatsApp family sharing &amp; Instagram.</span></li>
                 </ul>
               </div>
               <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px;">
-                <button type="button" class="btn btn-gold" data-customize-package="pkg-wedding-signature" data-category="wedding" style="width: 100%; justify-content: center;">
-                  Customize in Quotation Builder
-                </button>
-                <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20would%20love%20to%20reserve%20the%20Signature%20Wedding%20Package%20(₹49,999)%20for%20our%20wedding." target="_blank" rel="noopener" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.84rem;">
+                <a href="quote.html" class="btn btn-gold" style="width: 100%; justify-content: center;">
+                  Customize in Quotation Studio &rarr;
+                </a>
+                <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20would%20love%20to%20reserve%20the%20Signature%20Wedding%20Package%20(Special%20Rate:%20₹75,000,%20Original:%20₹1,00,000)%20for%20our%20wedding." target="_blank" rel="noopener" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.84rem;">
                   Reserve via WhatsApp
                 </a>
               </div>
@@ -791,32 +800,28 @@
                 <div class="package-header">
                   <span class="package-tag">EXTENDED COVERAGE</span>
                   <h3 class="package-title">Premium Wedding Story</h3>
-                  <div class="package-price-wrap">
-                    <span class="package-price">₹74,999</span>
+                  <div class="package-price-wrap" style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                    <span class="package-price" style="color: var(--gold-light);">₹1,00,000</span>
+                    <span style="font-size: 1.1rem; color: #888891; text-decoration: line-through; font-family: 'Cinzel', serif;">₹1,50,000</span>
+                    <span class="package-save-pill">Special Rate</span>
                   </div>
-                  <div class="package-price-range">Indicative Range: ₹74,999 – ₹89,999</div>
                   <div class="package-hours-badge">⏱ Two-day coverage &bull; Up to 8 hrs/day</div>
-                  <p class="package-scope" style="margin-top: 12px;">
+                  <p class="package-scope" style="margin-top: 10px;">
                     Extended hours designed for elaborate Gujarati functions where early morning Mandva and late midnight Garba require unhurried coverage.
                   </p>
                 </div>
-                <div class="package-services">
-                  <strong>Included Coverage:</strong> Candid Photography &bull; Cinematic Filmmaking &bull; Lighting Support
-                </div>
                 <ul class="package-features">
-                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Two-day coverage</strong> (up to 8 hours per day).</span></li>
-                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Curated RAW &amp; Handpicked Edits:</strong> Full curated ultra-high-resolution RAW collection &amp; handpicked master retouched images.</span></li>
-                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Cinematic highlight film</strong> with personalized sound design.</span></li>
-                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Two short social media vertical reels</strong> for Instagram &amp; WhatsApp.</span></li>
-                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Dedicated couple portrait session &amp; extended family portraits setup.</strong></span></li>
-                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Priority editing turnaround</strong> &amp; private cloud gallery.</span></li>
+                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Candid Photography, 4K Filmmaking &amp; Production Lighting</strong> across all key rituals.</span></li>
+                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Curated RAW &amp; Master Edits:</strong> Full curated gallery plus handpicked master retouched images.</span></li>
+                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Cinematic 4K highlight story film</strong> with custom sound design &amp; audio moments.</span></li>
+                  <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Two social media vertical 9:16 reels</strong> &amp; dedicated couple portrait session.</span></li>
                 </ul>
               </div>
               <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px;">
-                <button type="button" class="btn btn-gold" data-customize-package="pkg-wedding-premium" data-category="wedding" style="width: 100%; justify-content: center;">
-                  Customize in Quotation Builder
-                </button>
-                <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20are%20planning%20our%20wedding%20and%20would%20love%20to%20discuss%20the%20Premium%20Wedding%20Story%20Package%20(₹74,999)." target="_blank" rel="noopener" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.84rem;">
+                <a href="quote.html" class="btn btn-gold" style="width: 100%; justify-content: center;">
+                  Customize in Quotation Studio &rarr;
+                </a>
+                <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20are%20planning%20our%20wedding%20and%20would%20love%20to%20discuss%20the%20Premium%20Wedding%20Story%20Package%20(Special%20Rate:%20₹1,00,000,%20Original:%20₹1,50,000)." target="_blank" rel="noopener" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.84rem;">
                   Inquire via WhatsApp
                 </a>
               </div>
@@ -832,8 +837,11 @@
               <div class="package-header">
                 <span class="package-tag">CONCEPT STILLS</span>
                 <h3 class="package-title">Essential Couple Shoot</h3>
-                <div class="package-price-wrap"><span class="package-price">₹7,999</span></div>
-                <div class="package-price-range">Range: ₹7,999 – ₹9,999</div>
+                <div class="package-price-wrap" style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                  <span class="package-price" style="color: var(--gold-light);">₹15,000</span>
+                  <span style="font-size: 1.15rem; color: #a1a1aa; text-decoration: line-through; font-family: 'Cinzel', serif;">₹20,000</span>
+                </div>
+                <div class="package-price-range">Original: ₹20,000 &bull; Special Rate: ₹15,000</div>
                 <div class="package-hours-badge">⏱ 1 Session &bull; Up to 3 hrs</div>
                 <p class="package-scope" style="margin-top: 12px;">Relaxed local photoshoot session at one scenic Ahmedabad or Gujarat heritage location.</p>
               </div>
@@ -845,8 +853,8 @@
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>High-speed private gallery delivery</span></li>
               </ul>
               <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px;">
-                <button type="button" class="btn btn-gold" data-customize-package="pkg-prewed-essential" data-category="prewed" style="width: 100%; justify-content: center;">Customize in Quotation Builder</button>
-                <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20would%20love%20to%20inquire%20about%20the%20Essential%20Couple%20Shoot%20(₹7,999)." target="_blank" rel="noopener" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.84rem;">Inquire via WhatsApp</a>
+                <a href="quote.html" class="btn btn-gold" style="width: 100%; justify-content: center;">Customize in Quotation Studio &rarr;</a>
+                <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20would%20love%20to%20inquire%20about%20the%20Essential%20Couple%20Shoot%20(Special%20Rate:%20₹15,000,%20Original:%20₹20,000)." target="_blank" rel="noopener" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.84rem;">Inquire via WhatsApp</a>
               </div>
             </div>
 
@@ -856,8 +864,11 @@
               <div class="package-header">
                 <span class="package-tag">EXTENDED PHOTO + REEL</span>
                 <h3 class="package-title">Signature Pre-Wedding</h3>
-                <div class="package-price-wrap"><span class="package-price" style="color: var(--gold-light);">₹15,999</span></div>
-                <div class="package-price-range">Range: ₹15,999 – ₹19,999</div>
+                <div class="package-price-wrap" style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                  <span class="package-price" style="color: var(--gold-light);">₹30,000</span>
+                  <span style="font-size: 1.15rem; color: #a1a1aa; text-decoration: line-through; font-family: 'Cinzel', serif;">₹45,000</span>
+                </div>
+                <div class="package-price-range">Original: ₹45,000 &bull; Special Rate: ₹30,000</div>
                 <div class="package-hours-badge">⏱ Half-day &bull; Up to 5 hrs</div>
                 <p class="package-scope" style="margin-top: 12px;">Extended session across 2 locations with outfit changes, creative direction, and a 60s romantic reel.</p>
               </div>
@@ -869,8 +880,8 @@
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>High-speed cloud downloads</span></li>
               </ul>
               <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px;">
-                <button type="button" class="btn btn-gold" data-customize-package="pkg-prewed-signature" data-category="prewed" style="width: 100%; justify-content: center;">Customize in Quotation Builder</button>
-                <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20are%20interested%20in%20the%20Signature%20Pre-Wedding%20Package%20(₹15,999)." target="_blank" rel="noopener" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.84rem;">Inquire via WhatsApp</a>
+                <a href="quote.html" class="btn btn-gold" style="width: 100%; justify-content: center;">Customize in Quotation Studio &rarr;</a>
+                <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20are%20interested%20in%20the%20Signature%20Pre-Wedding%20Package%20(Special%20Rate:%20₹30,000,%20Original:%20₹45,000)." target="_blank" rel="noopener" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.84rem;">Inquire via WhatsApp</a>
               </div>
             </div>
 
@@ -879,8 +890,11 @@
               <div class="package-header">
                 <span class="package-tag">CINEMATIC CONCEPT FILM</span>
                 <h3 class="package-title">Premium Pre-Wedding Film</h3>
-                <div class="package-price-wrap"><span class="package-price">₹24,999</span></div>
-                <div class="package-price-range">Range: ₹24,999 – ₹31,999</div>
+                <div class="package-price-wrap" style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                  <span class="package-price" style="color: var(--gold-light);">₹50,000</span>
+                  <span style="font-size: 1.15rem; color: #a1a1aa; text-decoration: line-through; font-family: 'Cinzel', serif;">₹75,000</span>
+                </div>
+                <div class="package-price-range">Original: ₹75,000 &bull; Special Rate: ₹50,000</div>
                 <div class="package-hours-badge">⏱ Full-day &bull; Up to 8 hrs</div>
                 <p class="package-scope" style="margin-top: 12px;">Full cinematic production with dialogue audio, sunrise-to-sunset lighting, drone aerials, and 2 reels.</p>
               </div>
@@ -892,8 +906,8 @@
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Drone establishing aerial shots (where permitted)</span></li>
               </ul>
               <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px;">
-                <button type="button" class="btn btn-gold" data-customize-package="pkg-prewed-premium" data-category="prewed" style="width: 100%; justify-content: center;">Customize in Quotation Builder</button>
-                <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20would%20love%20to%20plan%20a%20Premium%20Pre-Wedding%20Film%20(₹24,999)." target="_blank" rel="noopener" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.84rem;">Inquire via WhatsApp</a>
+                <a href="quote.html" class="btn btn-gold" style="width: 100%; justify-content: center;">Customize in Quotation Studio &rarr;</a>
+                <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20would%20love%20to%20plan%20a%20Premium%20Pre-Wedding%20Film%20(Special%20Rate:%20₹50,000,%20Original:%20₹75,000)." target="_blank" rel="noopener" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.84rem;">Inquire via WhatsApp</a>
               </div>
             </div>
           </div>
@@ -907,8 +921,11 @@
               <div class="package-header">
                 <span class="package-tag">STILL PHOTOGRAPHY</span>
                 <h3 class="package-title">Essential Engagement</h3>
-                <div class="package-price-wrap"><span class="package-price">₹9,999</span></div>
-                <div class="package-price-range">Range: ₹9,999 – ₹12,999</div>
+                <div class="package-price-wrap" style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                  <span class="package-price">₹20,000</span>
+                  <span style="font-size: 1.15rem; color: #a1a1aa; text-decoration: line-through; font-family: 'Cinzel', serif;">₹28,000</span>
+                </div>
+                <div class="package-price-range">Original: ₹28,000 &bull; Special Rate: ₹20,000</div>
                 <div class="package-hours-badge">⏱ Single Function &bull; Up to 4 hrs</div>
                 <p class="package-scope" style="margin-top: 12px;">Complete photography coverage for intimate engagement ceremonies, ring exchange, and family portraiture.</p>
               </div>
@@ -920,8 +937,8 @@
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>High-speed digital cloud delivery</span></li>
               </ul>
               <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px;">
-                <button type="button" class="btn btn-gold" data-customize-package="pkg-engagement-essential" data-category="engagement" style="width: 100%; justify-content: center;">Customize in Quotation Builder</button>
-                <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20would%20love%20to%20check%20availability%20for%20the%20Essential%20Engagement%20(₹9,999)." target="_blank" rel="noopener" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.84rem;">Inquire via WhatsApp</a>
+                <a href="quote.html" class="btn btn-gold" style="width: 100%; justify-content: center;">Customize in Quotation Studio &rarr;</a>
+                <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20would%20love%20to%20check%20availability%20for%20the%20Essential%20Engagement%20(Special%20Rate:%20₹20,000,%20Original:%20₹28,000)." target="_blank" rel="noopener" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.84rem;">Inquire via WhatsApp</a>
               </div>
             </div>
 
@@ -931,8 +948,11 @@
               <div class="package-header">
                 <span class="package-tag">PHOTO + CINEMATIC HIGHLIGHT</span>
                 <h3 class="package-title">Signature Engagement</h3>
-                <div class="package-price-wrap"><span class="package-price" style="color: var(--gold-light);">₹18,999</span></div>
-                <div class="package-price-range">Range: ₹18,999 – ₹23,999</div>
+                <div class="package-price-wrap" style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                  <span class="package-price" style="color: var(--gold-light);">₹35,000</span>
+                  <span style="font-size: 1.15rem; color: #a1a1aa; text-decoration: line-through; font-family: 'Cinzel', serif;">₹50,000</span>
+                </div>
+                <div class="package-price-range">Original: ₹50,000 &bull; Special Rate: ₹35,000</div>
                 <div class="package-hours-badge">⏱ Extended &bull; Up to 5 hrs</div>
                 <p class="package-scope" style="margin-top: 12px;">Both emotional photography and a 2–3 minute 4K cinematic film capturing the joy and family banter.</p>
               </div>
@@ -944,8 +964,8 @@
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>One vertical social media reel for WhatsApp</span></li>
               </ul>
               <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px;">
-                <button type="button" class="btn btn-gold" data-customize-package="pkg-engagement-signature" data-category="engagement" style="width: 100%; justify-content: center;">Customize in Quotation Builder</button>
-                <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20are%20planning%20our%20Engagement%20and%20would%20love%20the%20Signature%20package%20(₹18,999)." target="_blank" rel="noopener" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.84rem;">Inquire via WhatsApp</a>
+                <a href="quote.html" class="btn btn-gold" style="width: 100%; justify-content: center;">Customize in Quotation Studio &rarr;</a>
+                <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20are%20planning%20our%20Engagement%20and%20would%20love%20the%20Signature%20package%20(Special%20Rate:%20₹35,000,%20Original:%20₹50,000)." target="_blank" rel="noopener" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.84rem;">Inquire via WhatsApp</a>
               </div>
             </div>
 
@@ -954,8 +974,11 @@
               <div class="package-header">
                 <span class="package-tag">EXPANDED GALA COVERAGE</span>
                 <h3 class="package-title">Premium Engagement Gala</h3>
-                <div class="package-price-wrap"><span class="package-price">₹31,999</span></div>
-                <div class="package-price-range">Range: ₹31,999 – ₹39,999</div>
+                <div class="package-price-wrap" style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                  <span class="package-price" style="color: var(--gold-light);">₹60,000</span>
+                  <span style="font-size: 1.15rem; color: #a1a1aa; text-decoration: line-through; font-family: 'Cinzel', serif;">₹85,000</span>
+                </div>
+                <div class="package-price-range">Original: ₹85,000 &bull; Special Rate: ₹60,000</div>
                 <div class="package-hours-badge">⏱ Gala &bull; Up to 6 hrs</div>
                 <p class="package-scope" style="margin-top: 12px;">Full evening gala coverage with stage ceremonies, dance performances, and pre-event couple portraits.</p>
               </div>
@@ -967,8 +990,8 @@
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Dedicated couple portraiture session before guest arrival</span></li>
               </ul>
               <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px;">
-                <button type="button" class="btn btn-gold" data-customize-package="pkg-engagement-premium" data-category="engagement" style="width: 100%; justify-content: center;">Customize in Quotation Builder</button>
-                <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20are%20interested%20in%20the%20Premium%20Engagement%20Gala%20Package%20(₹31,999)." target="_blank" rel="noopener" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.84rem;">Inquire via WhatsApp</a>
+                <a href="quote.html" class="btn btn-gold" style="width: 100%; justify-content: center;">Customize in Quotation Studio &rarr;</a>
+                <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20are%20interested%20in%20the%20Premium%20Engagement%20Gala%20Package%20(Special%20Rate:%20₹60,000,%20Original:%20₹85,000)." target="_blank" rel="noopener" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.84rem;">Inquire via WhatsApp</a>
               </div>
             </div>
           </div>
@@ -982,8 +1005,11 @@
               <div class="package-header">
                 <span class="package-tag">INTIMATE EVENT</span>
                 <h3 class="package-title">Essential Function</h3>
-                <div class="package-price-wrap"><span class="package-price">₹9,999</span></div>
-                <div class="package-price-range">Range: ₹9,999 – ₹12,999</div>
+                <div class="package-price-wrap" style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                  <span class="package-price">₹15,000</span>
+                  <span style="font-size: 1.15rem; color: #a1a1aa; text-decoration: line-through; font-family: 'Cinzel', serif;">₹20,000</span>
+                </div>
+                <div class="package-price-range">Original: ₹20,000 &bull; Special Rate: ₹15,000</div>
                 <div class="package-hours-badge">⏱ Up to 4 hrs</div>
                 <p class="package-scope" style="margin-top: 12px;">Ideal for Haldi/Pithi, Mosalu, Mehndi afternoon, or intimate home pujas.</p>
               </div>
@@ -995,8 +1021,8 @@
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>High-speed digital delivery</span></li>
               </ul>
               <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px;">
-                <button type="button" class="btn btn-gold" data-customize-package="pkg-fn-essential" data-category="functions" style="width: 100%; justify-content: center;">Customize in Quotation Builder</button>
-                <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20would%20like%20to%20book%20the%20Essential%20Function%20coverage%20(₹9,999)." target="_blank" rel="noopener" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.84rem;">Inquire via WhatsApp</a>
+                <a href="quote.html" class="btn btn-gold" style="width: 100%; justify-content: center;">Customize in Quotation Studio &rarr;</a>
+                <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20would%20like%20to%20book%20the%20Essential%20Function%20coverage%20(Special%20Rate:%20₹15,000,%20Original:%20₹20,000)." target="_blank" rel="noopener" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.84rem;">Inquire via WhatsApp</a>
               </div>
             </div>
 
@@ -1006,8 +1032,11 @@
               <div class="package-header">
                 <span class="package-tag">PHOTO + CINEMA HIGHLIGHT</span>
                 <h3 class="package-title">Signature Function (Garba)</h3>
-                <div class="package-price-wrap"><span class="package-price" style="color: var(--gold-light);">₹18,999</span></div>
-                <div class="package-price-range">Range: ₹18,999 – ₹24,999</div>
+                <div class="package-price-wrap" style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                  <span class="package-price" style="color: var(--gold-light);">₹30,000</span>
+                  <span style="font-size: 1.15rem; color: #a1a1aa; text-decoration: line-through; font-family: 'Cinzel', serif;">₹45,000</span>
+                </div>
+                <div class="package-price-range">Original: ₹45,000 &bull; Special Rate: ₹30,000</div>
                 <div class="package-hours-badge">⏱ Up to 5 hrs</div>
                 <p class="package-scope" style="margin-top: 12px;">Specially tuned for high-energy Raas Garba nights, Sangeet dance performances, or Receptions.</p>
               </div>
@@ -1019,8 +1048,8 @@
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>One vertical social media reel for WhatsApp</span></li>
               </ul>
               <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px;">
-                <button type="button" class="btn btn-gold" data-customize-package="pkg-fn-signature" data-category="functions" style="width: 100%; justify-content: center;">Customize in Quotation Builder</button>
-                <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20would%20love%20to%20book%20the%20Signature%20Garba/Function%20package%20(₹18,999)." target="_blank" rel="noopener" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.84rem;">Inquire via WhatsApp</a>
+                <a href="quote.html" class="btn btn-gold" style="width: 100%; justify-content: center;">Customize in Quotation Studio &rarr;</a>
+                <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20would%20love%20to%20book%20the%20Signature%20Garba/Function%20package%20(Special%20Rate:%20₹30,000,%20Original:%20₹45,000)." target="_blank" rel="noopener" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.84rem;">Inquire via WhatsApp</a>
               </div>
             </div>
 
@@ -1029,8 +1058,11 @@
               <div class="package-header">
                 <span class="package-tag">FULL PRODUCTION</span>
                 <h3 class="package-title">Premium Grand Function</h3>
-                <div class="package-price-wrap"><span class="package-price">₹28,999</span></div>
-                <div class="package-price-range">Range: ₹28,999 – ₹36,999</div>
+                <div class="package-price-wrap" style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                  <span class="package-price" style="color: var(--gold-light);">₹50,000</span>
+                  <span style="font-size: 1.15rem; color: #a1a1aa; text-decoration: line-through; font-family: 'Cinzel', serif;">₹75,000</span>
+                </div>
+                <div class="package-price-range">Original: ₹75,000 &bull; Special Rate: ₹50,000</div>
                 <div class="package-hours-badge">⏱ Up to 6 hrs</div>
                 <p class="package-scope" style="margin-top: 12px;">Expanded team coverage for lavish midnight Garba nights or formal Receptions with 500+ guests.</p>
               </div>
@@ -1042,8 +1074,8 @@
                 <li class="package-feature"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Priority delivery turnaround</span></li>
               </ul>
               <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px;">
-                <button type="button" class="btn btn-gold" data-customize-package="pkg-fn-premium" data-category="functions" style="width: 100%; justify-content: center;">Customize in Quotation Builder</button>
-                <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20are%20interested%20in%20the%20Premium%20Grand%20Function%20package%20(₹28,999)." target="_blank" rel="noopener" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.84rem;">Inquire via WhatsApp</a>
+                <a href="quote.html" class="btn btn-gold" style="width: 100%; justify-content: center;">Customize in Quotation Studio &rarr;</a>
+                <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20are%20interested%20in%20the%20Premium%20Grand%20Function%20package%20(Special%20Rate:%20₹50,000,%20Original:%20₹75,000)." target="_blank" rel="noopener" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.84rem;">Inquire via WhatsApp</a>
               </div>
             </div>
           </div>
@@ -1055,259 +1087,41 @@
       </div>
     </section>
 
-    <!-- SECTION: INTERACTIVE WEDDING QUOTATION BUILDER (PHASE 4) -->
-    <section class="quotation-builder-section" id="quotation-builder">
+    <!-- SECTION: INTERACTIVE WEDDING QUOTATION BUILDER LAUNCHER -->
+    <section class="quotation-builder-section" id="quotation-builder" style="padding: 70px 0;">
       <div class="container">
-        <div class="section-header">
-          <div class="section-tag">LIVE ESTIMATOR &bull; CUSTOM QUOTATION BUILDER</div>
-          <h2 class="section-title">
-            Interactive <span class="gold-text">Wedding Quotation Builder</span>
-            <span class="gujarati-quote">તમારા બજેટ અને જરૂરિયાત મુજબ સંપૂર્ણ પારદર્શક પેકેજ ડિઝાઇન કરો</span>
+        <div style="background: linear-gradient(135deg, rgba(212,175,55,0.08) 0%, rgba(20,20,24,0.95) 100%); border: 1px solid var(--hairline-gold); border-radius: var(--radius-xl); padding: 48px 36px; text-align: center; box-shadow: 0 20px 48px rgba(0,0,0,0.4); position: relative; overflow: hidden;">
+          <div style="position: absolute; top: -50px; right: -50px; width: 220px; height: 220px; background: radial-gradient(circle, rgba(212,175,55,0.15) 0%, transparent 70%); pointer-events: none;"></div>
+          
+          <div class="section-tag" style="margin-bottom: 12px;">BESPOKE PROPOSAL STUDIO &bull; 100% TRANSPARENT PRICING</div>
+          <h2 class="section-title" style="font-size: 2rem; margin-bottom: 14px;">
+            Design Your <span class="gold-text">Wedding Quotation</span> Online
+            <span class="gujarati-quote" style="display: block; margin-top: 6px;">તમારા બજેટ અને જરૂરિયાત મુજબ સંપૂર્ણ પારદર્શક પેકેજ ડિઝાઇન કરો</span>
           </h2>
-          <p class="section-desc">
-            Explore tiers, select customized photography &amp; cinematography coverage styles, add drone aerials, luxury heirloom albums, or vertical reels, and get an instant itemized price breakdown. Save, share with family, or send directly to WhatsApp.
+          <p class="section-desc" style="max-width: 720px; margin: 0 auto 28px; font-size: 0.95rem; line-height: 1.6;">
+            Select your celebration dates, joint or separate venue coverage scope, curated photography &amp; 4K cinema tiers, add heirloom albums or drone aerials, and download a transparent, itemized quotation ready for date locking.
           </p>
-        </div>
 
-        <!-- Prominent Photography Philosophy Banner -->
-        <div class="photography-philosophy-card">
-          <div class="phil-header">
-            <span class="phil-icon">✨</span>
-            <h3 class="phil-title">OUR PHOTOGRAPHY PHILOSOPHY</h3>
+          <div style="display: flex; justify-content: center; align-items: center; gap: 16px; flex-wrap: wrap;">
+            <a href="quote.html" class="btn btn-gold btn-lg" style="font-size: 1.05rem; padding: 16px 36px; box-shadow: 0 4px 24px rgba(212,175,55,0.3); letter-spacing: 0.02em;">
+              ⚡ Launch Interactive Quotation Studio &rarr;
+            </a>
+            <a href="contact.html" class="btn btn-outline-gold" style="font-size: 0.95rem; padding: 15px 26px;">
+              Check Muhurat Date Availability
+            </a>
           </div>
-          <p class="phil-quote">
-            &ldquo;We believe in capturing genuine emotions, unscripted moments, and the true essence of your wedding rather than setting artificial limits on the number of pictures taken. Every meaningful ritual, family blessing, laughter, and tear will be thoroughly documented.&rdquo;
-          </p>
-          <div class="phil-grid">
-            <div class="phil-item">
-              <strong class="phil-item-title">📸 Ultra-High-Resolution RAW Photographs:</strong>
-              <span class="phil-item-desc">All original, uncompressed, full-resolution RAW photographs captured across every function of your celebration, meticulously organized for complete family archival.</span>
-            </div>
-            <div class="phil-item">
-              <strong class="phil-item-title">🎨 Handpicked Master Retouched Photographs:</strong>
-              <span class="phil-item-desc">A signature curated collection of your finest couple portraits, ritual highlights, and family group portraits, individually color-graded and retouched to print perfection.</span>
-            </div>
+
+          <div style="margin-top: 24px; display: flex; justify-content: center; gap: 24px; font-size: 0.8rem; color: var(--mute); font-family: var(--font-mono); flex-wrap: wrap;">
+            <span>✓ Instant Deal-Closing PDF</span>
+            <span>✓ Direct WhatsApp Confirmation</span>
+            <span>✓ Zero Fixed Photo Headcounts</span>
+            <span>✓ Lock 2026–2027 Founding Rates</span>
           </div>
         </div>
-
-        <!-- Mount Target for js/quotation-builder.js -->
-        <div id="quotation-builder-app"></div>
       </div>
     </section>
 
-    <!-- SECTION: CENTRALIZED ADD-ON CATALOGUE (PHASE 3) -->
-    <section class="addons-section" id="addons">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-tag">CATALOGUE OF OPTIONAL SERVICES</div>
-          <h2 class="section-title">
-            Centralized <span class="gold-text">Add-on Catalogue</span>
-          </h2>
-          <p class="section-desc">
-            Tailor any wedding package with optional services. All prices are transparent starting estimates and can be added directly into your quotation builder above.
-          </p>
-        </div>
 
-        <!-- Add-on Showcase Grid -->
-        <div class="addons-grid" id="addons-cards-wrap">
-          <!-- 1. Photography -->
-          <div class="addon-card">
-            <div>
-              <div class="addon-header">
-                <div>
-                  <span class="qb-addon-cat-tag">Photography</span>
-                  <h3 class="addon-title">Traditional Photography Coverage</h3>
-                </div>
-                <div style="text-align: right;">
-                  <span class="addon-price">₹9,999</span>
-                  <div class="addon-price-range">per event</div>
-                </div>
-              </div>
-              <p class="addon-desc">
-                Specialized coverage for formal stage family portraits, elder blessings, and complete ritual documentation.
-              </p>
-            </div>
-          </div>
-
-          <!-- 2. Candid Photo -->
-          <div class="addon-card">
-            <div>
-              <div class="addon-header">
-                <div>
-                  <span class="qb-addon-cat-tag">Photography</span>
-                  <h3 class="addon-title">Candid Photography Coverage</h3>
-                </div>
-                <div style="text-align: right;">
-                  <span class="addon-price">₹9,999</span>
-                  <div class="addon-price-range">per event</div>
-                </div>
-              </div>
-              <p class="addon-desc">
-                Captures spontaneous tears during Hasta Melap, laughter among cousins, and candid bride &amp; groom moments with dedicated prime lenses.
-              </p>
-            </div>
-          </div>
-
-          <!-- 3. Cinematography -->
-          <div class="addon-card">
-            <div>
-              <div class="addon-header">
-                <div>
-                  <span class="qb-addon-cat-tag">Cinematography</span>
-                  <h3 class="addon-title">Cinematic Wedding Filmmaking</h3>
-                </div>
-                <div style="text-align: right;">
-                  <span class="addon-price">₹12,499</span>
-                  <div class="addon-price-range">per event</div>
-                </div>
-              </div>
-              <p class="addon-desc">
-                Artistic fine-art cinematography with prime cinema glass, motorized gimbals, and dedicated multi-channel audio recording.
-              </p>
-            </div>
-          </div>
-
-          <!-- 4. Cinematic Highlight Film -->
-          <div class="addon-card">
-            <div>
-              <div class="addon-header">
-                <div>
-                  <span class="qb-addon-cat-tag">Cinematography</span>
-                  <h3 class="addon-title">Cinematic Highlight Film (3–5 Min)</h3>
-                </div>
-                <div style="text-align: right;">
-                  <span class="addon-price">₹9,999</span>
-                  <div class="addon-price-range">per film</div>
-                </div>
-              </div>
-              <p class="addon-desc">
-                Emotionally crafted 3–5 minute 4K highlight film featuring custom licensed score, Vedic audio chants, and pacing.
-              </p>
-            </div>
-          </div>
-
-          <!-- 5. Traditional Video Archive -->
-          <div class="addon-card">
-            <div>
-              <div class="addon-header">
-                <div>
-                  <span class="qb-addon-cat-tag">Cinematography</span>
-                  <h3 class="addon-title">Traditional Video Archive</h3>
-                </div>
-                <div style="text-align: right;">
-                  <span class="addon-price">₹8,499</span>
-                  <div class="addon-price-range">per event</div>
-                </div>
-              </div>
-              <p class="addon-desc">
-                Full-length documentary recording of all vidhis from start to finish, preserved for long-term family archives.
-              </p>
-            </div>
-          </div>
-
-          <!-- 6. Drone Aerials -->
-          <div class="addon-card">
-            <div>
-              <div class="addon-header">
-                <div>
-                  <span class="qb-addon-cat-tag">Drone &amp; Aerials</span>
-                  <h3 class="addon-title">4K Drone Aerial Shoot</h3>
-                </div>
-                <div style="text-align: right;">
-                  <span class="addon-price">₹7,499</span>
-                  <div class="addon-price-range">per event</div>
-                </div>
-              </div>
-              <p class="addon-desc">
-                Sweeping aerial vistas of venue architecture, Jaan Agaman procession, and outdoor vidhis. (Subject to DGCA permissions &amp; weather).
-              </p>
-            </div>
-          </div>
-
-          <!-- 7. Vertical Reels -->
-          <div class="addon-card">
-            <div>
-              <div class="addon-header">
-                <div>
-                  <span class="qb-addon-cat-tag">Social Media</span>
-                  <h3 class="addon-title">Vertical Social Reel (9:16)</h3>
-                </div>
-                <div style="text-align: right;">
-                  <span class="addon-price">₹2,499</span>
-                  <div class="addon-price-range">per reel &bull; 3 for ₹5,999</div>
-                </div>
-              </div>
-              <p class="addon-desc">
-                60-second vertical video edited with trending music for instant family WhatsApp forwarding and Instagram reels.
-              </p>
-            </div>
-          </div>
-
-          <!-- 8. Interviews & Podcasts -->
-          <div class="addon-card">
-            <div>
-              <div class="addon-header">
-                <div>
-                  <span class="qb-addon-cat-tag">Storytelling</span>
-                  <h3 class="addon-title">Guest Audio Interviews</h3>
-                </div>
-                <div style="text-align: right;">
-                  <span class="addon-price">₹5,999</span>
-                  <div class="addon-price-range">per event</div>
-                </div>
-              </div>
-              <p class="addon-desc">
-                Dedicated video journalist with lapel microphones and compact lighting captures spontaneous elder blessings and advice.
-              </p>
-            </div>
-          </div>
-
-          <!-- 9. Heirloom Album -->
-          <div class="addon-card">
-            <div>
-              <div class="addon-header">
-                <div>
-                  <span class="qb-addon-cat-tag">Albums &amp; Keepsakes</span>
-                  <h3 class="addon-title">Printed Heirloom Album</h3>
-                </div>
-                <div style="text-align: right;">
-                  <span class="addon-price">From ₹8,999</span>
-                  <div class="addon-price-range">30 sheets / 60 pgs</div>
-                </div>
-              </div>
-              <p class="addon-desc">
-                Handcrafted hardbound 12x18 inch photo album with luster/silk sheets, custom debossing, and protective keepsake box.
-              </p>
-            </div>
-          </div>
-
-          <!-- 10. Extra Hours -->
-          <div class="addon-card">
-            <div>
-              <div class="addon-header">
-                <div>
-                  <span class="qb-addon-cat-tag">Coverage</span>
-                  <h3 class="addon-title">Extra Coverage Hours</h3>
-                </div>
-                <div style="text-align: right;">
-                  <span class="addon-price">₹2,000</span>
-                  <div class="addon-price-range">per hour</div>
-                </div>
-              </div>
-              <p class="addon-desc">
-                Flexible hourly overtime billing when night Garba or extended morning Mandva rituals continue past standard schedule.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div style="text-align: center; margin-top: 36px;">
-          <a href="#quotation-builder" class="btn btn-gold" style="padding: 14px 28px;">
-            Configure Any Add-on in Live Quotation Builder ↑
-          </a>
-        </div>
-      </div>
-    </section>
 
     <!-- SECTION: WHY CHOOSE ANANT PRODUCTIONS (SECTION G) -->
     <section class="why-us-section" id="about" style="padding: 80px 0;">
@@ -1546,7 +1360,7 @@
               <span class="faq-icon" aria-hidden="true">+</span>
             </button>
             <div class="faq-answer">
-              <p>Our two-day wedding collections start at ₹29,999 for Essential Photography and ₹49,999 for Signature Photo + Cinema. We also offer our limited Founding Couple Launch Offer at ₹39,999 (Save ₹10,000) for early bookings. Final quotations reflect your chosen coverage hours, functions, and any optional add-ons.</p>
+              <p>Our two-day wedding collections start at ₹40,000 for Essential Photography and ₹75,000 for Signature Photo + Cinema. We also offer our limited Founding Couple Launch Offer at ₹50,000 (Save ₹25,000) for early bookings. Final quotations reflect your chosen coverage hours, functions, and any optional add-ons.</p>
             </div>
           </div>
 
@@ -1607,293 +1421,6 @@
         </div>
       </div>
     </section>
-
-    <!-- SECTION: EXPLORE OUR STUDIO & TRANSPARENCY (MPA SHOWCASE) -->
-    <section class="studio-pages-section" style="padding: 80px 0; border-top: 1px solid var(--hairline); background: rgba(0, 0, 0, 0.2);">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-tag">DEDICATED PAGES &bull; STUDIO STANDARDS</div>
-          <h2 class="section-title">
-            Transparency, Artistry &amp; <span class="gold-text">Sacred Trust</span>
-            <span class="gujarati-quote">પારદર્શક નીતિઓ, અમૂલ્ય વિશ્વાસ અને કલાત્મક વારસો</span>
-          </h2>
-          <p class="section-desc">
-            Explore our studio story, visit our Ahmedabad address, review our transparent date reservation terms, or learn how we safeguard your family's private wedding vaults.
-          </p>
-        </div>
-
-        <div class="studio-trust-grid">
-          <!-- Card 1: About Us -->
-          <article class="trust-page-card">
-            <div>
-              <div class="contact-icon-bubble" style="margin-bottom: 16px;">✦</div>
-              <h3 style="font-family: var(--font-serif); font-size: 1.25rem; color: var(--ink); margin-bottom: 8px;">About Anant Productions</h3>
-              <p style="font-size: 0.86rem; color: var(--body); line-height: 1.6; margin-bottom: 18px;">
-                Our core philosophy, Vedic ritual fluency, Ahmedabad roots, and why we treat your wedding as an eternal family milestone rather than a commercial headcount.
-              </p>
-            </div>
-            <a href="about.html" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.82rem;">
-              Read Our Story &rarr;
-            </a>
-          </article>
-
-          <!-- Card 2: Contact Us -->
-          <article class="trust-page-card">
-            <div>
-              <div class="contact-icon-bubble" style="margin-bottom: 16px;">📍</div>
-              <h3 style="font-family: var(--font-serif); font-size: 1.25rem; color: var(--ink); margin-bottom: 8px;">Studio &amp; Date Availability</h3>
-              <p style="font-size: 0.86rem; color: var(--body); line-height: 1.6; margin-bottom: 18px;">
-                Visit our studio in Bodakdev, Sindhu Bhavan Road, Ahmedabad, connect directly on WhatsApp with our founders, or check your 2026–2027 Muhurat date.
-              </p>
-            </div>
-            <a href="contact.html" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.82rem;">
-              Contact Our Studio &rarr;
-            </a>
-          </article>
-
-          <!-- Card 3: Terms & Conditions -->
-          <article class="trust-page-card">
-            <div>
-              <div class="contact-icon-bubble" style="margin-bottom: 16px;">📜</div>
-              <h3 style="font-family: var(--font-serif); font-size: 1.25rem; color: var(--ink); margin-bottom: 8px;">Terms &amp; Booking Policies</h3>
-              <p style="font-size: 0.86rem; color: var(--body); line-height: 1.6; margin-bottom: 18px;">
-                Clear written guarantees: date reservation advance, deliverable turnaround schedules, personal usage rights, and fair rescheduling terms.
-              </p>
-            </div>
-            <a href="terms-and-conditions.html" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.82rem;">
-              Review Studio Terms &rarr;
-            </a>
-          </article>
-
-          <!-- Card 4: Privacy Policy -->
-          <article class="trust-page-card">
-            <div>
-              <div class="contact-icon-bubble" style="margin-bottom: 16px;">🔒</div>
-              <h3 style="font-family: var(--font-serif); font-size: 1.25rem; color: var(--ink); margin-bottom: 8px;">Privacy Policy &amp; Vaults</h3>
-              <p style="font-size: 0.86rem; color: var(--body); line-height: 1.6; margin-bottom: 18px;">
-                Our solemn promise: password-protected private cloud galleries, zero commercial photo usage without couple consent, and multi-redundant archival security.
-              </p>
-            </div>
-            <a href="privacy-policy.html" class="btn btn-outline-gold" style="width: 100%; justify-content: center; font-size: 0.82rem;">
-              View Privacy Policy &rarr;
-            </a>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION: FINAL CALL TO ACTION (SECTION K) -->
-    <section class="final-cta-section">
-      <div class="container final-cta-container">
-        <div class="section-tag" style="margin-bottom: 16px;">PRESERVE YOUR WEDDING MEMORIES</div>
-        <h2 class="final-cta-title">
-          Let's Make Your Wedding Memories <span class="highlight-gold">Last Forever.</span>
-        </h2>
-        <p class="final-cta-desc">
-          Tell us your wedding date, location, and celebration plans. We'll help you find the right photography and cinematography package for your family.
-        </p>
-        <div class="final-cta-actions">
-          <a href="#contact" class="btn btn-gold" style="padding: 14px 28px; font-size: 0.95rem;">
-            Check Your Wedding Date
-          </a>
-          <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20would%20love%20to%20discuss%20our%20wedding%20photography%20and%20packages." target="_blank" rel="noopener" class="btn btn-whatsapp" style="padding: 14px 28px; font-size: 0.95rem;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-            Chat on WhatsApp
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION: HIGH-CONVERTING ENQUIRY SYSTEM (SECTION 4) -->
-    <section class="contact-section" id="contact">
-      <div class="container">
-        <div class="contact-box">
-          <!-- Left: Studio Details & Quick WhatsApp -->
-          <div class="contact-info">
-            <div>
-              <div class="section-tag" style="background: rgba(212,175,55,0.06);">DATE AVAILABILITY &bull; AUSPICIOUS MUHURAT BOOKINGS</div>
-              <h2 class="contact-info-title">Check Your Wedding Date.</h2>
-              <p class="contact-info-desc">
-                Share your wedding plans with us. We check our shooting calendar immediately and provide an itemized, transparent quotation.
-              </p>
-
-              <div class="contact-details">
-                <div class="contact-detail-row">
-                  <div class="contact-icon-bubble" aria-hidden="true">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                      <circle cx="12" cy="10" r="3"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <div class="contact-text-label">Studio Location</div>
-                    <div class="contact-text-value">Bodakdev, Sindhu Bhavan Road, Ahmedabad, Gujarat &mdash; 380054</div>
-                  </div>
-                </div>
-
-                <div class="contact-detail-row">
-                  <div class="contact-icon-bubble" aria-hidden="true">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <div class="contact-text-label">Direct Phone &amp; WhatsApp</div>
-                    <div class="contact-text-value">+91 80000 88819</div>
-                  </div>
-                </div>
-
-                <div class="contact-detail-row">
-                  <div class="contact-icon-bubble" aria-hidden="true">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                      <polyline points="22,6 12,13 2,6"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <div class="contact-text-label">Official Inquiries</div>
-                    <div class="contact-text-value">weddings@anantproductions.in</div>
-                  </div>
-                </div>
-
-                <div class="contact-detail-row">
-                  <div class="contact-icon-bubble" aria-hidden="true">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-                      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <div class="contact-text-label">Instagram Portfolio</div>
-                    <div class="contact-text-value">
-                      <a href="https://instagram.com/anantproductions" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;">@anantproductions</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Secondary direct WhatsApp CTA -->
-            <div class="contact-whatsapp-box" style="border-radius: var(--radius-md); padding: 18px; margin-top: 24px;">
-              <div class="contact-whatsapp-title" style="font-size: 0.86rem; font-weight: 600; margin-bottom: 6px;">Prefer not to fill out the form?</div>
-              <p class="contact-whatsapp-desc" style="font-size: 0.8rem; margin-bottom: 12px; line-height: 1.4;">
-                Send us a direct WhatsApp message with your wedding dates and we’ll reply promptly.
-              </p>
-              <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20are%20planning%20our%20wedding%20and%20would%20love%20to%20connect%20directly." target="_blank" rel="noopener" class="btn btn-whatsapp" style="width: 100%; justify-content: center;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-                Direct WhatsApp Message
-              </a>
-            </div>
-          </div>
-
-          <!-- Right: Interactive High-Converting Enquiry Form -->
-          <div>
-            <form id="wedding-inquiry-form" novalidate>
-              <div class="form-grid">
-                <!-- 1. Couple Names -->
-                <div class="form-group">
-                  <label for="form-names" class="form-label">Couple Names / Your Name *</label>
-                  <input type="text" id="form-names" class="form-input" placeholder="e.g. Priyanshi &amp; Harsh…" required autocomplete="name">
-                </div>
-
-                <!-- 2. WhatsApp Number -->
-                <div class="form-group">
-                  <label for="form-phone" class="form-label">WhatsApp Number *</label>
-                  <input type="tel" id="form-phone" class="form-input" placeholder="+91 98765 XXXXX…" required autocomplete="tel" spellcheck="false">
-                </div>
-
-                <!-- 3. Wedding Date with 'Not finalized' checkbox -->
-                <div class="form-group">
-                  <label for="form-date" class="form-label" id="date-label">Wedding Date / Muhurat Month *</label>
-                  <input type="text" id="form-date" class="form-input" placeholder="e.g. 14–15 Dec 2026…" required autocomplete="off">
-                  <label class="checkbox-toggle-row">
-                    <input type="checkbox" id="form-date-flexible">
-                    <span>Date not yet finalized / Discussing Muhurat</span>
-                  </label>
-                </div>
-
-                <!-- 4. City / Venue -->
-                <div class="form-group">
-                  <label for="form-city" class="form-label">Wedding City or Venue *</label>
-                  <input type="text" id="form-city" class="form-input" placeholder="e.g. Ahmedabad, Vadodara, Surat…" required autocomplete="address-level2">
-                </div>
-
-                <!-- 5. Number of Days -->
-                <div class="form-group">
-                  <label for="form-days" class="form-label">Number of Wedding Days</label>
-                  <select id="form-days" class="form-input" style="background-color: var(--canvas-elevated);">
-                    <option value="2 Days (Standard Gujarati Wedding)" selected>2 Days (Garba + Wedding / Standard)</option>
-                    <option value="1 Day (Intimate Celebration)">1 Day (Intimate / Single Day)</option>
-                    <option value="3 Days (Mandva + Garba + Wedding)">3 Days (Mandva + Garba + Lagna)</option>
-                    <option value="4+ Days (Grand Celebration)">4+ Days (Grand Celebration / Destination)</option>
-                    <option value="Not Decided Yet">Not Decided Yet</option>
-                  </select>
-                </div>
-
-                <!-- 6. Service Type -->
-                <div class="form-group">
-                  <label for="form-service" class="form-label">Service Interested In</label>
-                  <select id="form-service" class="form-input" style="background-color: var(--canvas-elevated);">
-                    <option value="Both Photography &amp; Cinematography (Recommended)" selected>Both Photography &amp; Cinematography</option>
-                    <option value="Signature Two-Day Launch Offer (₹39,999)">Signature Two-Day Launch Offer (₹39,999)</option>
-                    <option value="Photography Only">Photography Only</option>
-                    <option value="Cinematography &amp; Reels Only">Cinematography &amp; Reels Only</option>
-                    <option value="Pre-Wedding Shoot Only">Pre-Wedding Shoot Only</option>
-                  </select>
-                </div>
-
-                <!-- 7. Functions to be covered (Interactive Pills) -->
-                <div class="form-group full-width">
-                  <span class="function-pills-label">Functions to be Covered (Select all that apply):</span>
-                  <div class="function-pills-wrap" id="functions-pills-container">
-                    <button type="button" class="function-pill" data-fn="Mandva / Grah Shanti">Mandva / Grah Shanti</button>
-                    <button type="button" class="function-pill" data-fn="Haldi / Pithi">Haldi / Pithi</button>
-                    <button type="button" class="function-pill" data-fn="Mehndi">Mehndi</button>
-                    <button type="button" class="function-pill" data-fn="Garba / Sangeet Night">Garba / Sangeet Night</button>
-                    <button type="button" class="function-pill" data-fn="Lagna / Mandap Ceremony">Lagna / Mandap Ceremony</button>
-                    <button type="button" class="function-pill" data-fn="Reception">Reception</button>
-                    <button type="button" class="function-pill" data-fn="Mosalu / Mameru">Mosalu / Mameru</button>
-                    <button type="button" class="function-pill" data-fn="Pre-Wedding Shoot">Pre-Wedding Shoot</button>
-                  </div>
-                </div>
-
-                <!-- 8. Approximate Budget -->
-                <div class="form-group full-width">
-                  <label for="form-budget" class="form-label">Approximate Budget (₹)</label>
-                  <select id="form-budget" class="form-input" style="background-color: var(--canvas-elevated);">
-                    <option value="Founding Couple Launch Offer (₹39,999)">Founding Couple Launch Offer (₹39,999)</option>
-                    <option value="₹29,999 – ₹40,000 (Essential Tier)">₹29,999 – ₹40,000 (Essential Tier)</option>
-                    <option value="₹40,000 – ₹65,000 (Signature Photo + Cinema)" selected>₹40,000 – ₹65,000 (Signature Photo + Cinema)</option>
-                    <option value="₹65,000 – ₹95,000 (Premium Wedding Story)">₹65,000 – ₹95,000 (Premium Wedding Story)</option>
-                    <option value="₹95,000+ (Multi-Day / Grand)">₹95,000+ (Multi-Day / Grand)</option>
-                    <option value="Flexible / Need Advice">Flexible / Need Advice</option>
-                  </select>
-                </div>
-
-                <!-- 9. Optional Message -->
-                <div class="form-group full-width">
-                  <label for="form-details" class="form-label">Any specific vision or notes? (Optional)</label>
-                  <textarea id="form-details" class="form-textarea" placeholder="Tell us about special rituals, venue details, or questions you have…"></textarea>
-                </div>
-
-                <!-- Submit Button -->
-                <div class="form-group full-width">
-                  <button type="submit" class="btn btn-gold" id="btn-submit-enquiry" style="width: 100%; padding: 16px; font-size: 1rem; justify-content: center;">
-                    Check Date Availability &amp; Send on WhatsApp
-                  </button>
-                </div>
-              </div>
-            </form>
-
-            <!-- Friendly Success Box -->
-            <div id="form-feedback" class="form-feedback-box" role="alert">
-              <strong>Thank you!</strong> Opening WhatsApp with your wedding details… If WhatsApp did not open automatically, <a href="#" id="feedback-direct-link" target="_blank" rel="noopener">click here to send your inquiry directly</a>.
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
   </main>
 
   <!-- FOOTER (SECTION L) -->
@@ -1921,11 +1448,11 @@
         <div>
           <h4 class="footer-col-title">Navigation</h4>
           <ul class="footer-links">
-            <li><a href="index.html" class="footer-link">Home</a></li>
+            <li><a href="./" class="footer-link">Home</a></li>
             <li><a href="about.html" class="footer-link">About Us &amp; Story</a></li>
-            <li><a href="#portfolio" class="footer-link">Portfolio &amp; Work</a></li>
+            <li><a href="#films" class="footer-link">Wedding Films &amp; Cinema</a></li>
             <li><a href="#packages" class="footer-link">Two-Day Packages</a></li>
-            <li><a href="#quotation-builder" class="footer-link">Live Quotation Builder</a></li>
+            <li><a href="quote.html" class="footer-link">Live Quotation Builder</a></li>
             <li><a href="contact.html" class="footer-link">Contact &amp; Studio Location</a></li>
             <li><a href="terms-and-conditions.html" class="footer-link">Terms &amp; Retainer Policies</a></li>
             <li><a href="privacy-policy.html" class="footer-link">Privacy Policy &amp; Vaults</a></li>
@@ -1991,6 +1518,14 @@
     </a>
   </aside>
 
+  <!-- FLOATING RETURN TO TOP BUTTON -->
+  <button type="button" id="scroll-to-top" class="scroll-to-top" aria-label="Return to top" title="Return to top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="12" y1="19" x2="12" y2="5"></line>
+      <polyline points="5 12 12 5 19 12"></polyline>
+    </svg>
+  </button>
+
   <!-- FLOATING DESKTOP WHATSAPP BUTTON -->
   <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20We%20are%20planning%20our%20wedding%20and%20would%20love%20to%20connect." target="_blank" rel="noopener" class="floating-whatsapp" aria-label="Chat directly on WhatsApp" title="Chat Directly on WhatsApp">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
@@ -2036,9 +1571,8 @@
   </div>
 
   <!-- Central Configuration, Pricing Engine & Main JavaScript -->
-  <script src="js/config.js?v=11"></script>
-  <script src="js/pricing-engine.js?v=11"></script>
-  <script src="js/quotation-builder.js?v=12"></script>
-  <script src="js/main.js?v=11"></script>
+  <script src="js/config.js?v=43"></script>
+  <script src="js/pricing-engine.js?v=43"></script>
+  <script src="js/main.js?v=43"></script>
 </body>
 </html>

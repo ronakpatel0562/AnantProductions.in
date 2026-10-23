@@ -151,5 +151,142 @@ Whenever changes or additions are made:
       - **Production Crew Rates:** Traditional Photo ₹9,999; Candid Photo ₹9,999; 4K Cinema ₹12,499; Video Archive ₹8,499; Drone ₹7,499; Production Assistant ₹3,000.
       - **Add-on Services:** Drone ₹7,499; 9:16 Reel ₹2,499 (3-bundle ₹5,999); Interviews ₹5,999; Heirloom Album from ₹8,999; Royal Velvet Album ₹15,999; Extra hour ₹2,000; Extra day ₹24,999.
     - Updated all static cards, launch banners, budget dropdown selectors, pricing calculation engine, and 15/15 unit test assertions in `test/pricing-engine.test.js` to match.
+  - **Wedding Tier Repositioning & Expanded Launch Offer Update (October 2026):**
+    - Updated flagship Two-Day Gujarati Wedding Collections to clean luxury price points:
+      - **Essential Wedding:** ₹40,000 (was ₹29,999) &bull; Range: ₹40,000 – ₹48,000.
+      - **Signature Wedding:** ₹75,000 (was ₹49,999) &bull; Range: ₹75,000 – ₹90,000.
+      - **Premium Wedding Story:** ₹1,00,000 / 1L (was ₹74,999) &bull; Range: ₹1,00,000 – ₹1,20,000.
+    - Repositioned **Founding Couple Launch Offer** to regular price ₹75,000 down to **₹50,000** (Save ₹25,000 for early bookings).
+    - Updated `js/config.js`, `js/pricing-engine.js`, `index.html` (cards, launch banner, FAQ, inquiry form dropdowns, WhatsApp message strings), `contact.html`, `about.html`, `privacy-policy.html`, `terms-and-conditions.html`, `404.html`, `500.html`, and all 16/16 unit test assertions in `test/pricing-engine.test.js`.
+  - **Coverage Scope Flow Refactor & Dynamic Multiplier Schedule:**
+    - Repositioned the Coverage Scope selection in Step 1 of the Quotation Builder: Celebration Category / Event Type is rendered first upfront.
+    - Coverage Scope is now rendered in a dedicated section *after* Event Type, and is **only and only visible when someone selects 2-Day Wedding**. When other events (Pre-Wedding, Engagement, Individual Functions, Build Your Own) are selected, the Coverage Scope section is hidden and non-wedding scopes incur 0 surcharge.
+    - Updated Coverage Scope pricing logic from fixed surcharges to dynamic package multipliers:
+      - **One-Side Coverage:** 1.0x (Standard Base Price).
+      - **Both Sides — Joint Venue:** **1.4x price** (e.g. ₹56,000 for Essential, ₹1,05,000 for Signature, ₹1,40,000 for Premium).
+      - **Both Sides — Different Locations:** **1.85x price** (e.g. ₹74,000 for Essential, ₹1,38,750 for Signature, ₹1,85,000 for Premium).
+    - Updated `js/config.js`, `js/pricing-engine.js`, `js/quotation-builder.js`, `contact.html`, and all unit and UI requirement tests in `test/pricing-engine.test.js` and `test/ui-requirements.test.js`.
+  - **Removal of "Build Your Own (From ₹0 Base)" Option:**
+    - Removed the "Build Your Own" choice from Step 3 (Base Package Selection) and Step 1 (Celebration Category) of the Quotation Builder.
+    - Users now select strictly from curated, structured studio collections (Two-Day Wedding, Pre-Wedding, Engagement, Individual Functions) ensuring standardized studio delivery while still allowing custom add-ons in Step 5.
+    - Updated `js/quotation-builder.js` and `js/config.js`.
+  - **Removal of Redundant Coverage Services Step (Streamlined 7-Step Wizard):**
+    - Removed the redundant Step 4 ("04 Services: Select your celebration coverage styles") from `js/quotation-builder.js` as photography and cinematography coverage styles are already decided and included in the chosen Base Plan tier (Essential, Signature, Premium).
+    - Streamlined the quotation builder from 8 steps to 7 clean steps:
+      1. **01 Event Type & Celebration**
+      2. **02 Event Details & Schedule**
+      3. **03 Choose Base Package**
+      4. **04 Deliverables & Add-on Catalogue** (Heirloom albums, social reels, audio interviews, overtime hours)
+      5. **05 Review Custom Quotation**
+      6. **06 Your Contact Details**
+      7. **07 Ready to Dispatch / Final Quotation**
+    - Updated stepper tabs, navigation links (`data-step-next`, `data-step-prev`), kickers (`STEP XX OF 07`), mobile progress trackers, and test assertions in `test/ui-requirements.test.js`.
+  - **Wedding Plans Original vs. Discounted Pricing & Introductory Offer Isolation:**
+    - Removed the "Launch Offer" badge and strikethrough from the Signature Wedding card in the general package showcase grid.
+    - Preserved the Founding Couple Launch Offer (₹50,000 promotional rate vs. regular ₹75,000, Save ₹25,000) exclusively in the dedicated Introductory Offer section (`#launch-offer`) for early bookings.
+    - Updated all three Two-Day Wedding packages across `index.html`, `js/config.js`, and `js/quotation-builder.js` with:
+      - **Essential Wedding:** Original Price **₹50,000** (with strikethrough), Discounted / Special Rate **₹40,000**.
+      - **Signature Wedding:** Original Price **₹1,00,000 (1L)** (with strikethrough), Discounted / Special Rate **₹75,000**.
+      - **Premium Wedding Story:** Original Price **₹1,50,000 (1.5L)** (with strikethrough), Discounted / Special Rate **₹1,00,000 (1L)**.
+    - Updated package cards and quotation builder step 3 to display both the strikethrough original price and the prominent discounted rate.
+  - **Pre-Wedding Decoy & Anchoring Pricing Update (15k, 30k, 50k):**
+    - Updated the Pre-Wedding Collections to discounted rates of **₹15,000**, **₹30,000**, and **₹50,000**.
+    - Strategically anchored original strikethrough prices to maximize conversions toward the middle (Signature) and highest (Premium) tiers:
+      - **Essential Couple Shoot:** Original Price **₹20,000** (Save ₹5,000), Discounted Rate **₹15,000** (3 hrs, stills only).
+      - **Signature Pre-Wedding (Recommended Sweet Spot):** Original Price **₹45,000** (Save ₹15,000 / 33% off!), Discounted Rate **₹30,000** (Half-day 5 hrs, 2 locations, 3 outfits, 4K 60s romantic cinematic reel).
+      - **Premium Pre-Wedding Film (Luxury Flagship):** Original Price **₹75,000** (Save ₹25,000 / 33% off!), Discounted Rate **₹50,000** (Full-day 8 hrs sunrise-sunset, dialogue audio, 2-3 min 4K narrative film, 2 vertical reels, aerial drone).
+  - **Engagement & Individual Functions Strategic Pricing Alignment:**
+    - Updated **Engagement & Sakar Pudo (સગાઈ અને સાકરપુડો)** collections to be positioned a little more than pre-wedding (Pre-wedding is ₹15k / ₹30k / ₹50k), reflecting the sacred ritual solemnity, family coverage, and dual audio/ceremony requirements:
+      - **Essential Engagement:** Original Price **₹28,000** (Save ₹8,000), Discounted Rate **₹20,000** (Up to 4 hrs stills & sacred ritual documentation).
+      - **Signature Engagement (Most Booked Sweet Spot):** Original Price **₹50,000** (Save ₹15,000 / 30% off!), Discounted Rate **₹35,000** (Up to 5 hrs candid photo + 4K cinematic highlight film + 1 vertical reel).
+      - **Premium Engagement Gala:** Original Price **₹85,000** (Save ₹25,000 / 30% off!), Discounted Rate **₹60,000** (Up to 6 hrs dual photo + cinema + lighting + 2 vertical reels + couple portraits).
+    - Updated **Individual Functions (વ્યક્તિગત પ્રસંગો - Haldi, Pithi, Mehndi, Garba, Reception)** collections to match studio pricing structure:
+      - **Essential Function (Intimate Haldi / Pithi / Mosalu):** Original Price **₹20,000** (Save ₹5,000), Discounted Rate **₹15,000** (Up to 4 hrs candid still photo).
+      - **Signature Function (Best for Raas Garba / Sangeet Night):** Original Price **₹45,000** (Save ₹15,000 / 33% off!), Discounted Rate **₹30,000** (Up to 5 hrs photo + high-energy cinema highlight film + 1 vertical reel).
+      - **Premium Grand Function (500+ Guest Gala / Formal Reception):** Original Price **₹75,000** (Save ₹25,000 / 33% off!), Discounted Rate **₹50,000** (Up to 6 hrs dual photo + full production cinema + 2 vertical reels).
+    - Harmonized across `index.html` (with strikethrough original prices, special rate badges, and updated WhatsApp pre-filled inquiry messages), `js/config.js` (indicative prices, price ranges, and messages), and test suites (`test/pricing-engine.test.js` and `test/ui-requirements.test.js`).
+  - **Comprehensive Add-on Catalogue Pricing Overhaul (Ahmedabad / Gujarat Luxury Market Rates):**
+    - Recalibrated all add-on products and services to eliminate artificially low prices and match premium Ahmedabad wedding studio economics:
+      - **Heirloom Albums:**
+        - Printed Heirloom Wedding Album (30 Sheets / 60 Pages 12x18 layflat): **₹15,000** (was ₹8,999).
+        - Royal Velvet Master Album Upgrade (40 Sheets / 80 Pages): **₹25,000** (was ₹15,999).
+        - Parent / Family Duplicate Keepsake Album (8x12): **₹9,999** (was ₹5,999).
+        - Archival Fine-Art Print Box (25 Mounted Prints in Wooden Box): **₹6,999** (was ₹3,999).
+      - **Social Media Reels:**
+        - Single 9:16 Vertical Reel (60s): **₹4,500** (was ₹2,499).
+        - Three-Reel Bundle: **₹11,999** (was ₹5,999).
+        - Additional Edited Reel: **₹3,999** (was ₹2,199).
+        - Same-Day Edit Express Reel: **₹9,999** (was ₹4,499).
+        - Express 48-Hour Highlight Delivery: **₹12,500** (was ₹6,499).
+      - **Storytelling & Interviews:**
+        - Guest & Family Audio/Video Interviews: **₹9,999** (was ₹5,999).
+        - Couple Love Story Interview Session: **₹8,500** (was ₹4,999).
+        - Podcast-Style Sit-Down Recording Setup: **₹18,000** (was ₹9,999).
+        - Documentary Story Cut Integration: **₹6,500** (was ₹3,999).
+      - **Post-Production & Masters:**
+        - 4K Master SSD Archival Hard Drive (1TB): **₹8,999** (was ₹4,999).
+        - Advanced Cinema Sound & Color Master: **₹9,999** (was ₹5,999).
+        - Extended Feature Film (12–18 Mins): **₹15,000** (was ₹7,499).
+        - Standalone Cinematic 4K Highlight Film (3–5 Mins): **₹15,000** (was ₹8,999).
+        - Fine-Art Editorial Photo Retouching: **₹5,999** (was ₹3,199).
+      - **Coverage, Overtime & Extra Days:**
+        - Extra Coverage Hour: **₹4,000 / hr** (was ₹2,000).
+        - Additional Wedding Day Rate: **₹35,000 / day** (was ₹24,999).
+      - **Production Services (crewRoles & Showcase Grid):**
+        - Traditional Photography Coverage: **₹15,000** (was ₹9,999).
+        - Candid Photography Coverage: **₹15,000** (was ₹9,999).
+        - Cinematic Wedding Filmmaking: **₹20,000** (was ₹12,499).
+        - Traditional Video Archive: **₹12,000** (was ₹8,499).
+        - 4K Drone Aerial Shoot: **₹12,000** (was ₹7,499).
+        - Production Lighting & Audio Support: **₹5,000** (was ₹3,000).
+    - Updated `js/config.js`, `index.html` (#addons showcase grid), and `test/pricing-engine.test.js`.
+  - **Quotation Builder Stepper Menu Visibility & Navigation Fix:**
+    - Resolved the horizontal cutoff issue where stepper menu tabs were clipped off past the 6th item (`06 Review` / `0...`).
+    - Added `flex-wrap: wrap;` and optimized spacing on `.qb-stepper` in `css/style.css` so that all 7 steps (`01 Event Type`, `02 Details`, `03 Base Plan`, `04 Add-ons`, `05 Review`, `06 Your Info`, `07 Submit`) are fully visible, wrapped neatly, and never hidden on any screen size.
+    - Fixed syntax error in `js/quotation-builder.js` (`loadInitialState` try-catch block), ensuring the new 7-step wizard (with Services removed) loads cleanly without falling back to cached 8-step scripts.
+    - Added `syncCurrentInputs()` to ensure contact and schedule inputs are always synchronized into state before validation and step transitions.
+    - Added draft validation sanitization to clamp any legacy drafts from older 8-step sessions (`builderState.currentStep <= 7`).
+    - Updated cache-busting query strings (`?v=25`) across `index.html` for scripts and stylesheet.
+  - **Hero Value Pillars Bar Layout & Clipping Fix:**
+    - Resolved visual truncation and clipping on the 4th pillar item (`Transparent` / `Two-Day Wedding Packages`) in the hero stats bar on `index.html`.
+    - Expanded `.hero-stats` container width from `max-width: 900px` to `max-width: 1060px` in `css/style.css`, giving ample horizontal breathing room across all 4 columns.
+    - Added dedicated corner clearance padding (`.stat-item:first-child` / `.stat-item:last-child` with `22px` horizontal padding) so outer items are never clipped by the rounded border corners (`border-radius: var(--radius-lg)` + `overflow: hidden`).
+    - Scaled typography gracefully: tuned `.stat-num` to `clamp(0.96rem, 1.12vw, 1.18rem)` with balanced letter-spacing (`-0.01em`), and `.stat-label` letter-spacing to `0.05em` with clean multi-line wrapping support.
+    - Added responsive collapse breakpoints at `@media (max-width: 1120px)` (2x2 grid) and `@media (max-width: 560px)` (1 column), with mobile font sizes tuned in `@media (max-width: 480px)`.
+    - Removed redundant inline `white-space: nowrap` from `index.html`.
+  - **Photo Portfolio Section Temporarily Hidden:**
+    - Hidden the "Featured Wedding Portfolio" section (`#portfolio` / `.gallery-section`) on `index.html` via `display: none !important;` in `css/style.css` and `style="display: none;" aria-hidden="true"` on the section tag.
+    - Preserved all underlying markup, filter buttons, lightbox attributes, and data structures intact for effortless re-activation when the photo portfolio is ready.
+    - Updated navigation links across all pages (`index.html`, `about.html`, `contact.html`, `terms-and-conditions.html`, `privacy-policy.html`, `404.html`, `500.html`):
+      - Desktop nav: Cleanly streamlined to `Films`, `Packages`, `About`, `Contact`.
+      - Mobile drawer: Updated portfolio link to `Wedding Films & Cinema` (`#films`).
+      - Footer: Updated navigation link to `Wedding Films & Cinema` (`#films`).
+  - **Dedicated Coverage Scope Step & Dynamic Package Price Calculation:**
+    - Moved the Coverage Scope configurator into its own dedicated step (`Step 02 OF 08 • COVERAGE SCOPE`) instead of being embedded inside Step 1 (Event Type).
+    - Made the step conditional: displays only when a **Wedding** celebration is selected (8 total steps: `01 Event Type`, `02 Coverage Scope`, `03 Details`, `04 Base Plan`, `05 Add-ons`, `06 Review`, `07 Your Info`, `08 Submit`).
+    - For non-wedding celebrations (Pre-Wedding, Engagement, Individual Functions), Coverage Scope is skipped completely (7 total steps: `01 Event Type`, `02 Details`, `03 Base Plan`, `04 Add-ons`, `05 Review`, `06 Your Info`, `07 Submit`).
+    - Removed multiplier text ratios (`1.4x Price`, `1.85x Price`) from all badges, card text, line item descriptions, and generated WhatsApp messages. Replaced with `'With Extra Charge'` badges (`'Standard'` for One-Side).
+    - Updated package cards on the Base Plan step to dynamically compute and display package prices modified by the selected coverage scope multiplier (e.g. Signature Wedding dynamically displays ₹1,05,000 for Joint Venue or ₹1,38,750 for Different Locations, with an `'Adjusted with Extra Charge'` badge).
+    - Updated test suites (`test/ui-requirements.test.js`, `test/pricing-engine.test.js`) and bumped cache version to `?v=27` in `index.html`.
+  - **Zero-Scroll Quotation Studio & Dedicated Standalone Page (`quote.html`):**
+    - Created dedicated standalone full-screen zero-scroll page at `quote.html` with fixed 100vh layout (`body.qb-standalone-page`), completely eliminating up-and-down scrolling across all wizard steps.
+    - Integrated a persistent viewport-pinned bottom navigation bar (`.qb-nav-bar-fixed`) containing prominent `← Back` and `Continue →` buttons, ensuring navigation is always immediately reachable without hunting or scrolling.
+    - Streamlined the step workflow by removing the redundant in-wizard review step:
+      - Wedding celebrations: 6 steps (`01 Event Type` → `02 Coverage Scope` → `03 Details` → `04 Base Plan` → `05 Add-ons` → `06 Your Quotation`).
+      - Non-wedding celebrations: 5 steps (`01 Event Type` → `02 Details` → `03 Base Plan` → `04 Add-ons` → `05 Your Quotation`).
+    - Unified the final step (`renderStep_FinalQuotationAndContact`) with a clean two-column grid: quick contact details on the left, instant 1-click WhatsApp quote submission and official PDF download on the right.
+    - Added an always-accessible `📄 Review & Download PDF` action button in the studio header and inside the live summary sidebar card.
+    - Replaced the embedded quotation builder on `index.html` with a high-converting studio launcher card pointing to `quote.html`, and updated all navbar and footer CTAs.
+  - **Quotation Builder Step 6 UI Polish & Navbar Clearance Fix:**
+    - Resolved horizontal button clipping and truncation in Card 02 (`Instant Dispatch & Official Proposal`): converted `.qb-final-grid` from a cramped 2-column grid to a clean vertical stack where Card 01 (Couple Details) and Card 02 (Dispatch Actions) both enjoy 100% width with dedicated flex `.qb-action-row` rows (`Review & Download PDF`, `Direct Print`, `Copy Shareable Link`, `Copy Summary Text`).
+    - Fixed bottom pinned bar (`.qb-nav-bar-fixed`) floating over content on `index.html`: restricted `.qb-nav-bar-fixed` via CSS so it displays only on the dedicated standalone studio page (`body.qb-standalone-page` on `quote.html`), keeping `index.html` completely unblocked and clean.
+    - Eliminated duplicate WhatsApp buttons: on Step 6, the right sidebar now focuses cleanly on the price breakdown and PDF preview with an advisory notice, while Card 02 acts as the prominent primary WhatsApp dispatch hub.
+    - Added `scroll-margin-top: 100px;` and `padding-top: 14px;` to `.qb-stepper`, and updated `scrollToQuotationSection()` in `js/quotation-builder.js` to scroll directly to `#quotation-builder-app` with 24px of clear margin below the sticky navbar.
+    - Verified all 41 unit tests pass and verified visual state in browser subagent.
+
+
+
+
+
 
 

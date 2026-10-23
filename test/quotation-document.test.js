@@ -121,28 +121,17 @@ it('should generate a WhatsApp inquiry strictly compliant with Rules A, B, and C
   assert.strictEqual(photoCountRegex.test(msg), false, 'WhatsApp message must not contain numerical photo counts');
 });
 
-// 6. Formal Quotation Document 8-Section Structure
-it('should contain all 8 sections in quotation-builder.js', () => {
+// 6. Deal-Closing Formal Quotation Document Structure
+it('should render a clean, deal-closing quotation document without unnecessary bloat', () => {
   const qbPath = path.join(__dirname, '../js/quotation-builder.js');
   const content = fs.readFileSync(qbPath, 'utf8');
 
-  assert.ok(content.includes('SECTION 01 • PERSONALIZED QUOTATION') || content.includes('SECTION 01'), 'Section 1 must be present');
-  assert.ok(content.includes('SECTION 02'), 'Section 2 must be present');
-  assert.ok(content.includes('SECTION 03'), 'Section 3 must be present');
-  assert.ok(content.includes('SECTION 04'), 'Section 4 must be present');
-  assert.ok(content.includes('SECTION 05'), 'Section 5 must be present');
-  assert.ok(content.includes('SECTION 06'), 'Section 6 must be present');
-  assert.ok(content.includes('SECTION 07'), 'Section 7 must be present');
-  assert.ok(content.includes('SECTION 08'), 'Section 8 must be present');
-
-  // Specific section headers
-  assert.ok(content.includes('Event-by-Event Celebration Coverage'), 'Section 2 title must match');
-  assert.ok(content.includes('Deliverables You Will Receive'), 'Section 3 title must match');
-  assert.ok(content.includes('Complimentary Experiences for Your Celebration'), 'Section 4 title must match');
-  assert.ok(content.includes('Investment & Special Offer') || content.includes('Investment &amp; Special Offer'), 'Section 5 title must match');
-  assert.ok(content.includes('Special Add-ons for Your Wedding Experience'), 'Section 6 title must match');
-  assert.ok(content.includes('Terms of Engagement & Exclusions') || content.includes('Terms of Engagement &amp; Exclusions'), 'Section 7 title must match');
-  assert.ok(content.includes('Let\'s Create Something Timeless Together'), 'Section 8 title must match');
+  assert.ok(content.includes('DEAL-CLOSING FORMAL QUOTATION DOCUMENT'), 'Must have deal-closing quotation header');
+  assert.ok(content.includes('OFFICIAL QUOTATION'), 'Must have official proposal badge');
+  assert.ok(content.includes('Itemized Investment Breakdown'), 'Must have itemized table');
+  assert.ok(content.includes('Ready to Lock Your Wedding Dates?'), 'Must have deal-closing next steps');
+  assert.ok(content.includes('Date Reservation Advance'), 'Must specify 25% date reservation advance');
+  assert.ok(content.includes('Confirm Dates on WhatsApp'), 'Must provide direct WhatsApp confirmation');
 });
 
 console.log(`\nResults: ${passedTests}/${totalTests} tests passed.\n`);

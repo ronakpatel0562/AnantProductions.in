@@ -85,10 +85,10 @@ const ANANT_CONFIG = {
     active: true,
     title: 'Celebrate Your Beginning With Anant Productions',
     badge: 'Founding Couple Launch Offer',
-    price: '₹39,999',
-    regularPrice: '₹49,999',
-    savings: 'Save ₹10,000',
-    discountAmount: 10000, // ₹49,999 Signature down to ₹39,999
+    price: '₹50,000',
+    regularPrice: '₹75,000',
+    savings: 'Save ₹25,000',
+    discountAmount: 25000, // ₹75,000 Signature down to ₹50,000
     slotsTotal: 3,
     note: 'Introductory pricing limited to the first 3 bookings for 2026–2027 wedding seasons.',
     packageTitle: 'Signature Two-Day Photo + Cinema Collection',
@@ -102,7 +102,7 @@ const ANANT_CONFIG = {
       'Private online gallery with instant family download access'
     ],
     ctaText: 'Claim Launch Offer via WhatsApp',
-    waMessage: 'Hello Anant Productions! I saw your Founding Couple Launch Offer (₹39,999 for Signature Photo + Cinema). We are planning our wedding and would love to check date availability!'
+    waMessage: 'Hello Anant Productions! I saw your Founding Couple Launch Offer (₹50,000 for Signature Photo + Cinema, Regular ₹75,000). We are planning our wedding and would love to check date availability!'
   },
 
   // COVERAGE SERVICES & STYLES (Customer-Facing Services — Rule A Compliant)
@@ -111,7 +111,7 @@ const ANANT_CONFIG = {
       id: 'photo_trad',
       name: 'Traditional Photography Coverage',
       serviceTitle: 'Traditional Photography',
-      ratePerEvent: 9999,
+      ratePerEvent: 15000,
       isPerDay: false,
       description: 'Stage portraits, family groupings, and complete sacred Vedic ritual documentation.'
     },
@@ -119,7 +119,7 @@ const ANANT_CONFIG = {
       id: 'photo_candid',
       name: 'Candid Photography Coverage',
       serviceTitle: 'Candid Photography',
-      ratePerEvent: 9999,
+      ratePerEvent: 15000,
       isPerDay: false,
       description: 'Unposed raw moments, genuine emotions, laughter, and tearful glances.'
     },
@@ -127,7 +127,7 @@ const ANANT_CONFIG = {
       id: 'cinema_cam',
       name: 'Cinematic Wedding Filmmaking',
       serviceTitle: 'Cinematic Filmmaking',
-      ratePerEvent: 12499,
+      ratePerEvent: 20000,
       isPerDay: false,
       description: 'Stabilized gimbals, prime cinema glass, ambient sound capture, and cinematic motion.'
     },
@@ -135,7 +135,7 @@ const ANANT_CONFIG = {
       id: 'video_trad',
       name: 'Traditional Videography Coverage',
       serviceTitle: 'Traditional Videography',
-      ratePerEvent: 8499,
+      ratePerEvent: 12000,
       isPerDay: false,
       description: 'Continuous documentary recording of all vidhis from start to finish.'
     },
@@ -143,7 +143,7 @@ const ANANT_CONFIG = {
       id: 'drone_pilot',
       name: 'Drone Aerial Cinematography',
       serviceTitle: 'Drone Cinematography',
-      ratePerEvent: 7499,
+      ratePerEvent: 12000,
       isPerDay: false,
       description: 'Licensed 4K drone cinematography. Subject to weather & venue airspace permissions.'
     },
@@ -151,7 +151,7 @@ const ANANT_CONFIG = {
       id: 'crew_assistant',
       name: 'Production Lighting & Audio Support',
       serviceTitle: 'Lighting & Audio Support',
-      ratePerEvent: 3000,
+      ratePerEvent: 5000,
       isPerDay: false,
       description: 'On-location soft lighting, wireless audio mic coordination, and synchronized gear support.'
     }
@@ -165,38 +165,41 @@ const ANANT_CONFIG = {
       title: 'One-Side Coverage',
       subtitle: 'Bride or Groom Family Only',
       gujarati: 'એક પક્ષ કવરેજ (વર અથવા કન્યા પક્ષ)',
-      badge: 'Single Family',
+      badge: 'Standard',
+      multiplier: 1.0,
       surcharge: 0,
       price: 0,
       icon: '👤',
-      tagline: 'Standard Base Price (+₹0)',
+      tagline: 'Single Family Focused Coverage',
       description: 'Dedicated visual team focused entirely on one family’s home, ceremonies, rituals, and celebration venue.'
     },
     {
       id: 'both_same_venue',
-      name: 'Both Sides — Same Location (Joint Venue)',
+      name: 'Both Sides — Joint Venue',
       title: 'Both Sides — Joint Venue',
       subtitle: 'Same Location / Single Hall',
       gujarati: 'બંને પક્ષ — એક જ સ્થળ (કમ્બાઈન્ડ લગ્ન)',
-      badge: 'Joint Venue',
+      badge: 'With Extra Charge',
+      multiplier: 1.4,
       surcharge: 0,
       price: 0,
       icon: '👥',
-      tagline: 'No Extra Charge (₹0)',
-      description: 'Both bride and groom families celebrating together at the same resort or hall. Seamless single-location coverage.'
+      tagline: 'Unified Multi-Angle Coverage',
+      description: 'Both bride and groom families celebrating together at the same resort or hall. Coordinated multi-angle coverage for both families.'
     },
     {
       id: 'both_diff_venues',
-      name: 'Both Sides — Different Locations (+₹8,500)',
+      name: 'Both Sides — Different Locations',
       title: 'Both Sides — Different Locations',
       subtitle: 'Separate Residences / Venues',
-      gujarati: 'બંને પક્ષ — અલગ-અલગ સ્થળો (+₹8,500)',
-      badge: 'Dual Coordination',
-      surcharge: 8500,
-      price: 8500,
+      gujarati: 'બંને પક્ષ — અલગ-અલગ સ્થળો',
+      badge: 'With Extra Charge',
+      multiplier: 1.85,
+      surcharge: 0,
+      price: 0,
       icon: '📍',
-      tagline: '+₹8,500 Dual Location Fee',
-      description: 'Coordinated simultaneous coverage across separate bride and groom homes, independent morning rituals, and Jaan procession.'
+      tagline: 'Parallel Synchronized Crews',
+      description: 'Simultaneous parallel cinematography & photography crews deployed across separate groom and bride homes, independent morning rituals, and Jaan procession.'
     }
   ],
 
@@ -215,9 +218,10 @@ const ANANT_CONFIG = {
           category: 'wedding',
           tier: 'essential',
           tag: 'TWO-DAY PHOTOGRAPHY',
-          price: '₹29,999',
-          priceRange: '₹29,999 – ₹34,999',
-          indicativePrice: 29999,
+          price: '₹40,000',
+          originalPrice: '₹50,000',
+          priceRange: 'Original: ₹50,000 • Special Rate: ₹40,000',
+          indicativePrice: 40000,
           duration: 'Two-day coverage',
           standardDays: 2,
           services: ['Traditional Photography Coverage', 'Full Ceremony Documentation'],
@@ -237,17 +241,18 @@ const ANANT_CONFIG = {
             'Drone coverage not included'
           ],
           includedAddons: {},
-          waMessage: 'Hello Anant Productions! We would love to check availability for the Essential Wedding Package (₹29,999).'
+          waMessage: 'Hello Anant Productions! We would love to check availability for the Essential Wedding Package (Special Rate: ₹40,000, Original: ₹50,000).'
         },
         {
           id: 'pkg-wedding-signature',
           name: 'Signature Wedding',
           category: 'wedding',
           tier: 'signature',
-          tag: 'MOST POPULAR FOR GUJARATI WEDDINGS',
-          price: '₹49,999',
-          priceRange: '₹49,999 – ₹59,999',
-          indicativePrice: 49999,
+          tag: 'RECOMMENDED COLLECTION',
+          price: '₹75,000',
+          originalPrice: '₹1,00,000',
+          priceRange: 'Original: ₹1,00,000 • Special Rate: ₹75,000',
+          indicativePrice: 75000,
           duration: 'Two-day coverage',
           standardDays: 2,
           featured: true,
@@ -273,7 +278,7 @@ const ANANT_CONFIG = {
             'addon-cine-highlight': 1,
             'addon-reel-single': 1
           },
-          waMessage: 'Hello Anant Productions! We would love to check date availability for the Signature Wedding Package (₹49,999).'
+          waMessage: 'Hello Anant Productions! We would love to check date availability for the Signature Wedding Package (Special Rate: ₹75,000, Original: ₹1,00,000).'
         },
         {
           id: 'pkg-wedding-premium',
@@ -281,9 +286,10 @@ const ANANT_CONFIG = {
           category: 'wedding',
           tier: 'premium',
           tag: 'COMPREHENSIVE LUXURY COVERAGE',
-          price: '₹74,999',
-          priceRange: '₹74,999 – ₹89,999',
-          indicativePrice: 74999,
+          price: '₹1,00,000',
+          originalPrice: '₹1,50,000',
+          priceRange: 'Original: ₹1,50,000 • Special Rate: ₹1,00,000',
+          indicativePrice: 100000,
           duration: 'Two-day coverage',
           standardDays: 2,
           services: ['Candid Photography Coverage', 'Cinematic Wedding Filmmaking', 'Production Lighting Support'],
@@ -309,7 +315,7 @@ const ANANT_CONFIG = {
             'addon-reel-single': 2,
             'addon-photo-couple-portrait': 1
           },
-          waMessage: 'Hello Anant Productions! We are interested in the Premium Wedding Story Package (₹74,999) for our celebration.'
+          waMessage: 'Hello Anant Productions! We are interested in the Premium Wedding Story Package (Special Rate: ₹1,00,000, Original: ₹1,50,000) for our celebration.'
         }
       ]
     },
@@ -327,9 +333,10 @@ const ANANT_CONFIG = {
           category: 'prewed',
           tier: 'essential',
           tag: 'CONCEPT PORTRAITURE',
-          price: '₹7,999',
-          priceRange: '₹7,999 – ₹9,999',
-          indicativePrice: 7999,
+          price: '₹15,000',
+          originalPrice: '₹20,000',
+          priceRange: 'Original: ₹20,000 • Special Rate: ₹15,000',
+          indicativePrice: 15000,
           duration: '1 Short Session (Up to 3 hrs)',
           standardDays: 1,
           services: ['Creative Couple Portraiture', 'Fine-Art Color Grading'],
@@ -348,7 +355,7 @@ const ANANT_CONFIG = {
             'Location entry fees or permissions borne by client'
           ],
           includedAddons: {},
-          waMessage: 'Hello Anant Productions! We would like to inquire about the Essential Couple Shoot (₹7,999).'
+          waMessage: 'Hello Anant Productions! We would like to inquire about the Essential Couple Shoot (Special Rate: ₹15,000, Original: ₹20,000).'
         },
         {
           id: 'pkg-prewed-signature',
@@ -356,9 +363,10 @@ const ANANT_CONFIG = {
           category: 'prewed',
           tier: 'signature',
           tag: 'EXTENDED PHOTO + REEL',
-          price: '₹15,999',
-          priceRange: '₹15,999 – ₹19,999',
-          indicativePrice: 15999,
+          price: '₹30,000',
+          originalPrice: '₹45,000',
+          priceRange: 'Original: ₹45,000 • Special Rate: ₹30,000',
+          indicativePrice: 30000,
           duration: 'Half-Day Session (Up to 5 hrs)',
           standardDays: 1,
           featured: true,
@@ -381,7 +389,7 @@ const ANANT_CONFIG = {
           includedAddons: {
             'addon-reel-single': 1
           },
-          waMessage: 'Hello Anant Productions! We are interested in the Signature Pre-Wedding Package (₹15,999).'
+          waMessage: 'Hello Anant Productions! We are interested in the Signature Pre-Wedding Package (Special Rate: ₹30,000, Original: ₹45,000).'
         },
         {
           id: 'pkg-prewed-premium',
@@ -389,9 +397,10 @@ const ANANT_CONFIG = {
           category: 'prewed',
           tier: 'premium',
           tag: 'CINEMATIC COUPLE FILM',
-          price: '₹24,999',
-          priceRange: '₹24,999 – ₹32,999',
-          indicativePrice: 24999,
+          price: '₹50,000',
+          originalPrice: '₹75,000',
+          priceRange: 'Original: ₹75,000 • Special Rate: ₹50,000',
+          indicativePrice: 50000,
           duration: 'Full-Day Production (Up to 8 hrs)',
           standardDays: 1,
           services: ['Editorial Couple Portraiture', '4K Cinematic Concept Film', 'Drone Aerial Perspectives'],
@@ -416,7 +425,7 @@ const ANANT_CONFIG = {
             'addon-reel-single': 2,
             'addon-drone-venue': 1
           },
-          waMessage: 'Hello Anant Productions! We would love to plan a Premium Pre-Wedding Film (₹24,999).'
+          waMessage: 'Hello Anant Productions! We would love to plan a Premium Pre-Wedding Film (Special Rate: ₹50,000, Original: ₹75,000).'
         }
       ]
     },
@@ -434,9 +443,10 @@ const ANANT_CONFIG = {
           category: 'engagement',
           tier: 'essential',
           tag: 'STILL PHOTOGRAPHY',
-          price: '₹9,999',
-          priceRange: '₹9,999 – ₹12,999',
-          indicativePrice: 9999,
+          price: '₹20,000',
+          originalPrice: '₹28,000',
+          priceRange: 'Original: ₹28,000 • Special Rate: ₹20,000',
+          indicativePrice: 20000,
           duration: 'Single Function (Up to 4 hrs)',
           standardDays: 1,
           services: ['Candid Engagement Photography', 'Sacred Ritual Documentation'],
@@ -454,7 +464,7 @@ const ANANT_CONFIG = {
             'Cinematography / Video not included'
           ],
           includedAddons: {},
-          waMessage: 'Hello Anant Productions! We would like to check availability for Essential Engagement (₹9,999).'
+          waMessage: 'Hello Anant Productions! We would like to check availability for Essential Engagement (Special Rate: ₹20,000, Original: ₹28,000).'
         },
         {
           id: 'pkg-engagement-signature',
@@ -462,9 +472,10 @@ const ANANT_CONFIG = {
           category: 'engagement',
           tier: 'signature',
           tag: 'PHOTO + CINEMATIC HIGHLIGHT',
-          price: '₹18,999',
-          priceRange: '₹18,999 – ₹22,999',
-          indicativePrice: 18999,
+          price: '₹35,000',
+          originalPrice: '₹50,000',
+          priceRange: 'Original: ₹50,000 • Special Rate: ₹35,000',
+          indicativePrice: 35000,
           duration: 'Extended Function (Up to 5 hrs)',
           standardDays: 1,
           featured: true,
@@ -488,7 +499,7 @@ const ANANT_CONFIG = {
             'addon-cine-highlight': 1,
             'addon-reel-single': 1
           },
-          waMessage: 'Hello Anant Productions! We are planning our Engagement and would love the Signature package (₹18,999).'
+          waMessage: 'Hello Anant Productions! We are planning our Engagement and would love the Signature package (Special Rate: ₹35,000, Original: ₹50,000).'
         },
         {
           id: 'pkg-engagement-premium',
@@ -496,9 +507,10 @@ const ANANT_CONFIG = {
           category: 'engagement',
           tier: 'premium',
           tag: 'EXPANDED CELEBRATION',
-          price: '₹31,999',
-          priceRange: '₹31,999 – ₹39,999',
-          indicativePrice: 31999,
+          price: '₹60,000',
+          originalPrice: '₹85,000',
+          priceRange: 'Original: ₹85,000 • Special Rate: ₹60,000',
+          indicativePrice: 60000,
           duration: 'Full Evening / Gala (Up to 6 hrs)',
           standardDays: 1,
           services: ['Dual Photography Coverage', 'Cinematic Wedding Filmmaking', 'Lighting Support'],
@@ -522,7 +534,7 @@ const ANANT_CONFIG = {
             'addon-reel-single': 2,
             'addon-photo-couple-portrait': 1
           },
-          waMessage: 'Hello Anant Productions! We are interested in the Premium Engagement Gala Package (₹31,999).'
+          waMessage: 'Hello Anant Productions! We are interested in the Premium Engagement Gala Package (Special Rate: ₹60,000, Original: ₹85,000).'
         }
       ]
     },
@@ -540,9 +552,10 @@ const ANANT_CONFIG = {
           category: 'functions',
           tier: 'essential',
           tag: 'INTIMATE EVENT',
-          price: '₹9,999',
-          priceRange: '₹9,999 – ₹12,999',
-          indicativePrice: 9999,
+          price: '₹15,000',
+          originalPrice: '₹20,000',
+          priceRange: 'Original: ₹20,000 • Special Rate: ₹15,000',
+          indicativePrice: 15000,
           duration: 'Up to 4 hours',
           standardDays: 1,
           services: ['Candid Function Photography', 'Ritual Stills'],
@@ -559,7 +572,7 @@ const ANANT_CONFIG = {
             'Cinematography not included'
           ],
           includedAddons: {},
-          waMessage: 'Hello Anant Productions! We would like to book the Essential Function coverage (₹9,999).'
+          waMessage: 'Hello Anant Productions! We would like to book the Essential Function coverage (Special Rate: ₹15,000, Original: ₹20,000).'
         },
         {
           id: 'pkg-fn-signature',
@@ -567,9 +580,10 @@ const ANANT_CONFIG = {
           category: 'functions',
           tier: 'signature',
           tag: 'PHOTO + CINEMA HIGHLIGHT',
-          price: '₹18,999',
-          priceRange: '₹18,999 – ₹24,999',
-          indicativePrice: 18999,
+          price: '₹30,000',
+          originalPrice: '₹45,000',
+          priceRange: 'Original: ₹45,000 • Special Rate: ₹30,000',
+          indicativePrice: 30000,
           duration: 'Up to 5 hours',
           standardDays: 1,
           featured: true,
@@ -593,7 +607,7 @@ const ANANT_CONFIG = {
             'addon-cine-highlight': 1,
             'addon-reel-single': 1
           },
-          waMessage: 'Hello Anant Productions! We would love to book the Signature Garba/Function package (₹18,999).'
+          waMessage: 'Hello Anant Productions! We would love to book the Signature Garba/Function package (Special Rate: ₹30,000, Original: ₹45,000).'
         },
         {
           id: 'pkg-fn-premium',
@@ -601,9 +615,10 @@ const ANANT_CONFIG = {
           category: 'functions',
           tier: 'premium',
           tag: 'FULL PRODUCTION',
-          price: '₹28,999',
-          priceRange: '₹28,999 – ₹34,999',
-          indicativePrice: 28999,
+          price: '₹50,000',
+          originalPrice: '₹75,000',
+          priceRange: 'Original: ₹75,000 • Special Rate: ₹50,000',
+          indicativePrice: 50000,
           duration: 'Up to 6 hours',
           standardDays: 1,
           services: ['Dual Photography Coverage', 'Cinematic Wedding Filmmaking'],
@@ -625,7 +640,7 @@ const ANANT_CONFIG = {
             'addon-cine-highlight': 1,
             'addon-reel-single': 2
           },
-          waMessage: 'Hello Anant Productions! We are interested in the Premium Grand Function package (₹28,999).'
+          waMessage: 'Hello Anant Productions! We are interested in the Premium Grand Function package (Special Rate: ₹50,000, Original: ₹75,000).'
         }
       ]
     }
@@ -641,7 +656,7 @@ const ANANT_CONFIG = {
       categoryName: 'Heirloom Albums & Keepsakes',
       pricingMethod: 'per_unit',
       pricingUnit: 'starting price',
-      defaultPrice: 8999,
+      defaultPrice: 15000,
       description: 'Handcrafted hardbound 12x18 inch photo album on imported luster/silk photo paper with matching keepsake box and panoramic lay-flat binding.',
       applicableCategories: ['wedding', 'engagement']
     },
@@ -652,7 +667,7 @@ const ANANT_CONFIG = {
       categoryName: 'Heirloom Albums & Keepsakes',
       pricingMethod: 'per_unit',
       pricingUnit: 'per album',
-      defaultPrice: 15999,
+      defaultPrice: 25000,
       description: 'Imported Italian velvet or bonded leather cover with laser-engraved gold typography, acrylic cameo window, and padded presentation briefcase.',
       applicableCategories: ['wedding']
     },
@@ -663,7 +678,7 @@ const ANANT_CONFIG = {
       categoryName: 'Heirloom Albums & Keepsakes',
       pricingMethod: 'per_unit',
       pricingUnit: 'per copy',
-      defaultPrice: 5999,
+      defaultPrice: 9999,
       description: 'A compact 8x12 inch identical duplicate heirloom album printed for parents or in-laws.',
       applicableCategories: ['wedding']
     },
@@ -674,7 +689,7 @@ const ANANT_CONFIG = {
       categoryName: 'Heirloom Albums & Keepsakes',
       pricingMethod: 'per_unit',
       pricingUnit: 'per box',
-      defaultPrice: 3999,
+      defaultPrice: 6999,
       description: '25 Master color-graded 6x8 inch fine-art archival prints mounted on acid-free mat board in a handcrafted wooden keepsake box.',
       applicableCategories: ['wedding', 'prewed', 'engagement']
     },
@@ -687,7 +702,7 @@ const ANANT_CONFIG = {
       categoryName: 'Social Media & Reels',
       pricingMethod: 'per_unit',
       pricingUnit: 'per reel',
-      defaultPrice: 2499,
+      defaultPrice: 4500,
       description: '60-second high-definition vertical video edited with trending music for instant family WhatsApp forwarding and Instagram.',
       applicableCategories: ['wedding', 'prewed', 'engagement', 'functions']
     },
@@ -698,7 +713,7 @@ const ANANT_CONFIG = {
       categoryName: 'Social Media & Reels',
       pricingMethod: 'per_unit',
       pricingUnit: 'bundle of 3',
-      defaultPrice: 5999,
+      defaultPrice: 11999,
       description: 'Pack of three vertical reels: (1) Romantic couple teaser, (2) High-energy Garba / Sangeet, and (3) Emotional Vidaai / Rituals.',
       applicableCategories: ['wedding', 'engagement', 'functions']
     },
@@ -709,7 +724,7 @@ const ANANT_CONFIG = {
       categoryName: 'Social Media & Reels',
       pricingMethod: 'per_unit',
       pricingUnit: 'per reel',
-      defaultPrice: 2199,
+      defaultPrice: 3999,
       description: 'Additional vertical highlight reel edited with personalized song request.',
       applicableCategories: ['wedding', 'prewed', 'engagement', 'functions']
     },
@@ -720,7 +735,7 @@ const ANANT_CONFIG = {
       categoryName: 'Social Media & Reels',
       pricingMethod: 'per_unit',
       pricingUnit: 'per reel',
-      defaultPrice: 4499,
+      defaultPrice: 9999,
       description: 'On-site video editor crafts and delivers an impactful 60-second reel within hours to premier on stage at the evening reception.',
       applicableCategories: ['wedding', 'engagement']
     },
@@ -731,7 +746,7 @@ const ANANT_CONFIG = {
       categoryName: 'Social Media & Reels',
       pricingMethod: 'per_unit',
       pricingUnit: 'express turnaround',
-      defaultPrice: 6499,
+      defaultPrice: 12500,
       description: 'Priority editing queue to receive your complete 3–5 minute highlight film within 48 hours of the wedding celebration.',
       applicableCategories: ['wedding']
     },
@@ -744,7 +759,7 @@ const ANANT_CONFIG = {
       categoryName: 'Interviews & Storytelling',
       pricingMethod: 'per_event',
       pricingUnit: 'per event',
-      defaultPrice: 5999,
+      defaultPrice: 9999,
       description: 'Roving video journalist with 2 broadcast lapel mics and compact soft light captures spontaneous blessings and heartfelt advice from Baa-Dada, parents, and friends.',
       applicableCategories: ['wedding', 'engagement']
     },
@@ -755,7 +770,7 @@ const ANANT_CONFIG = {
       categoryName: 'Interviews & Storytelling',
       pricingMethod: 'per_session',
       pricingUnit: 'per session',
-      defaultPrice: 4999,
+      defaultPrice: 8500,
       description: 'A relaxed 45-minute sit-down interview with 2 cameras and studio audio recording where the couple shares how they met, their proposal, and future hopes.',
       applicableCategories: ['wedding', 'prewed']
     },
@@ -766,7 +781,7 @@ const ANANT_CONFIG = {
       categoryName: 'Interviews & Storytelling',
       pricingMethod: 'per_session',
       pricingUnit: 'per session',
-      defaultPrice: 9999,
+      defaultPrice: 18000,
       description: 'Premium broadcast-grade Shure microphone setup, multi-cam 4K angles, and custom lounge seating for an in-depth conversational couple or parent story.',
       applicableCategories: ['wedding', 'prewed']
     },
@@ -777,7 +792,7 @@ const ANANT_CONFIG = {
       categoryName: 'Interviews & Storytelling',
       pricingMethod: 'per_unit',
       pricingUnit: 'per edit',
-      defaultPrice: 3999,
+      defaultPrice: 6500,
       description: 'Weaves spoken vows and elder blessings seamlessly across the background score of the final wedding film.',
       applicableCategories: ['wedding']
     },
@@ -790,7 +805,7 @@ const ANANT_CONFIG = {
       categoryName: 'Post-Production & Masters',
       pricingMethod: 'per_unit',
       pricingUnit: 'per 1TB drive',
-      defaultPrice: 4999,
+      defaultPrice: 8999,
       description: 'Shockproof 1TB external solid-state drive preloaded with all uncompressed master footage, RAW photo archives, and master cinema exports.',
       applicableCategories: ['wedding', 'prewed']
     },
@@ -801,7 +816,7 @@ const ANANT_CONFIG = {
       categoryName: 'Post-Production & Masters',
       pricingMethod: 'per_unit',
       pricingUnit: 'per project',
-      defaultPrice: 5999,
+      defaultPrice: 9999,
       description: 'Dedicated sound design, multi-track audio cleanup of Vedic mantras, and cinematic film-look color grade.',
       applicableCategories: ['wedding']
     },
@@ -812,7 +827,7 @@ const ANANT_CONFIG = {
       categoryName: 'Post-Production & Masters',
       pricingMethod: 'per_unit',
       pricingUnit: 'per film',
-      defaultPrice: 7499,
+      defaultPrice: 15000,
       description: 'In-depth long-form cinematic chapter film documenting every phase of the celebration without rushing.',
       applicableCategories: ['wedding']
     },
@@ -823,7 +838,7 @@ const ANANT_CONFIG = {
       categoryName: 'Post-Production & Masters',
       pricingMethod: 'per_unit',
       pricingUnit: 'per film',
-      defaultPrice: 8999,
+      defaultPrice: 15000,
       description: 'A 3–5 minute cinematic wedding film color-graded in 4K with synchronized Vedic audio, speech highlights, and cinematic music.',
       applicableCategories: ['wedding']
     },
@@ -834,7 +849,7 @@ const ANANT_CONFIG = {
       categoryName: 'Post-Production & Masters',
       pricingMethod: 'per_unit',
       pricingUnit: 'per collection',
-      defaultPrice: 3199,
+      defaultPrice: 5999,
       description: 'High-end frequency separation, skin tone balancing, and micro-blemish retouching on chosen portraits.',
       applicableCategories: ['wedding', 'prewed', 'engagement']
     },
@@ -847,7 +862,7 @@ const ANANT_CONFIG = {
       categoryName: 'Coverage & Overtime',
       pricingMethod: 'per_hour',
       pricingUnit: 'per hour',
-      defaultPrice: 2000,
+      defaultPrice: 4000,
       description: 'Hourly overtime rate applied when night Garba, extended Mandva, or morning Vidaai rituals continue past standard schedule.',
       applicableCategories: ['wedding', 'functions', 'engagement']
     },
@@ -875,8 +890,8 @@ const ANANT_CONFIG = {
   },
 
   // DEFAULT SETTINGS
-  additionalDayRate: 24999,
-  extraHourRate: 2000,
+  additionalDayRate: 35000,
+  extraHourRate: 4000,
 
   // PROCESS STEPS
   processSteps: [
@@ -933,8 +948,8 @@ const ANANT_CONFIG = {
       a: 'We understand family excitement! Vertical 9:16 reels for WhatsApp and Instagram can be delivered within 24–48 hours. Master color-graded photo galleries are delivered within 3–4 weeks, and cinematic highlight films within 4–6 weeks.'
     },
     {
-      q: 'Can we build our own package from scratch without selecting a preset plan?',
-      a: 'Absolutely. In Step 3 of the Quotation Builder, simply select "Build Your Own Custom Collection". You can then handpick your exact photography styles, cinematic films, deliverables, and add-ons tailored to your budget.'
+      q: 'Can we customize our chosen wedding or celebration package?',
+      a: 'Absolutely. Select your preferred curated package in the Quotation Builder and easily tailor it with optional add-ons, extra coverage hours, heirloom albums, and drone aerials.'
     }
   ]
 };

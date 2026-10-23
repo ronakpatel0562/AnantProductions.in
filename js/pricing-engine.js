@@ -204,21 +204,35 @@
       }
     });
 
-    // 4. Coverage Scope Adjustment (One-Side vs Both-Sides different venues)
-    const coverageScopeKey = state.coverageScope || 'one_side';
+    // 4. Coverage Scope Adjustment (Only for 2-Day Wedding: Joint Venue = 1.4x, Different Locations = 1.85x)
+    const isWeddingScopeApplicable = (eventCategory === 'wedding');
+    const coverageScopeKey = isWeddingScopeApplicable ? (state.coverageScope || 'one_side') : 'one_side';
     let scopeConfig = null;
     if (Array.isArray(config.coverageScopes)) {
       scopeConfig = config.coverageScopes.find(s => s.id === coverageScopeKey);
     } else if (config.coverageScopes) {
       scopeConfig = config.coverageScopes[coverageScopeKey];
     }
-    const scopeSurcharge = scopeConfig ? Number(scopeConfig.surcharge ?? scopeConfig.price ?? 0) : (coverageScopeKey === 'both_diff_venues' ? 8500 : 0);
+
+    // Multipliers: both_same_venue = 1.4x, both_diff_venues = 1.85x, one_side = 1.0x
+    const scopeMultiplier = scopeConfig 
+      ? Number(scopeConfig.multiplier || (coverageScopeKey === 'both_diff_venues' ? 1.85 : (coverageScopeKey === 'both_same_venue' ? 1.4 : 1.0)))
+      : (coverageScopeKey === 'both_diff_venues' ? 1.85 : (coverageScopeKey === 'both_same_venue' ? 1.4 : 1.0));
+
+    // Multiplier applies to the base package price (or custom crew subtotal if custom)
+    const baseSubjectPrice = Number(basePackage ? (basePackage.indicativePrice || 0) : subtotal);
+    const scopeSurcharge = (isWeddingScopeApplicable && scopeMultiplier > 1.0)
+      ? Math.round(baseSubjectPrice * (scopeMultiplier - 1.0))
+      : 0;
 
     if (scopeSurcharge > 0) {
       subtotal += scopeSurcharge;
+      const isJoint = (coverageScopeKey === 'both_same_venue');
       lineItems.push({
-        id: 'scope-dual-locations',
-        name: 'Dual-Side Multi-Location Coverage (+₹8,500)',
+        id: isJoint ? 'scope-joint-venue' : 'scope-dual-locations',
+        name: isJoint 
+          ? 'Both Sides — Joint Venue Coverage' 
+          : 'Both Sides — Different Locations Coverage',
         category: 'Coverage Scope',
         type: 'scope',
         unit: 'Celebration',
@@ -229,7 +243,9 @@
         totalPrice: scopeSurcharge,
         isIncluded: false,
         isCustomQuote: false,
-        description: 'Simultaneous visual coordination across separate residences, Jaan departure, and bride arrival rituals.'
+        description: isJoint 
+          ? 'Synchronized dual-family visual coverage at a single venue / hall (+40% on base package).'
+          : 'Simultaneous dual-crew visual coverage across separate residences, simultaneous rituals, and Jaan procession (+85% on base package).'
       });
     }
 
@@ -268,7 +284,7 @@
     if (launchOfferActive && config.launchOffer && config.launchOffer.active) {
       // Check if applicable (e.g. Signature package or qualifying subtotal)
       if (packageId === 'pkg-wedding-signature' || packageId === 'pkg-signature') {
-        discountAmount = (config.launchOffer && config.launchOffer.discountAmount) ? config.launchOffer.discountAmount : 10000;
+        discountAmount = (config.launchOffer && config.launchOffer.discountAmount) ? config.launchOffer.discountAmount : 25000;
         appliedDiscount = {
           code: 'LAUNCH_OFFER',
           name: config.launchOffer.badge || 'Founding Couple Launch Offer',
@@ -316,6 +332,7 @@
       },
       coverageScope: coverageScopeKey,
       coverageScopeLabel: scopeConfig ? (scopeConfig.title || scopeConfig.name) : (coverageScopeKey === 'both_diff_venues' ? 'Both Sides — Different Locations' : (coverageScopeKey === 'both_same_venue' ? 'Both Sides — Joint Venue' : 'One-Side Coverage')),
+      coverageScopeMultiplier: isWeddingScopeApplicable ? scopeMultiplier : 1.0,
       coverageScopeSurcharge: scopeSurcharge,
       lineItems: lineItems,
       subtotal: subtotal,
@@ -348,12 +365,12 @@
     const ref = quote.referenceId;
     const cust = quote.customer || {};
     const evt = quote.eventDetails || {};
-    const scopeLabel = quote.coverageScopeLabel || (quote.coverageScope === 'both_diff_venues' ? 'Both Sides (Separate Locations, +₹8,500)' : (quote.coverageScope === 'both_same_venue' ? 'Both Sides (Joint Venue)' : 'One-Side Coverage'));
+    const scopeLabel = quote.coverageScopeLabel || (quote.coverageScope === 'both_diff_venues' ? 'Both Sides (Separate Locations)' : (quote.coverageScope === 'both_same_venue' ? 'Both Sides (Joint Venue)' : 'One-Side Coverage'));
 
     let msg = `✨ *JAI SHREE KRISHNA / INQUIRY FOR ANANT PRODUCTIONS*\n`;
     msg += `*Quotation Reference:* ${ref}\n\n`;
 
-    msg += `👰🤵 *Couple / Family:* ${cust.names || 'Honored Couple'}\n`;
+    msg += `💍 *Couple / Family:* ${cust.names || 'Honored Couple'}\n`;
     msg += `📱 *WhatsApp:* ${cust.phone || 'Provided via chat'}\n`;
     if (cust.email) msg += `✉️ *Email:* ${cust.email}\n`;
     msg += `👥 *Coverage Scope:* ${scopeLabel}\n`;
@@ -395,6 +412,21 @@
     if (cust.notes) {
       msg += `\n📝 *Couple's Celebration Notes:*\n"${cust.notes}"\n`;
     }
+
+    let host = 'https://anantproductions.in';
+    if (typeof window !== 'undefined' && window.location && window.location.origin && !window.location.origin.includes('file://')) {
+      host = window.location.origin;
+    }
+
+    let quoteUrl = `${host}/quote?ref=${ref}&view=pdf`;
+    try {
+      const hash = serializeStateToHash(quote);
+      if (hash) {
+        quoteUrl = `${host}/quote#quote=${hash}&view=pdf`;
+      }
+    } catch (e) {}
+
+    msg += `\n📄 *OFFICIAL PDF QUOTATION DOCUMENT:*\n${quoteUrl}\n_(Tap to view & download the formal branded PDF proposal)_\n`;
 
     msg += `\nCould you please check your availability for our dates and share the next steps? Thank you!`;
 

@@ -24,6 +24,13 @@
     return;
   }
 
+  const formatINR = (engine && typeof engine.formatINR === 'function')
+    ? engine.formatINR
+    : function (amount) {
+        if (amount === null || amount === undefined || isNaN(amount)) return 'Custom Quote';
+        return '₹' + Math.round(Number(amount)).toLocaleString('en-IN');
+      };
+
   // Analytics Event Bus (Privacy-safe)
   window.trackAnantEvent = function (eventName, payload) {
     try {
@@ -93,7 +100,7 @@
         const decoded = engine.deserializeStateFromHash(match[1]);
         if (decoded) {
           builderState = { ...builderState, ...decoded };
-          builderState.currentStep = 6; // Jump straight to review
+          builderState.currentStep = getStepList().length; // Jump straight to final review & proposal
           return;
         }
       }
@@ -110,6 +117,18 @@
       }
     } catch (e) {
       // Ignore
+    }
+
+    // If draft had custom package selected, reset to default signature package
+    if (builderState.packageId === 'custom' || builderState.eventCategory === 'custom') {
+      builderState.eventCategory = 'wedding';
+      builderState.packageId = 'pkg-wedding-signature';
+    }
+
+    // Clamp currentStep to current dynamic step count
+    const maxSteps = getStepList().length;
+    if (builderState.currentStep && builderState.currentStep > maxSteps) {
+      builderState.currentStep = maxSteps;
     }
 
     // Always reset function selection buttons every time we land on page unless explicit in quote hash
@@ -138,11 +157,35 @@
     renderBuilder();
     setupGlobalPackageCustomizers();
 
+    // Auto-open PDF modal if view=pdf is in URL hash or query params
+    if (window.location.hash.includes('view=pdf') || window.location.search.includes('view=pdf')) {
+      setTimeout(() => {
+        const formalModal = document.getElementById('qb-formal-modal');
+        if (formalModal) {
+          formalModal.style.display = 'flex';
+          void formalModal.offsetWidth;
+          formalModal.classList.add('active');
+          formalModal.scrollTop = 0;
+        }
+      }, 350);
+    }
+
     // Listen to hash changes for deep linking
     window.addEventListener('hashchange', () => {
       if (window.location.hash.includes('quote=')) {
         loadInitialState();
         renderBuilder();
+        if (window.location.hash.includes('view=pdf')) {
+          setTimeout(() => {
+            const formalModal = document.getElementById('qb-formal-modal');
+            if (formalModal) {
+              formalModal.style.display = 'flex';
+              void formalModal.offsetWidth;
+              formalModal.classList.add('active');
+              formalModal.scrollTop = 0;
+            }
+          }, 350);
+        }
       }
     });
   });
@@ -167,15 +210,22 @@
   // Smooth scroll to the start of the quotation builder section
   function scrollToQuotationSection() {
     requestAnimationFrame(() => {
+      const activeStep = document.getElementById('qb-active-step');
+      if (activeStep) {
+        activeStep.scrollTop = 0;
+      }
+      const appEl = document.getElementById('quotation-builder-app');
       const section = document.getElementById('quotation-builder');
-      if (!section) return;
-      const navbar = document.querySelector('.navbar');
-      const navHeight = navbar ? navbar.offsetHeight : 70;
-      const targetY = window.pageYOffset + section.getBoundingClientRect().top - navHeight - 16;
-      window.scrollTo({
-        top: Math.max(0, targetY),
-        behavior: 'smooth'
-      });
+      const targetEl = appEl || section;
+      if (targetEl && !document.body.classList.contains('qb-standalone-page')) {
+        const navbar = document.querySelector('.navbar');
+        const navHeight = navbar ? navbar.offsetHeight : 70;
+        const targetY = window.pageYOffset + targetEl.getBoundingClientRect().top - navHeight - 24;
+        window.scrollTo({
+          top: Math.max(0, targetY),
+          behavior: 'smooth'
+        });
+      }
     });
   }
 
@@ -193,7 +243,7 @@
       builderState.eventDetails.days = pkg.standardDays || (catId === 'wedding' ? 2 : 1);
     }
 
-    builderState.currentStep = 4; // Jump to crew/add-ons configuration
+    builderState.currentStep = 4; // Jump to deliverables & add-ons configuration
     renderBuilder();
     scrollToQuotationSection();
 
@@ -228,6 +278,8 @@
         </aside>
       </div>
 
+
+
       <!-- Mobile Sticky Action Drawer (Slides from bottom on phones) -->
       <div class="qb-mobile-bar" id="qb-mobile-bar">
         <div class="qb-mobile-bar-inner">
@@ -240,7 +292,7 @@
               View Breakdown
             </button>
             <button type="button" class="btn btn-gold qb-btn-next-mobile" id="btn-mobile-next">
-              ${builderState.currentStep === 8 ? 'Send WhatsApp' : 'Next Step →'}
+              ${builderState.currentStep === getStepList().length ? 'Send WhatsApp' : 'Next Step →'}
             </button>
           </div>
         </div>
@@ -272,28 +324,42 @@
     saveDraftToStorage();
   }
 
+  // STEP DEFINITION (DYNAMIC: 6 STEPS FOR WEDDING, 5 STEPS FOR NON-WEDDING)
+  function getStepList() {
+    const isWedding = (builderState.eventCategory === 'wedding' && builderState.packageId !== 'custom');
+    if (isWedding) {
+      return [
+        { id: 'event_type', title: 'Event Type', kicker: 'STEP 01 OF 06 • EVENT TYPE & CELEBRATION' },
+        { id: 'coverage_scope', title: 'Coverage Scope', kicker: 'STEP 02 OF 06 • COVERAGE SCOPE' },
+        { id: 'details', title: 'Details', kicker: 'STEP 03 OF 06 • CELEBRATION DETAILS' },
+        { id: 'base_plan', title: 'Base Plan', kicker: 'STEP 04 OF 06 • CHOOSE BASE PACKAGE' },
+        { id: 'addons', title: 'Add-ons', kicker: 'STEP 05 OF 06 • CUSTOMIZE DELIVERABLES & ADD-ONS' },
+        { id: 'submit', title: 'Your Quotation', kicker: 'STEP 06 OF 06 • YOUR DETAILS & PROPOSAL' }
+      ];
+    } else {
+      return [
+        { id: 'event_type', title: 'Event Type', kicker: 'STEP 01 OF 05 • EVENT TYPE & CELEBRATION' },
+        { id: 'details', title: 'Details', kicker: 'STEP 02 OF 05 • CELEBRATION DETAILS' },
+        { id: 'base_plan', title: 'Base Plan', kicker: 'STEP 03 OF 05 • CHOOSE BASE PACKAGE' },
+        { id: 'addons', title: 'Add-ons', kicker: 'STEP 04 OF 05 • CUSTOMIZE DELIVERABLES & ADD-ONS' },
+        { id: 'submit', title: 'Your Quotation', kicker: 'STEP 05 OF 05 • YOUR DETAILS & PROPOSAL' }
+      ];
+    }
+  }
+
   // STEP TABS
   function renderStepperTabs() {
-    const steps = [
-      { num: 1, title: 'Event Type' },
-      { num: 2, title: 'Details' },
-      { num: 3, title: 'Base Plan' },
-      { num: 4, title: 'Services' },
-      { num: 5, title: 'Add-ons' },
-      { num: 6, title: 'Review' },
-      { num: 7, title: 'Your Info' },
-      { num: 8, title: 'Submit' }
-    ];
-
-    return steps.map(s => {
-      const isCurrent = s.num === builderState.currentStep;
-      const isPast = s.num < builderState.currentStep;
+    const steps = getStepList();
+    return steps.map((s, idx) => {
+      const stepNum = idx + 1;
+      const isCurrent = stepNum === builderState.currentStep;
+      const isPast = stepNum < builderState.currentStep;
       return `
         <button type="button" class="qb-step-pill ${isCurrent ? 'active' : ''} ${isPast ? 'completed' : ''}" 
-          data-goto-step="${s.num}" 
+          data-goto-step="${stepNum}" 
           aria-current="${isCurrent ? 'step' : 'false'}"
-          title="Step ${s.num}: ${s.title}">
-          <span class="qb-step-num">${isPast ? '✓' : '0' + s.num}</span>
+          title="Step ${stepNum}: ${s.title}">
+          <span class="qb-step-num">${isPast ? '✓' : '0' + stepNum}</span>
           <span class="qb-step-name">${s.title}</span>
         </button>
       `;
@@ -302,90 +368,50 @@
 
   // RENDER CURRENT ACTIVE STEP
   function renderCurrentStep(quotation) {
-    switch (builderState.currentStep) {
-      case 1: return renderStep1_EventType();
-      case 2: return renderStep2_EventDetails();
-      case 3: return renderStep3_BasePackage();
-      case 4: return renderStep4_CrewConfig();
-      case 5: return renderStep5_DeliverablesAddons();
-      case 6: return renderStep6_ReviewQuotation(quotation);
-      case 7: return renderStep7_CustomerDetails();
-      case 8: return renderStep8_SubmitAndShare(quotation);
-      default: return renderStep1_EventType();
+    const steps = getStepList();
+    const currentIdx = Math.max(0, Math.min(steps.length - 1, (builderState.currentStep || 1) - 1));
+    const step = steps[currentIdx];
+
+    switch (step.id) {
+      case 'event_type': return renderStep1_EventType(step);
+      case 'coverage_scope': return renderStep_CoverageScope(step, quotation);
+      case 'details': return renderStep2_EventDetails(step);
+      case 'base_plan': return renderStep3_BasePackage(step, quotation);
+      case 'addons': return renderStep4_DeliverablesAddons(step);
+      case 'submit': return renderStep_FinalQuotationAndContact(step, quotation);
+      default: return renderStep1_EventType(step);
     }
   }
 
-  // ================= STEP 1: EVENT TYPE & COVERAGE SCOPE =================
-  function renderStep1_EventType() {
-    const scopes = Array.isArray(config.coverageScopes) 
-      ? config.coverageScopes 
-      : Object.values(config.coverageScopes || {});
+  // ================= STEP 1: EVENT TYPE =================
+  function renderStep1_EventType(stepInfo) {
+    const isTwoDayWedding = (builderState.eventCategory === 'wedding' && builderState.packageId !== 'custom');
 
     const categories = [
       { id: 'wedding', name: 'Two-Day Wedding', guj: 'લગ્ન પ્રસંગ (બે દિવસ)', desc: 'Mandva, Pithi, Garba, Hasta Melap & Reception', icon: '💍', badge: 'Most Popular' },
       { id: 'prewed', name: 'Pre-Wedding & Couple Film', guj: 'પ્રી-વેડિંગ શૂટ', desc: 'Concept couple portraiture and cinematic romance in scenic backdrops', icon: '📸', badge: 'High-Demand' },
       { id: 'engagement', name: 'Engagement / Sakar Pudo', guj: 'સગાઈ અને ગોળધાણા', desc: 'Ring ceremony, family blessings, and evening dinner celebration', icon: '✨', badge: null },
-      { id: 'functions', name: 'Individual Functions', guj: 'વ્યક્તિગત પ્રસંગો', desc: 'Standalone Haldi/Pithi, Mehndi, Midnight Garba, or Reception', icon: '🪔', badge: null },
-      { id: 'custom', name: 'Build Your Own Package', guj: 'તમારું મનપસંદ પેકેજ', desc: 'Custom multi-day celebration configured from scratch', icon: '🎨', badge: 'Flexible' }
+      { id: 'functions', name: 'Individual Functions', guj: 'વ્યક્તિગત પ્રસંગો', desc: 'Standalone Haldi/Pithi, Mehndi, Midnight Garba, or Reception', icon: '🪔', badge: null }
     ];
 
     return `
       <div class="qb-step-header">
-        <span class="qb-step-kicker">STEP 01 OF 08 &bull; COVERAGE SCOPE &amp; EVENT TYPE</span>
-        <h3 class="qb-step-title">Select your celebration coverage</h3>
+        <span class="qb-step-kicker">${stepInfo ? stepInfo.kicker : 'STEP 01 • EVENT TYPE & CELEBRATION'}</span>
+        <h3 class="qb-step-title">Select your celebration type</h3>
         <p class="qb-step-desc">
-          Choose whether you need single-side or both-side coverage, and select your primary event category.
+          Choose your primary celebration category to customize your photography &amp; cinematography collection.
         </p>
       </div>
 
-      <!-- Coverage Scope Filter (One-Side vs Both-Sides) -->
-      <div class="qb-scope-section">
-        <div style="margin-bottom: 14px;">
-          <span style="font-size: 0.78rem; font-family: var(--font-mono); color: var(--gold-light); text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 4px;">COVERAGE SCOPE FILTER</span>
-          <h4 style="font-family: 'Cinzel', serif; font-size: 1.15rem; color: var(--foreground); margin: 0 0 6px 0;">Are you looking for One-Side or Both-Side Coverage?</h4>
-          <p style="font-size: 0.85rem; color: var(--mute); margin: 0;">
-            Select whether you are booking for one family side (Bride OR Groom) or both family sides. Celebrations at separate locations (different residences &amp; Jaan arrival) include transparent +₹8,500 dual coordination.
-          </p>
-        </div>
-
-        <div class="qb-scope-grid" role="radiogroup" aria-label="Coverage scope selection">
-          ${scopes.map(scope => {
-            const isSelected = (builderState.coverageScope === scope.id);
-            const surcharge = Number(scope.surcharge ?? scope.price ?? 0);
-            return `
-              <div class="qb-scope-card ${isSelected ? 'selected' : ''}" data-select-scope="${scope.id}" role="radio" aria-checked="${isSelected}" tabindex="0">
-                <div class="qb-scope-header">
-                  <div class="qb-scope-title-wrap">
-                    <span class="qb-scope-icon">${scope.icon || '📍'}</span>
-                    <div>
-                      <h5 class="qb-scope-title">${scope.title || scope.name}</h5>
-                      <span class="qb-scope-sub">${scope.subtitle || scope.gujarati}</span>
-                    </div>
-                  </div>
-                  <span class="qb-scope-badge ${surcharge > 0 ? 'badge-extra' : ''}">
-                    ${surcharge > 0 ? '+₹8,500' : 'Included'}
-                  </span>
-                </div>
-                <p class="qb-scope-desc">${scope.description}</p>
-                <div class="qb-scope-status">
-                  <span>${isSelected ? '● Selected Setup' : '○ Click to Select'}</span>
-                </div>
-              </div>
-            `;
-          }).join('')}
-        </div>
-      </div>
-
-      <div style="margin: 32px 0 16px 0;">
+      <!-- CELEBRATION CATEGORY -->
+      <div style="margin: 0 0 16px 0;">
         <span style="font-size: 0.78rem; font-family: var(--font-mono); color: var(--gold-light); text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 4px;">CELEBRATION CATEGORY</span>
-        <h4 style="font-family: 'Cinzel', serif; font-size: 1.1rem; color: var(--foreground); margin: 0;">What celebration are we documenting?</h4>
+        <h4 style="font-family: 'Cinzel', serif; font-size: 1.12rem; color: var(--foreground); margin: 0 0 6px 0;">What celebration are we documenting?</h4>
       </div>
 
       <div class="qb-category-grid" role="radiogroup" aria-label="Event category selection">
         ${categories.map(cat => {
-          const isSelected = (cat.id === 'custom') 
-            ? (builderState.packageId === 'custom') 
-            : (builderState.eventCategory === cat.id && builderState.packageId !== 'custom');
+          const isSelected = (builderState.eventCategory === cat.id);
           return `
             <div class="qb-cat-card ${isSelected ? 'selected' : ''}" data-select-category="${cat.id}" role="radio" aria-checked="${isSelected}" tabindex="0">
               <div class="qb-cat-top">
@@ -406,14 +432,72 @@
       <div class="qb-step-footer">
         <div></div>
         <button type="button" class="btn btn-gold qb-btn-next" data-step-next="2">
-          Continue to Event Details →
+          ${isTwoDayWedding ? 'Continue to Coverage Scope →' : 'Continue to Celebration Details →'}
         </button>
       </div>
     `;
   }
 
-  // ================= STEP 2: EVENT DETAILS =================
-  function renderStep2_EventDetails() {
+  // ================= STEP: COVERAGE SCOPE (WEDDING ONLY) =================
+  function renderStep_CoverageScope(stepInfo, quotation) {
+    const scopes = Array.isArray(config.coverageScopes) 
+      ? config.coverageScopes 
+      : Object.values(config.coverageScopes || {});
+
+    return `
+      <div class="qb-step-header">
+        <span class="qb-step-kicker">${stepInfo ? stepInfo.kicker : 'STEP 02 OF 08 • COVERAGE SCOPE'}</span>
+        <h3 class="qb-step-title">Are you looking for One-Side or Both-Side Coverage?</h3>
+        <p class="qb-step-desc">
+          Select whether you are booking for one family side (Bride OR Groom) or both family sides. Joint venues and multi-location celebrations include dedicated parallel cinematographers and photographers with an adjusted package investment.
+        </p>
+      </div>
+
+      <div class="qb-scope-grid" role="radiogroup" aria-label="Coverage scope selection">
+        ${scopes.map(scope => {
+          const isSelected = (builderState.coverageScope === scope.id);
+          const multiplier = Number(scope.multiplier || 1.0);
+          const startingVal = Math.round(40000 * multiplier);
+          const signatureVal = Math.round(75000 * multiplier);
+          const badgeText = multiplier > 1.0 ? 'With Extra Charge' : 'Standard';
+
+          return `
+            <div class="qb-scope-card ${isSelected ? 'selected' : ''}" data-select-scope="${scope.id}" role="radio" aria-checked="${isSelected}" tabindex="0">
+              <div class="qb-scope-header">
+                <div class="qb-scope-title-wrap">
+                  <span class="qb-scope-icon">${scope.icon || '📍'}</span>
+                  <div>
+                    <h5 class="qb-scope-title">${scope.title || scope.name}</h5>
+                    <span class="qb-scope-sub">${scope.subtitle || scope.gujarati}</span>
+                  </div>
+                </div>
+                <span class="qb-scope-badge ${multiplier > 1.0 ? 'badge-extra' : ''}">
+                  ${badgeText}
+                </span>
+              </div>
+              <p class="qb-scope-desc">${scope.description}</p>
+              <div style="margin: 12px 0 8px; font-family: var(--font-mono); font-size: 0.82rem; color: var(--gold-light);">
+                Starting from <strong>${formatINR(startingVal)}</strong> &bull; Signature <strong>${formatINR(signatureVal)}</strong>
+              </div>
+              <div class="qb-scope-status">
+                <span>${isSelected ? '● Selected Setup' : '○ Click to Select'}</span>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+
+      <div class="qb-step-footer">
+        <button type="button" class="btn btn-outline-gold qb-btn-prev" data-step-prev="${builderState.currentStep - 1}">← Back</button>
+        <button type="button" class="btn btn-gold qb-btn-next" data-step-next="${builderState.currentStep + 1}">
+          Continue to Celebration Details →
+        </button>
+      </div>
+    `;
+  }
+
+  // ================= STEP: EVENT DETAILS =================
+  function renderStep2_EventDetails(stepInfo) {
     const d = builderState.eventDetails;
     const functionsList = [
       'Chandlo Matli / Sakar Pudo',
@@ -430,7 +514,7 @@
 
     return `
       <div class="qb-step-header">
-        <span class="qb-step-kicker">STEP 02 OF 08 &bull; EVENT DETAILS &amp; SCHEDULE</span>
+        <span class="qb-step-kicker">${stepInfo ? stepInfo.kicker : 'EVENT DETAILS & SCHEDULE'}</span>
         <h3 class="qb-step-title">Tell us about your celebration schedule</h3>
         <p class="qb-step-desc">
           Configure celebration duration, city, and sacred rituals. For multi-day weddings, daily hours and locations are adjusted with zero hidden surprises.
@@ -517,146 +601,113 @@
       </div>
 
       <div class="qb-step-footer">
-        <button type="button" class="btn btn-outline-gold qb-btn-prev" data-step-prev="1">← Back</button>
-        <button type="button" class="btn btn-gold qb-btn-next" data-step-next="3">Select Base Package →</button>
+        <button type="button" class="btn btn-outline-gold qb-btn-prev" data-step-prev="${builderState.currentStep - 1}">← Back</button>
+        <button type="button" class="btn btn-gold qb-btn-next" data-step-next="${builderState.currentStep + 1}">Select Base Package →</button>
       </div>
     `;
   }
 
-  // ================= STEP 3: BASE PACKAGE SELECTION =================
-  function renderStep3_BasePackage() {
+  // ================= STEP: BASE PACKAGE SELECTION =================
+  function renderStep3_BasePackage(stepInfo, quotation) {
     const cat = builderState.eventCategory;
     const catData = config.packageCategories[cat] || config.packageCategories.wedding;
     const packages = catData.packages || [];
+    const isWedding = (cat === 'wedding');
+    const scopeMultiplier = isWedding 
+      ? (builderState.coverageScope === 'both_diff_venues' ? 1.85 : (builderState.coverageScope === 'both_same_venue' ? 1.4 : 1.0))
+      : 1.0;
 
     return `
       <div class="qb-step-header">
-        <span class="qb-step-kicker">STEP 03 OF 08 &bull; CHOOSE BASE PACKAGE</span>
+        <span class="qb-step-kicker">${stepInfo ? stepInfo.kicker : 'CHOOSE BASE PACKAGE'}</span>
         <h3 class="qb-step-title">Select your foundational collection for ${catData.name}</h3>
         <p class="qb-step-desc">
-          Choose a recommended tier below or select "Build Your Own" to handpick every deliverable. All packages can be freely customized with add-ons in Step 5.
+          Choose a curated collection tier below. All packages can be tailored with optional add-ons in the next step.
         </p>
       </div>
 
       <div class="qb-package-cards-grid">
         ${packages.map(pkg => {
           const isSelected = builderState.packageId === pkg.id;
+          const baseIndicative = pkg.indicativePrice || 40000;
+          const calculatedDiscounted = Math.round(baseIndicative * scopeMultiplier);
+          const baseOriginal = (pkg.id === 'pkg-wedding-essential' ? 50000 : (pkg.id === 'pkg-wedding-signature' ? 100000 : (pkg.id === 'pkg-wedding-premium' ? 150000 : null)));
+          const calculatedOriginal = baseOriginal ? Math.round(baseOriginal * scopeMultiplier) : null;
+
+          const displayPrice = (isWedding && scopeMultiplier > 1.0) 
+            ? formatINR(calculatedDiscounted) 
+            : pkg.price;
+          const displayOriginal = (isWedding && scopeMultiplier > 1.0 && calculatedOriginal)
+            ? formatINR(calculatedOriginal)
+            : pkg.originalPrice;
+
+          // Curate 3-4 clean high-impact highlights per tier
+          let filteredDeliverables = [];
+          if (pkg.id === 'pkg-wedding-essential') {
+            filteredDeliverables = [
+              'Traditional Photography & Sacred Ritual Documentation',
+              'Curated Ultra-High-Resolution RAW Master Gallery',
+              'Handpicked, Artistically Retouched Master Portraits',
+              'Private Online Cloud Gallery with Full Print Rights'
+            ];
+          } else if (pkg.id === 'pkg-wedding-signature') {
+            filteredDeliverables = [
+              'Synchronized Candid Photography & 4K Wedding Cinema',
+              'Curated RAW Master Gallery & Retouched Portraits',
+              'One 3–5 Min Cinematic 4K Highlight Story Film',
+              'One Vertical 9:16 Reel for WhatsApp & Instagram'
+            ];
+          } else if (pkg.id === 'pkg-wedding-premium') {
+            filteredDeliverables = [
+              'Extended Hours: Early Mandva to Late Midnight Garba',
+              'Candid Photography, 4K Cinema & Production Lighting',
+              'Master 4K Wedding Story Film & Vertical 9:16 Social Reels',
+              'Dedicated Couple Portrait Session & Priority Turnaround'
+            ];
+          } else {
+            filteredDeliverables = (pkg.deliverables || [])
+              .filter(d => !d.toLowerCase().includes('coverage (up to') && !d.toLowerCase().includes('two-day coverage'))
+              .slice(0, 4);
+          }
+
           return `
             <div class="package-card qb-tier-card ${pkg.featured ? 'featured' : ''} ${isSelected ? 'selected' : ''}" data-select-package="${pkg.id}">
-              ${pkg.badge ? `<span class="package-ribbon">${pkg.badge}</span>` : ''}
+              ${pkg.badge ? `<span class="qb-tier-badge">★ ${pkg.badge}</span>` : ''}
+              
               <div class="package-header">
                 <span class="package-tag">${pkg.tag}</span>
-                <h4 class="package-title" style="font-size: 1.3rem;">${pkg.name}</h4>
-                <div class="package-price-wrap" style="margin: 12px 0 6px;">
-                  <span class="package-price" style="font-size: 1.85rem; color: var(--gold-light);">${pkg.price}</span>
+                <h4 class="package-title">${pkg.name}</h4>
+                
+                <div class="package-price-wrap">
+                  <span class="package-price">${displayPrice}</span>
+                  ${displayOriginal ? `
+                    <span class="package-orig-price">${displayOriginal}</span>
+                    <span class="package-save-pill">Special Rate</span>
+                  ` : ''}
                 </div>
-                <div class="package-price-range">${pkg.priceRange}</div>
-                <div class="package-hours-badge">⏱ ${pkg.duration} &bull; ${pkg.hours}</div>
-                <p class="package-scope" style="margin-top: 10px; font-size: 0.85rem;">${pkg.summary}</p>
+
+                ${isWedding && scopeMultiplier > 1.0 ? `
+                  <div style="font-size: 0.72rem; color: var(--gold-light); background: rgba(212,175,55,0.12); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(212,175,55,0.25); display: inline-block; margin-bottom: 8px;">
+                    Adjusted for ${builderState.coverageScope === 'both_same_venue' ? 'Joint Venue' : 'Separate Locations'}
+                  </div>
+                ` : ''}
+
+                <div class="package-hours-pill">⏱ ${pkg.duration} &bull; ${pkg.hours}</div>
+                <p class="package-scope">${pkg.summary}</p>
               </div>
 
-              <div class="package-crew" style="margin: 14px 0; font-size: 0.84rem;">
-                <strong>Included Services:</strong> ${pkg.services ? pkg.services.join(' &bull; ') : (pkg.crewText || 'Photography & Cinematography Coverage')}
-              </div>
-
-              <ul class="package-features" style="font-size: 0.82rem; margin-bottom: 18px;">
-                ${pkg.deliverables.map(del => `
-                  <li class="package-feature">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                    <span>${del}</span>
-                  </li>
-                `).join('')}
-              </ul>
-
-              <button type="button" class="btn ${isSelected ? 'btn-gold' : 'btn-outline-gold'} qb-btn-choose-pkg" style="width: 100%; justify-content: center;">
-                ${isSelected ? '✓ Selected Tier' : 'Select This Tier'}
-              </button>
-            </div>
-          `;
-        }).join('')}
-
-        <!-- Custom Build Your Own Option -->
-        <div class="package-card qb-tier-card ${builderState.packageId === 'custom' ? 'selected' : ''}" data-select-package="custom">
-          <div class="package-header">
-            <span class="package-tag">100% BESPOKE CONFIGURATION</span>
-            <h4 class="package-title" style="font-size: 1.3rem;">Build Your Own</h4>
-            <div class="package-price-wrap" style="margin: 12px 0 6px;">
-              <span class="package-price" style="font-size: 1.85rem; color: var(--gold-light);">From ₹0 Base</span>
-            </div>
-            <div class="package-price-range">Pay strictly for what you choose</div>
-            <div class="package-hours-badge">⏱ Fully Configurable</div>
-            <p class="package-scope" style="margin-top: 10px; font-size: 0.85rem;">
-              Start with a clean slate. Handpick your photography and cinematography coverage styles, drone aerials, luxury heirloom albums, and reels in the next steps.
-            </p>
-          </div>
-          <div class="package-crew" style="margin: 14px 0; font-size: 0.84rem;">
-            <strong>Coverage:</strong> Handpicked services configured dynamically
-          </div>
-          <ul class="package-features" style="font-size: 0.82rem; margin-bottom: 18px;">
-            <li class="package-feature"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Zero bundled assumptions or unwanted add-ons</span></li>
-            <li class="package-feature"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Select tailored photography and cinematography coverage</span></li>
-            <li class="package-feature"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Itemized transparency down to each reel and print</span></li>
-          </ul>
-          <button type="button" class="btn ${builderState.packageId === 'custom' ? 'btn-gold' : 'btn-outline-gold'} qb-btn-choose-pkg" style="width: 100%; justify-content: center;">
-            ${builderState.packageId === 'custom' ? '✓ Selected Bespoke' : 'Build Custom Plan'}
-          </button>
-        </div>
-      </div>
-
-      <div class="qb-step-footer">
-        <button type="button" class="btn btn-outline-gold qb-btn-prev" data-step-prev="2">← Back</button>
-        <button type="button" class="btn btn-gold qb-btn-next" data-step-next="4">Select Coverage Services →</button>
-      </div>
-    `;
-  }
-
-  // ================= STEP 4: COVERAGE SERVICES =================
-  function renderStep4_CrewConfig() {
-    // Current package base crew
-    const catPackages = config.packageCategories[builderState.eventCategory]?.packages || [];
-    const basePkg = catPackages.find(p => p.id === builderState.packageId);
-    const baseCrewMap = (basePkg && basePkg.baseCrew) ? basePkg.baseCrew : {};
-
-    return `
-      <div class="qb-step-header">
-        <span class="qb-step-kicker">STEP 04 OF 08 &bull; PHOTOGRAPHY &amp; CINEMATOGRAPHY SERVICES</span>
-        <h3 class="qb-step-title">Select your celebration coverage styles</h3>
-        <p class="qb-step-desc">
-          Choose the visual styles that best tell your celebration story. Every selected service is documented by dedicated, specialized artists equipped with cinema cameras, prime lenses, and discrete audio capture.
-        </p>
-      </div>
-
-      <div class="qb-services-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
-        ${config.crewRoles.map(role => {
-          const baseCount = baseCrewMap[role.id] || 0;
-          const currentCount = (builderState.crew[role.id] !== undefined) ? builderState.crew[role.id] : baseCount;
-          const isIncludedInBase = baseCount > 0;
-          const isSelected = currentCount > 0;
-
-          return `
-            <div class="qb-service-card ${isSelected ? 'selected' : ''}" style="background: var(--canvas-elevated); border: 1.5px solid ${isSelected ? 'var(--gold-primary)' : 'var(--border)'}; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.2s ease;">
               <div>
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 8px;">
-                  <span class="qb-badge-sm" style="font-size: 0.72rem; text-transform: uppercase;">${role.roleType || 'Coverage'}</span>
-                  ${isIncludedInBase 
-                    ? `<span class="qb-included-tag" style="background: rgba(34, 197, 94, 0.15); color: #86efac; border: 1px solid rgba(34, 197, 94, 0.3); padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 600;">Included in Tier</span>` 
-                    : `<span style="font-size: 0.8rem; color: var(--gold-light); font-weight: 600;">${engine.formatINR(role.ratePerEvent)} / event</span>`
-                  }
-                </div>
-                <h4 style="font-size: 1.05rem; margin: 0 0 8px 0; color: var(--foreground);">${role.name}</h4>
-                <p style="font-size: 0.82rem; color: var(--mute); line-height: 1.5; margin: 0 0 16px 0;">${role.description}</p>
-              </div>
+                <ul class="package-features">
+                  ${filteredDeliverables.map(del => `
+                    <li class="package-feature">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                      <span>${del}</span>
+                    </li>
+                  `).join('')}
+                </ul>
 
-              <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255, 255, 255, 0.06); padding-top: 14px;">
-                <span style="font-size: 0.82rem; color: ${isSelected ? '#86efac' : 'var(--mute)'};">
-                  ${isSelected ? '● Active Coverage' : '○ Not Selected'}
-                </span>
-                <button type="button" 
-                  class="btn ${isSelected ? 'btn-gold' : 'btn-outline-gold'} qb-btn-service-toggle" 
-                  data-service-toggle="${role.id}"
-                  style="padding: 8px 16px; font-size: 0.82rem;"
-                  aria-pressed="${isSelected}">
-                  ${isSelected ? '✓ Selected' : '+ Add Service'}
+                <button type="button" class="btn ${isSelected ? 'btn-gold' : 'btn-outline-gold'} qb-btn-choose-pkg" style="width: 100%; justify-content: center;">
+                  ${isSelected ? '✓ Plan Selected' : 'Select ' + pkg.name}
                 </button>
               </div>
             </div>
@@ -664,19 +715,15 @@
         }).join('')}
       </div>
 
-      <div class="package-transparency-note" style="margin-top: 24px;">
-        💡 <strong>Harmonious Coverage Recommendation:</strong> For traditional celebrations with 250+ guests across Mandva, Pithi, Garba, and Lagna, we recommend combining Traditional Photography, Candid Photography, and Cinematic Wedding Filmmaking for complete, multi-angle celebration documentation.
-      </div>
-
       <div class="qb-step-footer">
-        <button type="button" class="btn btn-outline-gold qb-btn-prev" data-step-prev="3">← Back</button>
-        <button type="button" class="btn btn-gold qb-btn-next" data-step-next="5">Select Deliverables &amp; Add-ons →</button>
+        <button type="button" class="btn btn-outline-gold qb-btn-prev" data-step-prev="${builderState.currentStep - 1}">← Back</button>
+        <button type="button" class="btn btn-gold qb-btn-next" data-step-next="${builderState.currentStep + 1}">Customize Add-ons &amp; Deliverables →</button>
       </div>
     `;
   }
 
-  // ================= STEP 5: DELIVERABLES & ADD-ONS =================
-  function renderStep5_DeliverablesAddons() {
+  // ================= STEP: DELIVERABLES & ADD-ONS =================
+  function renderStep4_DeliverablesAddons(stepInfo) {
     const catPackages = config.packageCategories[builderState.eventCategory]?.packages || [];
     const basePkg = catPackages.find(p => p.id === builderState.packageId);
     const includedAddons = (basePkg && basePkg.includedAddons) ? basePkg.includedAddons : {};
@@ -703,7 +750,7 @@
 
     return `
       <div class="qb-step-header">
-        <span class="qb-step-kicker">STEP 05 OF 08 &bull; DELIVERABLES &amp; ADD-ON CATALOGUE</span>
+        <span class="qb-step-kicker">${stepInfo ? stepInfo.kicker : 'DELIVERABLES &amp; ADD-ON CATALOGUE'}</span>
         <h3 class="qb-step-title">Enhance your package with optional deliverables</h3>
         <p class="qb-step-desc">
           Add printed heirloom albums, social media reels, guest audio interviews, or extra coverage hours. Services already included in your package are excluded here so you never pay twice.
@@ -767,277 +814,118 @@
       `}
 
       <div class="qb-step-footer">
-        <button type="button" class="btn btn-outline-gold qb-btn-prev" data-step-prev="4">← Back</button>
-        <button type="button" class="btn btn-gold qb-btn-next" data-step-next="6">Review Custom Quotation →</button>
+        <button type="button" class="btn btn-outline-gold qb-btn-prev" data-step-prev="${builderState.currentStep - 1}">← Back to Base Plan</button>
+        <button type="button" class="btn btn-gold qb-btn-next" data-step-next="${builderState.currentStep + 1}">Continue to Final Quotation →</button>
       </div>
     `;
   }
 
-  // ================= STEP 6: REVIEW QUOTATION =================
-  function renderStep6_ReviewQuotation(quotation) {
-    const evt = quotation.eventDetails;
-    const functionsList = (evt.functions && evt.functions.length > 0) 
-      ? evt.functions 
-      : ['Mandva / Grah Shanti', 'Haldi / Pithi', 'Garba / Sangeet Night', 'Lagna / Mandap Ceremony', 'Reception'];
-
-    return `
-      <div class="qb-step-header">
-        <span class="qb-step-kicker">STEP 06 OF 08 &bull; REVIEW CUSTOM QUOTATION</span>
-        <h3 class="qb-step-title">Your Itemized Celebration Quotation</h3>
-        <p class="qb-step-desc">
-          Review every service, deliverable, and complimentary experience. Everything is 100% transparent with zero hidden fees.
-        </p>
-      </div>
-
-      <div class="qb-review-card">
-        <div class="qb-review-header">
-          <div>
-            <span class="qb-review-ref">Reference: <strong>${quotation.referenceId}</strong></span>
-            <h4 class="qb-review-pkg-name">${quotation.basePackageName}</h4>
-            <div class="qb-review-meta">
-              <span>📍 ${evt.city}${evt.venue ? ' (' + evt.venue + ')' : ''}</span> &bull; 
-              <span>👥 ${quotation.coverageScopeLabel || 'One-Side Coverage'}</span> &bull; 
-              <span>🗓️ ${evt.dates || 'Dates to be finalized'}</span> &bull; 
-              <span>⏳ ${evt.days} Day(s)</span>
-            </div>
-          </div>
-          <div class="qb-review-status-pill">
-            ${quotation.status}
-          </div>
-        </div>
-
-        <!-- Schedule & Functions Covered -->
-        <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 16px 20px; margin-bottom: 20px;">
-          <div style="font-size: 0.78rem; font-family: var(--font-mono); color: var(--gold-light); text-transform: uppercase; margin-bottom: 8px;">
-            Documented Celebration Functions:
-          </div>
-          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-            ${functionsList.map(fn => `
-              <span style="background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.25); color: var(--foreground); padding: 4px 10px; border-radius: 20px; font-size: 0.8rem;">
-                ✦ ${fn}
-              </span>
-            `).join('')}
-          </div>
-        </div>
-
-        <!-- Deliverables & Philosophy Highlights -->
-        <div style="background: rgba(212, 175, 55, 0.05); border-left: 3px solid var(--gold-primary); border-radius: 6px; padding: 14px 18px; margin-bottom: 20px; font-size: 0.84rem; line-height: 1.55;">
-          <strong style="color: var(--gold-light); display: block; margin-bottom: 4px;">Our Photography Guarantee:</strong>
-          "${config.photographyPhilosophy.quote}"
-          <div style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 16px; font-size: 0.8rem; color: var(--mute);">
-            <span>✓ Complete Ultra-High-Resolution RAW Collection</span>
-            <span>✓ Curated Handpicked Master Retouched Photographs</span>
-          </div>
-        </div>
-
-        <!-- Complimentary Benefits -->
-        <div style="background: rgba(255, 255, 255, 0.02); border: 1px dashed rgba(212, 175, 55, 0.3); border-radius: 8px; padding: 14px 18px; margin-bottom: 20px;">
-          <div style="font-size: 0.78rem; font-family: var(--font-mono); color: #86efac; text-transform: uppercase; margin-bottom: 8px;">
-            🎁 Complimentary Experiences Included:
-          </div>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; font-size: 0.8rem;">
-            ${config.complimentaryBenefits.map(b => `
-              <div style="display: flex; gap: 8px; align-items: flex-start;">
-                <span style="color: var(--gold-light);">✓</span>
-                <div>
-                  <strong style="color: var(--foreground);">${b.title}</strong>
-                  <div style="color: var(--mute); font-size: 0.75rem;">${b.description}</div>
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-
-        <!-- Line Items Table -->
-        <div class="qb-table-wrap">
-          <table class="qb-table">
-            <thead>
-              <tr>
-                <th style="text-align: left;">Service / Deliverable</th>
-                <th style="text-align: center;">Category</th>
-                <th style="text-align: center;">Status</th>
-                <th style="text-align: right;">Total Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${quotation.lineItems.map(item => `
-                <tr>
-                  <td>
-                    <div class="qb-item-name">${item.name}</div>
-                    ${item.description ? `<div class="qb-item-sub">${item.description}</div>` : ''}
-                  </td>
-                  <td style="text-align: center;">
-                    <span class="qb-badge-sm">${item.category}</span>
-                  </td>
-                  <td style="text-align: center;">
-                    ${item.isIncluded 
-                      ? '<span class="qb-included-text" style="color: #86efac; font-weight: 600;">Included in Tier</span>' 
-                      : (item.type === 'service' ? '<span style="color: var(--gold-light);">Active Coverage</span>' : `${item.quantity} ${item.unit}`)
-                    }
-                  </td>
-                  <td style="text-align: right; font-weight: 600;">
-                    ${item.isIncluded ? '<span style="color: #86efac;">Included (₹0)</span>' : (item.isCustomQuote ? '<span style="color: var(--gold-light);">Custom Quote</span>' : engine.formatINR(item.totalPrice))}
-                  </td>
-                </tr>
-              `).join('')}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colspan="3" style="text-align: right;">Subtotal:</td>
-                <td style="text-align: right;">${quotation.subtotalFormatted}</td>
-              </tr>
-              ${quotation.discountAmount > 0 ? `
-                <tr style="color: #86efac;">
-                  <td colspan="3" style="text-align: right;">${quotation.appliedDiscount?.name || 'Discount / Savings'}:</td>
-                  <td style="text-align: right;">-${quotation.discountFormatted}</td>
-                </tr>
-              ` : ''}
-              <tr class="qb-total-row">
-                <td colspan="3" style="text-align: right;">Estimated Total:</td>
-                <td style="text-align: right; font-size: 1.25rem; color: var(--gold-light);">${quotation.estimatedTotalFormatted}</td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-
-        <div class="qb-quote-notices">
-          <ul>
-            ${quotation.notes.map(note => `<li>• ${note}</li>`).join('')}
-          </ul>
-        </div>
-      </div>
-
-      <div class="qb-step-footer">
-        <button type="button" class="btn btn-outline-gold qb-btn-prev" data-step-prev="5">← Edit Services</button>
-        <button type="button" class="btn btn-gold qb-btn-next" data-step-next="7">Enter Contact Info →</button>
-      </div>
-    `;
-  }
-
-  // ================= STEP 7: CUSTOMER CONTACT =================
-  function renderStep7_CustomerDetails() {
+  // ================= STEP: FINAL QUOTATION & CONTACT =================
+  function renderStep_FinalQuotationAndContact(stepInfo, quotation) {
     const c = builderState.customer;
-    return `
-      <div class="qb-step-header">
-        <span class="qb-step-kicker">STEP 07 OF 08 &bull; YOUR CONTACT DETAILS</span>
-        <h3 class="qb-step-title">Where should we send your formal quotation?</h3>
-        <p class="qb-step-desc">
-          Provide your WhatsApp number so we can check calendar availability and send your personalized quotation summary.
-        </p>
-      </div>
-
-      <div class="form-grid">
-        <div class="form-group">
-          <label class="form-label" for="qb-cust-names">Couple Names / Your Name *</label>
-          <input type="text" id="qb-cust-names" class="form-input" placeholder="e.g. Priyanshi &amp; Harsh…" value="${c.names || ''}" required>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="qb-cust-phone">WhatsApp Number *</label>
-          <input type="tel" id="qb-cust-phone" class="form-input" placeholder="+91 98765 XXXXX…" value="${c.phone || ''}" required>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="qb-cust-email">Email Address (Optional)</label>
-          <input type="email" id="qb-cust-email" class="form-input" placeholder="weddings@yourdomain.com…" value="${c.email || ''}">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="qb-cust-contact-pref">Preferred Contact Method</label>
-          <select id="qb-cust-contact-pref" class="form-input" style="background-color: var(--canvas-elevated);">
-            <option value="WhatsApp" ${c.preferredContact === 'WhatsApp' ? 'selected' : ''}>WhatsApp Message (Fastest)</option>
-            <option value="Phone Call" ${c.preferredContact === 'Phone Call' ? 'selected' : ''}>Direct Phone Call</option>
-            <option value="Email" ${c.preferredContact === 'Email' ? 'selected' : ''}>Official Email</option>
-          </select>
-        </div>
-
-        <div class="form-group full-width">
-          <label class="form-label" for="qb-cust-notes">Special Rituals, Vision or Questions (Optional)</label>
-          <textarea id="qb-cust-notes" class="form-textarea" placeholder="Tell us about unique family customs, Panditji muhurat requirements, or decor vision…">${c.notes || ''}</textarea>
-        </div>
-      </div>
-
-      <div class="qb-step-footer">
-        <button type="button" class="btn btn-outline-gold qb-btn-prev" data-step-prev="6">← Back to Review</button>
-        <button type="button" class="btn btn-gold qb-btn-next" data-step-next="8">Finalize &amp; Submit Inquiry →</button>
-      </div>
-    `;
-  }
-
-  // ================= STEP 8: SUBMIT & ACTIONS =================
-  function renderStep8_SubmitAndShare(quotation) {
     const waUrl = getWhatsAppUrl(quotation);
 
     return `
-      <div class="qb-step-header" style="text-align: center;">
-        <span class="qb-step-kicker" style="color: var(--gold-light);">✨ STEP 08 OF 08 &bull; READY TO DISPATCH</span>
-        <h3 class="qb-step-title" style="margin: 0 auto 12px; max-width: 650px;">Your Custom Wedding Quotation is Ready</h3>
-        <p class="qb-step-desc" style="margin: 0 auto 24px; max-width: 600px;">
-          Reference ID: <strong style="color: var(--gold-light);">${quotation.referenceId}</strong> &bull; Estimated Total: <strong style="color: var(--gold-light); font-size: 1.15rem;">${quotation.estimatedTotalFormatted}</strong>
+      <div class="qb-step-header">
+        <span class="qb-step-kicker">${stepInfo ? stepInfo.kicker : 'YOUR DETAILS & PROPOSAL'}</span>
+        <h3 class="qb-step-title">Your Custom Quotation is Ready</h3>
+        <p class="qb-step-desc">
+          Enter your contact details to lock your launch rate, review the formal 8-section PDF quotation, or dispatch directly on WhatsApp.
         </p>
       </div>
 
-      <div class="qb-action-cards-grid">
-        <!-- 1. Send via WhatsApp -->
-        <div class="qb-action-card featured">
-          <div class="qb-action-icon">💬</div>
-          <h4 class="qb-action-title">Send Inquiry via WhatsApp</h4>
-          <p class="qb-action-desc">
-            Directly forwards your full itemized package, dates, and requirements to Anant Productions on WhatsApp for immediate date verification.
-          </p>
-          <a href="${waUrl}" target="_blank" rel="noopener" class="btn btn-whatsapp qb-action-btn" id="btn-qb-whatsapp-send">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-            Send Quotation on WhatsApp
-          </a>
-        </div>
+      <div class="qb-final-grid">
+        <!-- Contact Form (Left) -->
+        <div class="qb-final-card">
+          <div class="qb-final-card-header">
+            <span class="qb-final-card-num">01</span>
+            <div>
+              <h4 class="qb-final-card-title">Couple &amp; Booking Details</h4>
+              <p class="qb-final-card-sub">Where should we confirm Muhurat date availability?</p>
+            </div>
+          </div>
 
-        <!-- 2. Formal Quotation View & Print -->
-        <div class="qb-action-card">
-          <div class="qb-action-icon">📄</div>
-          <h4 class="qb-action-title">Download / Print PDF Quotation</h4>
-          <p class="qb-action-desc">
-            Open or print an official PDF quotation with Anant Productions branding, deliverables, terms, and studio details.
-          </p>
-          <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px;">
-            <button type="button" class="btn btn-gold qb-action-btn" id="btn-qb-print-direct" style="flex: 1; min-width: 170px; justify-content: center; padding: 12px 16px;">
-              🖨️ Download / Print PDF
-            </button>
-            <button type="button" class="btn btn-outline-gold qb-action-btn" id="btn-qb-open-formal" style="flex: 1; min-width: 140px; justify-content: center; padding: 12px 16px;">
-              👁️ View Full Quotation
-            </button>
+          <div class="form-grid" style="gap: 12px;">
+            <div class="form-group">
+              <label class="form-label" for="qb-cust-names">Couple Names / Your Name *</label>
+              <input type="text" id="qb-cust-names" class="form-input" placeholder="e.g. Priyanshi &amp; Harsh…" value="${c.names || ''}" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="qb-cust-phone">WhatsApp Number *</label>
+              <input type="tel" id="qb-cust-phone" class="form-input" placeholder="+91 98765 XXXXX…" value="${c.phone || ''}" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="qb-cust-email">Email Address (Optional)</label>
+              <input type="email" id="qb-cust-email" class="form-input" placeholder="weddings@yourdomain.com…" value="${c.email || ''}">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="qb-cust-contact-pref">Preferred Contact Method</label>
+              <select id="qb-cust-contact-pref" class="form-input" style="background-color: var(--canvas-elevated);">
+                <option value="WhatsApp" ${c.preferredContact === 'WhatsApp' ? 'selected' : ''}>WhatsApp Message (Fastest)</option>
+                <option value="Phone Call" ${c.preferredContact === 'Phone Call' ? 'selected' : ''}>Direct Phone Call</option>
+                <option value="Email" ${c.preferredContact === 'Email' ? 'selected' : ''}>Official Email</option>
+              </select>
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label" for="qb-cust-notes">Special Vision or Questions (Optional)</label>
+              <textarea id="qb-cust-notes" class="form-textarea" style="min-height: 52px; height: 52px; resize: none;" placeholder="Unique family customs, Panditji muhurat timings, or venue details…">${c.notes || ''}</textarea>
+            </div>
           </div>
         </div>
 
-        <!-- 3. Shareable Link -->
-        <div class="qb-action-card">
-          <div class="qb-action-icon">🔗</div>
-          <h4 class="qb-action-title">Share with Partner / Family</h4>
-          <p class="qb-action-desc">
-            Copy a customized link that instantly loads this exact package configuration on your fiancé’s or parents’ devices.
-          </p>
-          <button type="button" class="btn btn-outline-gold qb-action-btn" id="btn-qb-copy-link">
-            Copy Shareable Link
-          </button>
-        </div>
+        <!-- Action Cards (Full-Width Flow) -->
+        <div class="qb-final-card">
+          <div class="qb-final-card-header">
+            <span class="qb-final-card-num">02</span>
+            <div>
+              <h4 class="qb-final-card-title">Instant Dispatch &amp; Official Proposal</h4>
+              <p class="qb-final-card-sub">Instant quotation with zero waiting — Lock your Muhurat date rate</p>
+            </div>
+          </div>
 
-        <!-- 4. Copy Summary -->
-        <div class="qb-action-card">
-          <div class="qb-action-icon">📋</div>
-          <h4 class="qb-action-title">Copy Text Breakdown</h4>
-          <p class="qb-action-desc">
-            Copies a neat, formatted summary of services and prices to your clipboard for family discussion.
-          </p>
-          <button type="button" class="btn btn-outline-gold qb-action-btn" id="btn-qb-copy-summary">
-            Copy Summary Text
-          </button>
+          <div class="qb-action-stack">
+            <!-- 1. Send via WhatsApp (Primary Highlight CTA) -->
+            <a href="${waUrl}" target="_blank" rel="noopener" class="btn btn-whatsapp qb-action-main-btn" id="btn-qb-whatsapp-send">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+              <span>Send Quotation on WhatsApp</span>
+            </a>
+
+            <!-- 2. Formal Quotation & PDF Print -->
+            <div class="qb-action-row">
+              <button type="button" class="btn btn-gold" id="btn-qb-open-formal">
+                📄 Review &amp; Download PDF Quotation
+              </button>
+              <button type="button" class="btn btn-outline-gold" id="btn-qb-print-direct">
+                🖨️ Direct Print Document
+              </button>
+            </div>
+
+            <!-- 3. Share & Copy Tools -->
+            <div class="qb-action-row">
+              <button type="button" class="btn btn-outline-gold" id="btn-qb-copy-link">
+                🔗 Copy Shareable Link
+              </button>
+              <button type="button" class="btn btn-outline-gold" id="btn-qb-copy-summary">
+                📋 Copy Summary Text
+              </button>
+            </div>
+
+            <div class="qb-final-ref-banner">
+              Proposal Ref: <strong>${quotation.referenceId}</strong> &bull; Estimated Total: <strong>${quotation.estimatedTotalFormatted}</strong>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Quick Feedback Toast -->
       <div id="qb-toast" class="qb-toast" style="display: none;" role="status"></div>
 
-      <div class="qb-step-footer" style="margin-top: 36px;">
-        <button type="button" class="btn btn-outline-gold qb-btn-prev" data-step-prev="7">← Edit Contact Info</button>
+      <div class="qb-step-footer" style="margin-top: 16px;">
+        <button type="button" class="btn btn-outline-gold qb-btn-prev" data-step-prev="${builderState.currentStep - 1}">← Back to Add-ons</button>
         <button type="button" class="btn btn-outline-gold" data-step-goto="1">↺ Start New Quotation</button>
       </div>
     `;
@@ -1045,6 +933,8 @@
 
   // ================= STICKY SUMMARY CARD =================
   function renderSummaryCard(quotation) {
+    const isFinalStep = (builderState.currentStep === getStepList().length);
+
     return `
       <div class="qb-summary-card">
         <div class="qb-sum-header">
@@ -1060,7 +950,7 @@
           </div>
           <div class="qb-sum-scope-row">
             <span>👥 Scope:</span>
-            <strong>${quotation.coverageScope === 'both_diff_venues' ? 'Both Sides (+₹8,500)' : (quotation.coverageScope === 'both_same_venue' ? 'Both Sides (Joint)' : 'One-Side')}</strong>
+            <strong>${quotation.coverageScope === 'both_diff_venues' ? 'Both Sides (Separate Locations)' : (quotation.coverageScope === 'both_same_venue' ? 'Both Sides (Joint Venue)' : 'One-Side')}</strong>
           </div>
           <div class="qb-sum-scope-row">
             <span>⏳ Days:</span>
@@ -1107,12 +997,22 @@
         </div>
 
         <div class="qb-sum-ctas">
-          <a href="${getWhatsAppUrl(quotation)}" target="_blank" rel="noopener" class="btn btn-whatsapp qb-sum-btn-wa" id="btn-summary-whatsapp">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-            Send Quotation on WhatsApp
-          </a>
+          <button type="button" class="btn btn-gold qb-sum-btn-formal" id="btn-summary-open-formal" style="width: 100%; margin-bottom: 8px; justify-content: center; font-size: 0.86rem; padding: 10px 14px;">
+            📄 Review &amp; Download PDF
+          </button>
 
-          <button type="button" class="btn btn-outline-gold qb-sum-btn-share" id="btn-summary-share-link">
+          ${!isFinalStep ? `
+            <a href="${getWhatsAppUrl(quotation)}" target="_blank" rel="noopener" class="btn btn-whatsapp qb-sum-btn-wa" id="btn-summary-whatsapp">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+              Send Quotation on WhatsApp
+            </a>
+          ` : `
+            <div style="font-size: 0.74rem; color: var(--gold-light); text-align: center; margin: 6px 0; font-family: var(--font-mono);">
+              ✦ Enter contact details to lock proposal rates
+            </div>
+          `}
+
+          <button type="button" class="btn btn-outline-gold qb-sum-btn-share" id="btn-summary-share-link" style="margin-top: 6px;">
             🔗 Share Quotation Link
           </button>
         </div>
@@ -1124,256 +1024,83 @@
     `;
   }
 
-  // ================= FORMAL QUOTATION DOCUMENT (8 SECTIONS) =================
+  // ================= DEAL-CLOSING FORMAL QUOTATION DOCUMENT =================
   function renderFormalQuotationDocument(quotation) {
     const biz = config.business;
     const cust = quotation.customer;
     const evt = quotation.eventDetails;
-    const functionsList = (evt.functions && evt.functions.length > 0)
-      ? evt.functions
-      : ['Mandva / Ganesh Sthapana & Grah Shanti', 'Haldi & Pithi Ceremony', 'Raas Garba & Sangeet Night', 'Lagna & Hasta Melap Ceremony', 'Grand Reception Celebration'];
-
-    // Active coverage services for this quotation
-    const activeServices = config.crewRoles.filter(role => (builderState.crew[role.id] || 0) > 0);
 
     return `
       <div class="formal-doc">
         
-        <!-- ================= SECTION 1: PERSONALIZED QUOTATION COVER ================= -->
-        <section class="formal-doc-section formal-doc-cover" id="formal-sec-cover">
-          <div class="formal-doc-header">
-            <div class="formal-doc-brand">
-              <img src="anant_logo.png" alt="Anant Productions Logo" class="formal-doc-logo">
-              <div>
-                <h2 class="formal-doc-title">ANANT PRODUCTIONS</h2>
-                <p class="formal-doc-tagline">Fine-Art Gujarati Wedding Cinematography &amp; Photography</p>
-                <div class="formal-doc-address">
-                  ${biz.address}<br>
-                  Phone &amp; WhatsApp: ${biz.phone} &bull; Email: ${biz.email} &bull; Website: anantproductions.in
-                </div>
+        <!-- HEADER: BRAND & OFFICIAL PROPOSAL META -->
+        <header class="formal-doc-header">
+          <div class="formal-doc-brand">
+            <img src="anant_logo.png" alt="Anant Productions Logo" class="formal-doc-logo">
+            <div>
+              <h2 class="formal-doc-title">ANANT PRODUCTIONS</h2>
+              <p class="formal-doc-tagline">Fine-Art Gujarati Wedding Cinematography &amp; Photography</p>
+              <div class="formal-doc-address">
+                ${biz.address}<br>
+                Phone &amp; WhatsApp: ${biz.phone} &bull; Email: ${biz.email} &bull; Website: anantproductions.in
               </div>
             </div>
-            <div class="formal-doc-meta">
-              <div class="formal-doc-meta-badge">CONFIDENTIAL PROPOSAL</div>
-              <div class="formal-doc-ref">Ref: <strong>${quotation.referenceId}</strong></div>
-              <div class="formal-doc-date">Date: ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
-              <div class="formal-doc-validity">Validity: 30 Days</div>
-            </div>
           </div>
-
-          <div class="formal-cover-banner">
-            <span class="formal-cover-kicker">SECTION 01 &bull; PERSONALIZED QUOTATION</span>
-            <h1 class="formal-cover-title">Your Special Wedding Quotation</h1>
-            <p class="formal-cover-subtitle">તમારા લગ્ન પ્રસંગનું વિશેષ પ્રપોઝલ — Fine-Art Visual Storytelling Experience</p>
+          <div class="formal-doc-meta">
+            <div class="formal-doc-meta-badge">OFFICIAL QUOTATION</div>
+            <div class="formal-doc-ref">Ref: <strong>${quotation.referenceId}</strong></div>
+            <div class="formal-doc-date">Date: ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+            <div class="formal-doc-validity">Validity: 7 Days (To Lock Dates)</div>
           </div>
+        </header>
 
-          <div class="formal-doc-info-grid">
-            <div class="formal-doc-info-box">
-              <h4>Prepared Especially For:</h4>
-              <p>
-                <strong style="font-size: 1.05rem; color: #18181b;">${cust.names || 'Honored Couple &amp; Family'}</strong><br>
-                <span>WhatsApp: <strong>${cust.phone || 'Provided upon inquiry'}</strong></span><br>
-                ${cust.email ? `<span>Email: ${cust.email}</span><br>` : ''}
-                <span>Preferred Contact: ${cust.preferredContact || 'WhatsApp'}</span>
-              </p>
-            </div>
-            <div class="formal-doc-info-box">
-              <h4>Celebration Schedule &amp; Destination:</h4>
-              <p>
-                <strong>Event:</strong> ${quotation.basePackageName}<br>
-                <strong>Coverage Scope:</strong> ${quotation.coverageScopeLabel || 'One-Side Coverage'}<br>
-                <strong>City &amp; Venue:</strong> ${evt.city}${evt.venue ? ' &bull; ' + evt.venue : ''}<br>
-                <strong>Proposed Dates:</strong> ${evt.dates || 'Dates to be finalized'}<br>
-                <strong>Celebration Duration:</strong> ${evt.days} Day(s) &bull; ~${evt.approxHoursPerDay} hrs/day
-              </p>
-            </div>
+        <!-- BANNER -->
+        <div class="formal-cover-banner">
+          <span class="formal-cover-kicker">PERSONALIZED WEDDING QUOTATION</span>
+          <h1 class="formal-cover-title">Your Wedding Visual Storytelling Quotation</h1>
+          <p class="formal-cover-subtitle">તમારા લગ્ન પ્રસંગનું વિશેષ પ્રપોઝલ — Fine-Art Stills &amp; 4K Cinematic Highlights</p>
+        </div>
+
+        <!-- CLIENT & CELEBRATION PROFILE -->
+        <div class="formal-doc-info-grid">
+          <div class="formal-doc-info-box">
+            <h4>Prepared Especially For:</h4>
+            <p>
+              <strong style="font-size: 1.08rem; color: #18181b;">${cust.names || 'Honored Couple &amp; Family'}</strong><br>
+              <span>WhatsApp: <strong>${cust.phone || 'Provided via inquiry'}</strong></span><br>
+              ${cust.email ? `<span>Email: ${cust.email}</span><br>` : ''}
+              <span>Preferred Communication: WhatsApp</span>
+            </p>
           </div>
-        </section>
+          <div class="formal-doc-info-box">
+            <h4>Celebration Schedule &amp; Scope:</h4>
+            <p>
+              <strong>Selected Collection:</strong> ${quotation.basePackageName}<br>
+              <strong>Coverage Scope:</strong> ${quotation.coverageScopeLabel || 'One-Side Coverage'}<br>
+              <strong>City &amp; Venues:</strong> ${evt.city}${evt.venue ? ' &bull; ' + evt.venue : ''}<br>
+              <strong>Celebration Dates:</strong> ${evt.dates || 'Dates to be finalized'}<br>
+              <strong>Celebration Duration:</strong> ${evt.days} Day(s) &bull; ~${evt.approxHoursPerDay} hrs/day
+            </p>
+          </div>
+        </div>
 
-        <hr class="formal-doc-divider">
-
-        <!-- ================= SECTION 2: EVENT-BY-EVENT COVERAGE ================= -->
-        <section class="formal-doc-section" id="formal-sec-events">
-          <div class="formal-section-head">
-            <span class="formal-section-kicker">SECTION 02</span>
-            <h3 class="formal-section-title">Event-by-Event Celebration Coverage</h3>
+        <!-- ITEMIZED COMMERCIAL INVESTMENT TABLE -->
+        <section class="formal-doc-section" style="margin-top: 20px;">
+          <div class="formal-section-head" style="margin-bottom: 12px;">
+            <span class="formal-section-kicker">COMMERCIAL PROPOSAL</span>
+            <h3 class="formal-section-title">Itemized Investment Breakdown</h3>
             <p class="formal-section-desc">
-              Comprehensive visual documentation scheduled across your sacred wedding rituals. Every selected service is documented by dedicated, specialized visual artists ensuring complete, multi-angle coverage without blindspots.
+              100% transparent pricing for your selected collection and tailored add-ons. Zero hidden surcharges.
             </p>
           </div>
 
-          <!-- Active Services Highlight -->
-          <div class="formal-active-services-bar">
-            <strong>Active Coverage Services For Your Celebration:</strong>
-            <div class="formal-services-tag-list">
-              ${activeServices.map(s => `
-                <span class="formal-service-tag">✦ ${s.name}</span>
-              `).join('')}
-            </div>
-          </div>
-
-          <!-- Functions Timeline Cards -->
-          <div class="formal-events-grid">
-            ${functionsList.map((fn, idx) => `
-              <div class="formal-event-card">
-                <div class="formal-event-card-header">
-                  <span class="formal-event-num">RITUAL ${idx + 1 < 10 ? '0' + (idx + 1) : idx + 1}</span>
-                  <h4 class="formal-event-name">${fn}</h4>
-                </div>
-                <div class="formal-event-details">
-                  <div class="formal-event-meta">
-                    <span>📍 ${evt.venue || evt.city}</span> &bull; 
-                    <span>🗓️ ${evt.dates || 'Scheduled as per wedding muhurat'}</span>
-                  </div>
-                  <div class="formal-event-services">
-                    <strong>Documented with:</strong>
-                    ${activeServices.length > 0 
-                      ? activeServices.map(s => s.name).join(' &bull; ') 
-                      : 'Traditional Photography &bull; Candid Photography &bull; Cinematic Wedding Filmmaking'
-                    }
-                  </div>
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        </section>
-
-        <hr class="formal-doc-divider">
-
-        <!-- ================= SECTION 3: OUR DELIVERABLES ================= -->
-        <section class="formal-doc-section" id="formal-sec-deliverables">
-          <div class="formal-section-head">
-            <span class="formal-section-kicker">SECTION 03</span>
-            <h3 class="formal-section-title">Deliverables You Will Receive</h3>
-            <p class="formal-section-desc">
-              Meticulously preserved digital master files, high-resolution photo archives, and handcrafted heirloom keepsakes.
-            </p>
-          </div>
-
-          <!-- Exact Photography Philosophy Callout -->
-          <div class="formal-philosophy-box">
-            <div class="formal-philosophy-header">
-              <span class="formal-philosophy-icon">✨</span>
-              <h4>OUR PHOTOGRAPHY PHILOSOPHY</h4>
-            </div>
-            <p class="formal-philosophy-quote">
-              "${config.photographyPhilosophy.quote}"
-            </p>
-          </div>
-
-          <!-- Deliverables Grid -->
-          <div class="formal-deliverables-grid">
-            <div class="formal-deliv-card">
-              <div class="formal-deliv-icon">📸</div>
-              <h4>Ultra-High-Resolution RAW Photographs</h4>
-              <p>${config.photographyPhilosophy.rawDeliverable}</p>
-            </div>
-
-            <div class="formal-deliv-card">
-              <div class="formal-deliv-icon">🎨</div>
-              <h4>Handpicked Artistically Retouched Master Photographs</h4>
-              <p>${config.photographyPhilosophy.editedDeliverable}</p>
-            </div>
-
-            <div class="formal-deliv-card">
-              <div class="formal-deliv-icon">🎬</div>
-              <h4>Cinematic Wedding Highlight Film (3–7 Minutes)</h4>
-              <p>Emotionally paced 4K cinematic film capturing the authentic narrative of your wedding, set to custom licensed soundtrack and Vedic ceremony audio.</p>
-            </div>
-
-            <div class="formal-deliv-card">
-              <div class="formal-deliv-icon">⚡</div>
-              <h4>Cinematic Teaser / Save-the-Date (60–90 Seconds)</h4>
-              <p>High-energy cinematic teaser crafted for rapid sharing with close family and friends across social media and WhatsApp stories.</p>
-            </div>
-
-            <div class="formal-deliv-card">
-              <div class="formal-deliv-icon">🎥</div>
-              <h4>Full-Length Traditional Documentary Film (60–120 Minutes)</h4>
-              <p>Comprehensive, chronological multi-camera recording of all sacred rituals, Vedic mantras, and stage celebrations from start to finish.</p>
-            </div>
-
-            <div class="formal-deliv-card">
-              <div class="formal-deliv-icon">📱</div>
-              <h4>Instagram Cinematic Reels (Vertical 9:16)</h4>
-              <p>Short-form vertical 4K reels edited with trending audio, color-graded specifically for modern smartphone viewing and WhatsApp sharing.</p>
-            </div>
-
-            <div class="formal-deliv-card full-width">
-              <div class="formal-deliv-icon">📖</div>
-              <h4>Luxury Heirloom Hardcover Photobooks &amp; Albums</h4>
-              <p>Hand-bound archival 12x18 inch hardcover heirloom albums featuring imported luster or silk sheets, seamless lay-flat binding, custom foil debossing, and matching protective wooden presentation box.</p>
-            </div>
-          </div>
-        </section>
-
-        <hr class="formal-doc-divider">
-
-        <!-- ================= SECTION 4: COMPLIMENTARY BENEFITS ================= -->
-        <section class="formal-doc-section" id="formal-sec-complimentary">
-          <div class="formal-section-head">
-            <span class="formal-section-kicker">SECTION 04</span>
-            <h3 class="formal-section-title">Complimentary Experiences for Your Celebration</h3>
-            <p class="formal-section-desc">
-              Value-added experiences included with our highest compliments to make your celebration seamless.
-            </p>
-          </div>
-
-          <div class="formal-benefits-grid">
-            ${config.complimentaryBenefits.map(b => `
-              <div class="formal-benefit-card">
-                <div class="formal-benefit-badge">COMPLIMENTARY</div>
-                <h4 class="formal-benefit-title">${b.title}</h4>
-                <p class="formal-benefit-desc">${b.description}</p>
-              </div>
-            `).join('')}
-          </div>
-        </section>
-
-        <hr class="formal-doc-divider">
-
-        <!-- ================= SECTION 5: PRICING AND SPECIAL OFFER ================= -->
-        <section class="formal-doc-section" id="formal-sec-pricing">
-          <div class="formal-section-head">
-            <span class="formal-section-kicker">SECTION 05</span>
-            <h3 class="formal-section-title">Investment &amp; Special Offer</h3>
-            <p class="formal-section-desc">
-              100% transparent pricing with approved launch savings and zero hidden charges.
-            </p>
-          </div>
-
-          <!-- Pricing Overview Cards -->
-          <div class="formal-pricing-overview">
-            <div class="formal-price-tile">
-              <span class="formal-price-label">Regular Package Value</span>
-              <span class="formal-price-val strike">${quotation.subtotalFormatted}</span>
-              <span class="formal-price-sub">Standard Studio Rate</span>
-            </div>
-
-            ${quotation.discountAmount > 0 ? `
-              <div class="formal-price-tile discount">
-                <span class="formal-price-label">Special Offer / Savings</span>
-                <span class="formal-price-val savings">-${quotation.discountFormatted}</span>
-                <span class="formal-price-sub">${quotation.appliedDiscount?.name || 'Approved Privilege Savings'}</span>
-              </div>
-            ` : ''}
-
-            <div class="formal-price-tile total">
-              <span class="formal-price-label">Your Personalized Wedding Experience</span>
-              <span class="formal-price-val grand">${quotation.estimatedTotalFormatted}</span>
-              <span class="formal-price-sub">Inclusive of Selected Inclusions</span>
-            </div>
-          </div>
-
-          <!-- Itemized Breakdown Table -->
           <div class="formal-doc-table-wrap">
             <table class="formal-doc-table">
               <thead>
                 <tr>
-                  <th style="width: 50%; text-align: left;">Service Description &amp; Scope</th>
-                  <th style="width: 18%; text-align: center;">Category</th>
-                  <th style="width: 14%; text-align: center;">Status</th>
-                  <th style="width: 18%; text-align: right;">Amount (INR)</th>
+                  <th style="width: 52%; text-align: left;">Service Description &amp; Scope</th>
+                  <th style="width: 24%; text-align: center;">Category / Scope</th>
+                  <th style="width: 24%; text-align: right;">Amount (INR)</th>
                 </tr>
               </thead>
               <tbody>
@@ -1383,13 +1110,10 @@
                       <strong>${item.name}</strong>
                       ${item.description ? `<div style="font-size: 0.78rem; color: #52525b; margin-top: 2px;">${item.description}</div>` : ''}
                     </td>
-                    <td style="text-align: center; font-size: 0.8rem;">
-                      <span class="formal-table-category">${item.category}</span>
-                    </td>
                     <td style="text-align: center; font-size: 0.82rem;">
                       ${item.isIncluded 
                         ? '<span style="color: #15803d; font-weight: 600;">Included in Tier</span>' 
-                        : (item.type === 'service' ? '<span style="color: #9a7718; font-weight: 600;">Active Coverage</span>' : `${item.quantity} ${item.unit}`)
+                        : (item.type === 'service' ? '<span style="color: #9a7718; font-weight: 600;">Active Coverage</span>' : `<span class="formal-table-category">${item.category}</span>`)
                       }
                     </td>
                     <td style="text-align: right; font-weight: 600;">
@@ -1400,185 +1124,59 @@
               </tbody>
               <tfoot>
                 <tr>
-                  <td colspan="3" style="text-align: right; font-weight: 600;">Subtotal Investment:</td>
+                  <td colspan="2" style="text-align: right; font-weight: 600;">Subtotal Investment:</td>
                   <td style="text-align: right; font-weight: 600;">${quotation.subtotalFormatted}</td>
                 </tr>
                 ${quotation.discountAmount > 0 ? `
                   <tr style="color: #15803d;">
-                    <td colspan="3" style="text-align: right; font-weight: 600;">${quotation.appliedDiscount?.name || 'Discount / Savings'}:</td>
+                    <td colspan="2" style="text-align: right; font-weight: 600;">${quotation.appliedDiscount?.name || 'Discount / Savings'}:</td>
                     <td style="text-align: right; font-weight: 600;">-${quotation.discountFormatted}</td>
                   </tr>
                 ` : ''}
                 <tr class="formal-doc-total-row">
-                  <td colspan="3" style="text-align: right; font-size: 1.15rem; font-weight: 700;">Final Proposed Investment:</td>
-                  <td style="text-align: right; font-size: 1.25rem; font-weight: 700; color: #9a7718;">${quotation.estimatedTotalFormatted}</td>
+                  <td colspan="2" style="text-align: right; font-size: 1.15rem; font-weight: 700;">Final Proposed Investment:</td>
+                  <td style="text-align: right; font-size: 1.3rem; font-weight: 700; color: #9a7718;">${quotation.estimatedTotalFormatted}</td>
                 </tr>
               </tfoot>
             </table>
           </div>
         </section>
 
-        <hr class="formal-doc-divider">
-
-        <!-- ================= SECTION 6: PREMIUM OPTIONAL ADD-ONS ================= -->
-        <section class="formal-doc-section" id="formal-sec-addons">
-          <div class="formal-section-head">
-            <span class="formal-section-kicker">SECTION 06</span>
-            <h3 class="formal-section-title">Special Add-ons for Your Wedding Experience</h3>
-            <p class="formal-section-desc">
-              Tailor your visual experience further with these curated enhancements. Any add-on can be added to your booking at any time prior to your wedding week.
-            </p>
-          </div>
-
-          <div class="formal-addons-grid">
-            <div class="formal-addon-card">
-              <div class="formal-addon-header">
-                <h4>4K Drone Aerial Cinematography</h4>
-                <span class="formal-addon-price">₹7,499 / event</span>
-              </div>
-              <p>Sweeping 4K aerial visuals capturing venue grandeur, Jaan Agaman procession, and open-air vidhis.</p>
-            </div>
-
-            <div class="formal-addon-card">
-              <div class="formal-addon-header">
-                <h4>Same-Day Edit (SDE) Reception Teaser</h4>
-                <span class="formal-addon-price">₹14,999 / edit</span>
-              </div>
-              <p>High-energy 60–90 second cinematic highlight filmed in the morning, edited on-site, and premiered on stage at your evening Reception.</p>
-            </div>
-
-            <div class="formal-addon-card">
-              <div class="formal-addon-header">
-                <h4>Concept Couple Pre-Wedding Film</h4>
-                <span class="formal-addon-price">₹29,999 / session</span>
-              </div>
-              <p>Full-day couple portraiture and cinematic romance film at heritage palaces or scenic resort locations across Gujarat.</p>
-            </div>
-
-            <div class="formal-addon-card">
-              <div class="formal-addon-header">
-                <h4>Parent Keepsake Heirloom Mini-Albums (Set of 2)</h4>
-                <span class="formal-addon-price">₹9,999 / set</span>
-              </div>
-              <p>Two matching 8x12 inch hardcover archival photobooks specially crafted as timeless tokens of gratitude for both sets of parents.</p>
-            </div>
-
-            <div class="formal-addon-card">
-              <div class="formal-addon-header">
-                <h4>4K Master SSD Archival Hard Drive</h4>
-                <span class="formal-addon-price">₹4,999 / drive</span>
-              </div>
-              <p>Shockproof 1TB external solid-state drive preloaded with all uncompressed master footage, RAW image galleries, and final master cinema files.</p>
-            </div>
-
-            <div class="formal-addon-card">
-              <div class="formal-addon-header">
-                <h4>Guest Audio Wishes &amp; Family Interviews</h4>
-                <span class="formal-addon-price">₹5,999 / event</span>
-              </div>
-              <p>Dedicated video journalist with lapel microphones and lighting recording spontaneous elder blessings and heartfelt advice from close family.</p>
-            </div>
-          </div>
-        </section>
-
-        <hr class="formal-doc-divider">
-
-        <!-- ================= SECTION 7: TERMS AND EXCLUSIONS ================= -->
-        <section class="formal-doc-section" id="formal-sec-terms">
-          <div class="formal-section-head">
-            <span class="formal-section-kicker">SECTION 07</span>
-            <h3 class="formal-section-title">Terms of Engagement &amp; Exclusions</h3>
-            <p class="formal-section-desc">
-              Clear, transparent guidelines designed to ensure smooth execution and mutual peace of mind.
-            </p>
-          </div>
-
-          <div class="formal-terms-list">
-            <div class="formal-term-item">
-              <span class="formal-term-icon">1</span>
-              <div>
-                <strong>Milestone Payment Schedule:</strong>
-                <p>To ensure dedicated artist allocation, payments are structured into three transparent milestones: <strong>25% Booking Advance</strong> to reserve and block dates in our production calendar; <strong>50% Mid-Payment</strong> due on or before the wedding day; and <strong>25% Final Delivery Payment</strong> upon final delivery of your high-resolution gallery, master films, and approval of printed heirloom albums.</p>
-              </div>
-            </div>
-
-            <div class="formal-term-item">
-              <span class="formal-term-icon">2</span>
-              <div>
-                <strong>Studio Calendar &amp; Date Availability:</strong>
-                <p>Quotations are valid for 30 days from the date of generation. Auspicious Gujarati muhurat wedding dates operate on a strict first-come, first-served basis; dates remain open to other inquiries until receipt of the formal booking token advance.</p>
-              </div>
-            </div>
-
-            <div class="formal-term-item">
-              <span class="formal-term-icon">3</span>
-              <div>
-                <strong>Travel, Conveyance &amp; Outstation Lodging:</strong>
-                <p>Celebration coverage within Ahmedabad includes standard crew conveyance. For celebrations hosted in other Gujarat cities or destination resorts, comfortable client-provided lodging, meals, and outstation travel are reimbursed at actuals with zero hidden surcharges.</p>
-              </div>
-            </div>
-
-            <div class="formal-term-item">
-              <span class="formal-term-icon">4</span>
-              <div>
-                <strong>Drone Operations &amp; Airspace Approvals:</strong>
-                <p>Aerial drone coverage is strictly subject to DGCA airspace regulations, local municipal clearances, and venue flight feasibility. Drone flights will not be operated under unsafe atmospheric conditions (heavy rain or high wind speeds).</p>
-              </div>
-            </div>
-
-            <div class="formal-term-item">
-              <span class="formal-term-icon">5</span>
-              <div>
-                <strong>Post-Production Delivery Schedule:</strong>
-                <p>48-Hour Sneak Peek highlights delivered within 2 days of celebration. Master High-Resolution Photo Gallery delivered within 3 to 4 weeks. Cinematic Wedding Highlights and Full Documentary Video delivered within 4 to 6 weeks. Printed Heirloom Albums delivered within 3 to 4 weeks following final couple photo selection and layout sign-off.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <hr class="formal-doc-divider">
-
-        <!-- ================= SECTION 8: FINAL CALL TO ACTION ================= -->
-        <section class="formal-doc-section formal-doc-closing" id="formal-sec-cta">
-          <div class="formal-section-head">
-            <span class="formal-section-kicker">SECTION 08</span>
-            <h3 class="formal-section-title">Let's Create Something Timeless Together</h3>
-            <p class="formal-section-desc" style="max-width: 650px; margin: 0 auto 20px;">
-              Your wedding is a once-in-a-lifetime milestone filled with sacred traditions, joyous celebrations, and unscripted family memories. We would be honored to preserve every moment with the artistry, discretion, and reverence it deserves.
-            </p>
-          </div>
-
-          <div class="formal-cta-box">
+        <!-- NEXT STEPS: LOCK YOUR WEDDING DATE -->
+        <section class="formal-doc-section formal-doc-closing" style="margin-top: 24px; padding-top: 20px;">
+          <div class="formal-cta-box" style="background: #fafaf9; border: 1px solid #e7e5e4; border-radius: 12px; padding: 24px;">
             <h4 style="font-family: 'Cinzel', serif; font-size: 1.15rem; color: #18181b; margin-bottom: 8px;">
-              Ready to verify calendar availability for your wedding dates?
+              Ready to Lock Your Wedding Dates?
             </h4>
-            <p style="font-size: 0.88rem; color: #52525b; margin-bottom: 20px;">
-              Click below to send your quotation reference <strong>${quotation.referenceId}</strong> directly to our WhatsApp team for instant date verification.
+            <p style="font-size: 0.88rem; color: #52525b; margin-bottom: 16px; line-height: 1.5;">
+              • <strong>Date Reservation Advance:</strong> A 25% booking deposit locks and exclusively reserves your dates on our production calendar.<br>
+              • <strong>Balance Milestone:</strong> The remaining balance is split between your celebration week and final master delivery.<br>
+              • Share your reference <strong>${quotation.referenceId}</strong> on WhatsApp to verify date availability and confirm booking details.
             </p>
 
             <div class="formal-doc-actions no-print" style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
               <a href="${getWhatsAppUrl(quotation)}" target="_blank" rel="noopener" class="btn btn-whatsapp" style="padding: 14px 28px; font-size: 0.95rem; font-weight: 600;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-                Confirm Availability on WhatsApp
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                Confirm Dates on WhatsApp
               </a>
               <button type="button" class="btn btn-gold" id="btn-formal-print" style="padding: 14px 24px; font-weight: 600;">
                 🖨️ Download / Print PDF
               </button>
               <button type="button" class="btn btn-outline-gold" id="btn-formal-close-bottom" style="padding: 14px 20px;">
-                ✕ Close Document
+                ✕ Close
               </button>
             </div>
           </div>
 
           <!-- Studio Representative Signature Block -->
-          <div class="formal-signature-block">
+          <div class="formal-signature-block" style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #e7e5e4;">
             <div class="formal-sig-side">
-              <span class="formal-sig-label">Authorized Studio Lead:</span>
+              <span class="formal-sig-label">Authorized Studio Desk:</span>
               <div class="formal-sig-name">ANANT PRODUCTIONS</div>
-              <div class="formal-sig-sub">Fine-Art Wedding Cinematography Studio &bull; Ahmedabad, Gujarat</div>
+              <div class="formal-sig-sub">Bodakdev, Sindhu Bhavan Road, Ahmedabad, Gujarat</div>
             </div>
             <div class="formal-sig-side" style="text-align: right;">
-              <span class="formal-sig-label">Direct Studio Inquiries:</span>
+              <span class="formal-sig-label">Direct Studio WhatsApp &amp; Inquiries:</span>
               <div class="formal-sig-name">${biz.phone}</div>
               <div class="formal-sig-sub">${biz.email} &bull; anantproductions.in</div>
             </div>
@@ -1602,9 +1200,12 @@
     document.querySelectorAll('[data-goto-step]').forEach(btn => {
       btn.addEventListener('click', () => {
         const target = Number(btn.getAttribute('data-goto-step'));
+        syncCurrentInputs();
         if (target <= builderState.currentStep || validateCurrentStep()) {
           builderState.currentStep = target;
-          if (target === 5) {
+          const steps = getStepList();
+          const targetStep = steps[target - 1];
+          if (targetStep && targetStep.id === 'addons') {
             builderState.activeAddonCategory = 'albums';
           }
           renderBuilder();
@@ -1616,10 +1217,13 @@
     // Next / Previous buttons
     document.querySelectorAll('[data-step-next]').forEach(btn => {
       btn.addEventListener('click', () => {
+        syncCurrentInputs();
         if (validateCurrentStep()) {
-          const next = Number(btn.getAttribute('data-step-next'));
+          const next = Number(btn.getAttribute('data-step-next')) || (builderState.currentStep + 1);
           builderState.currentStep = next;
-          if (next === 5) {
+          const steps = getStepList();
+          const targetStep = steps[next - 1];
+          if (targetStep && targetStep.id === 'addons') {
             builderState.activeAddonCategory = 'albums';
           }
           renderBuilder();
@@ -1631,7 +1235,8 @@
 
     document.querySelectorAll('[data-step-prev]').forEach(btn => {
       btn.addEventListener('click', () => {
-        const prev = Number(btn.getAttribute('data-step-prev'));
+        syncCurrentInputs();
+        const prev = Number(btn.getAttribute('data-step-prev')) || Math.max(1, builderState.currentStep - 1);
         builderState.currentStep = prev;
         renderBuilder();
         scrollToQuotationSection();
@@ -1661,14 +1266,17 @@
     document.querySelectorAll('[data-select-category]').forEach(card => {
       card.addEventListener('click', () => {
         const cat = card.getAttribute('data-select-category');
-        if (cat === 'custom') {
-          builderState.packageId = 'custom';
-        } else {
-          builderState.eventCategory = cat;
-          // select first package in category
-          const catPkgs = config.packageCategories[cat]?.packages || [];
-          builderState.packageId = catPkgs[0]?.id || 'pkg-wedding-signature';
-          builderState.eventDetails.days = catPkgs[0]?.standardDays || (cat === 'wedding' ? 2 : 1);
+        builderState.eventCategory = cat;
+        if (cat !== 'wedding') {
+          builderState.coverageScope = 'one_side';
+        }
+        // select first package in category
+        const catPkgs = config.packageCategories[cat]?.packages || [];
+        builderState.packageId = catPkgs[0]?.id || 'pkg-wedding-signature';
+        builderState.eventDetails.days = catPkgs[0]?.standardDays || (cat === 'wedding' ? 2 : 1);
+        const maxSteps = getStepList().length;
+        if (builderState.currentStep > maxSteps) {
+          builderState.currentStep = maxSteps;
         }
         renderBuilder();
       });
@@ -1964,6 +1572,16 @@
       openFormalBtn.addEventListener('click', () => openFormalModal(false));
     }
 
+    const summaryFormalBtn = document.getElementById('btn-summary-open-formal');
+    if (summaryFormalBtn) {
+      summaryFormalBtn.addEventListener('click', () => openFormalModal(false));
+    }
+
+    const headerFormalBtn = document.getElementById('btn-header-open-formal');
+    if (headerFormalBtn) {
+      headerFormalBtn.addEventListener('click', () => openFormalModal(false));
+    }
+
     if (printDirectBtn) {
       printDirectBtn.addEventListener('click', () => openFormalModal(true));
     }
@@ -1997,19 +1615,47 @@
       }
     });
 
-    // WhatsApp Tracking
+    // Unified WhatsApp & Official PDF Dispatch
+    function dispatchWhatsAppWithQuotation(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      syncCurrentInputs();
+
+      // Recalculate quotation with current synchronized state
+      const currentQuote = engine.calculateQuotation(config, builderState);
+      currentQuote.customer = { ...builderState.customer };
+      currentQuote.eventDetails = { ...builderState.eventDetails };
+
+      // Generate message with official PDF document link
+      const freshMsg = engine.generateWhatsAppMessage(currentQuote, config);
+      const phoneRaw = config.business.phoneRaw || '918000088819';
+      const waUrl = `https://wa.me/${phoneRaw}?text=${encodeURIComponent(freshMsg)}`;
+
+      // 1. Immediately open official formal PDF quotation modal
+      openFormalModal(false);
+
+      // 2. Automatically prompt browser PDF Save / Print with official branded filename
+      setTimeout(() => {
+        triggerQuotationPrint();
+      }, 450);
+
+      // 3. Open WhatsApp Web / App
+      const waWindow = window.open(waUrl, '_blank');
+      if (!waWindow || waWindow.closed || typeof waWindow.closed === 'undefined') {
+        window.location.href = waUrl;
+      }
+
+      showToast('✓ WhatsApp opened & Official PDF Quotation ready to save/attach!');
+      window.trackAnantEvent('whatsapp_enquiry_clicked', { ref: currentQuote.referenceId, total: currentQuote.estimatedTotal });
+    }
+
     const waSendBtn = document.getElementById('btn-qb-whatsapp-send');
     if (waSendBtn) {
-      waSendBtn.addEventListener('click', () => {
-        window.trackAnantEvent('whatsapp_enquiry_clicked', { ref: quotation.referenceId, total: quotation.estimatedTotal });
-      });
+      waSendBtn.addEventListener('click', dispatchWhatsAppWithQuotation);
     }
 
     const sumWaBtn = document.getElementById('btn-summary-whatsapp');
     if (sumWaBtn) {
-      sumWaBtn.addEventListener('click', () => {
-        window.trackAnantEvent('whatsapp_enquiry_clicked', { ref: quotation.referenceId, total: quotation.estimatedTotal });
-      });
+      sumWaBtn.addEventListener('click', dispatchWhatsAppWithQuotation);
     }
 
     // Mobile bar toggles
@@ -2024,11 +1670,12 @@
 
     const mobileNextBtn = document.getElementById('btn-mobile-next');
     if (mobileNextBtn) {
-      mobileNextBtn.addEventListener('click', () => {
-        if (builderState.currentStep === 8) {
-          window.open(getWhatsAppUrl(quotation), '_blank');
+      mobileNextBtn.addEventListener('click', (e) => {
+        const totalSteps = getStepList().length;
+        if (builderState.currentStep === totalSteps) {
+          dispatchWhatsAppWithQuotation(e);
         } else if (validateCurrentStep()) {
-          builderState.currentStep = Math.min(8, builderState.currentStep + 1);
+          builderState.currentStep = Math.min(totalSteps, builderState.currentStep + 1);
           renderBuilder();
           scrollToQuotationSection();
         }
@@ -2036,15 +1683,42 @@
     }
   }
 
+  // SYNC DOM INPUTS TO STATE
+  function syncCurrentInputs() {
+    const custNames = document.getElementById('qb-cust-names');
+    if (custNames) builderState.customer.names = custNames.value.trim();
+    const custPhone = document.getElementById('qb-cust-phone');
+    if (custPhone) builderState.customer.phone = custPhone.value.trim();
+    const custEmail = document.getElementById('qb-cust-email');
+    if (custEmail) builderState.customer.email = custEmail.value.trim();
+    const custNotes = document.getElementById('qb-cust-notes');
+    if (custNotes) builderState.customer.notes = custNotes.value.trim();
+    const datesInput = document.getElementById('qb-input-dates');
+    if (datesInput && !builderState.eventDetails.isDateFlexible) {
+      builderState.eventDetails.dates = datesInput.value.trim();
+    }
+    const venueInput = document.getElementById('qb-input-venue');
+    if (venueInput) builderState.eventDetails.venue = venueInput.value.trim();
+    const venueGroom = document.getElementById('qb-input-venue-groom');
+    if (venueGroom) builderState.eventDetails.venueGroom = venueGroom.value.trim();
+    const venueBride = document.getElementById('qb-input-venue-bride');
+    if (venueBride) builderState.eventDetails.venueBride = venueBride.value.trim();
+  }
+
   // VALIDATION
   function validateCurrentStep() {
-    if (builderState.currentStep === 2) {
+    syncCurrentInputs();
+    const steps = getStepList();
+    const currentIdx = Math.max(0, Math.min(steps.length - 1, (builderState.currentStep || 1) - 1));
+    const step = steps[currentIdx];
+
+    if (step && step.id === 'details') {
       if (!builderState.eventDetails.isDateFlexible && !builderState.eventDetails.dates) {
         alert('Please enter your wedding date or check "Date not finalized yet".');
         return false;
       }
     }
-    if (builderState.currentStep === 7) {
+    if (step && step.id === 'submit') {
       if (!builderState.customer.names) {
         alert('Please enter your name or couple names.');
         document.getElementById('qb-cust-names')?.focus();

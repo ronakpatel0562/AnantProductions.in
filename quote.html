@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Design Your Wedding Quotation — Anant Productions | Ahmedabad, Gujarat</title>
+  <meta name="description" content="Interactive Gujarati Wedding Quotation Builder. Select your celebration type, coverage scope, curated deliverables, and download a transparent itemized quotation.">
+  <link rel="canonical" href="https://anantproductions.in/quote.html">
+
+  <!-- Open Graph / Meta -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://anantproductions.in/quote.html">
+  <meta property="og:title" content="Design Your Wedding Quotation — Anant Productions">
+  <meta property="og:description" content="Transparent two-day Gujarati wedding photography & cinematography pricing. Instant formal PDF & WhatsApp estimate.">
+  <meta property="og:image" content="https://anantproductions.in/images/hero-wedding.jpg">
+
+  <!-- Google Fonts: Geist, Cinzel, Noto Serif Gujarati, Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Geist+Mono:wght@400;500;600&family=Geist:wght@300;400;500;600;700&family=Noto+Serif+Gujarati:wght@400;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="anant_logo.png">
+  <link rel="apple-touch-icon" href="anant_logo.png">
+
+  <!-- Prevent Flash of Unstyled Theme (FOUC) -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('anant_theme');
+        if (saved === 'light' || (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+          if (saved === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+          } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+          }
+        } else {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- Central Stylesheet -->
+  <link rel="stylesheet" href="css/style.css?v=42">
+  <!-- Professional Clean Routing & URL Normalizer -->
+  <script>
+    (function () {
+      try {
+        var p = window.location.pathname;
+        if (p.endsWith('/index.html') || p === '/index.html' || p === 'index.html') {
+          var clean = p.replace(/\/?index\.html\/?$/i, '/') || '/';
+          window.history.replaceState(null, document.title, clean + window.location.search + window.location.hash);
+        } else if (p.endsWith('.html')) {
+          var clean = p.replace(/\.html$/i, '');
+          window.history.replaceState(null, document.title, clean + window.location.search + window.location.hash);
+        }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+
+<body class="qb-standalone-page">
+  <!-- Minimalist Studio App Header -->
+  <header class="qb-app-header">
+    <div class="qb-app-header-left">
+      <a href="./" class="qb-app-logo" title="Anant Productions — Home">
+        <img src="anant_logo.png" alt="Anant Productions Logo">
+        <span>ANANT PRODUCTIONS</span>
+      </a>
+      <a href="./" class="btn btn-outline-gold" style="font-size: 0.78rem; padding: 6px 12px; display: inline-flex; align-items: center; gap: 4px;">
+        ← Back to Website
+      </a>
+    </div>
+
+    <div class="qb-app-header-right">
+      <button type="button" class="btn btn-gold" id="btn-header-open-formal" style="font-size: 0.8rem; padding: 7px 14px; display: inline-flex; align-items: center; gap: 6px;">
+        <span>📄 Review &amp; Download PDF</span>
+      </button>
+
+      <a href="https://wa.me/918000088819?text=Hello%20Anant%20Productions!%20I%20am%20using%20the%20Quotation%20Builder%20and%20would%20love%20to%20check%20date%20availability." target="_blank" rel="noopener" class="btn btn-whatsapp" style="font-size: 0.8rem; padding: 7px 14px;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        <span>WhatsApp</span>
+      </a>
+
+      <!-- Theme Switcher -->
+      <button type="button" class="theme-toggle" id="theme-toggle-btn" aria-label="Toggle visual theme" style="padding: 7px 10px; border-radius: 8px;">
+        <span class="theme-icon dark-icon">🌙</span>
+        <span class="theme-icon light-icon" style="display:none;">☀️</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Interactive Quotation Builder Container (Takes 100% Remaining Screen Height) -->
+  <main class="qb-app-container">
+    <div id="quotation-builder-app"></div>
+  </main>
+
+  <!-- FLOATING RETURN TO TOP BUTTON -->
+  <button type="button" id="scroll-to-top" class="scroll-to-top" aria-label="Return to top" title="Return to top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="12" y1="19" x2="12" y2="5"></line>
+      <polyline points="5 12 12 5 19 12"></polyline>
+    </svg>
+  </button>
+
+  <!-- Central Configuration, Pricing Engine & Main JavaScript -->
+  <script src="js/config.js?v=43"></script>
+  <script src="js/pricing-engine.js?v=43"></script>
+  <script src="js/quotation-builder.js?v=43"></script>
+  <script src="js/main.js?v=43"></script>
+</body>
+</html>

@@ -36,77 +36,98 @@ it('should format Indian Rupee currency with commas', () => {
 });
 
 // 2. Wedding Package Tiers
-it('should accurately calculate Essential Wedding baseline (₹29,999)', () => {
+it('should accurately calculate Essential Wedding baseline (₹40,000)', () => {
   const quote = engine.calculateQuotation(config, {
     eventCategory: 'wedding',
     packageId: 'pkg-wedding-essential',
     eventDetails: { days: 2 }
   });
-  assert.strictEqual(quote.subtotal, 29999);
-  assert.strictEqual(quote.estimatedTotal, 29999);
+  assert.strictEqual(quote.subtotal, 40000);
+  assert.strictEqual(quote.estimatedTotal, 40000);
   assert.strictEqual(quote.hasCustomQuote, false);
 });
 
-it('should accurately calculate Signature Wedding baseline (₹49,999)', () => {
+it('should accurately calculate Signature Wedding baseline (₹75,000)', () => {
   const quote = engine.calculateQuotation(config, {
     eventCategory: 'wedding',
     packageId: 'pkg-wedding-signature',
     eventDetails: { days: 2 }
   });
-  assert.strictEqual(quote.subtotal, 49999);
-  assert.strictEqual(quote.estimatedTotal, 49999);
+  assert.strictEqual(quote.subtotal, 75000);
+  assert.strictEqual(quote.estimatedTotal, 75000);
 });
 
-it('should accurately calculate Premium Wedding baseline (₹74,999)', () => {
+it('should accurately calculate Premium Wedding baseline (₹1,00,000)', () => {
   const quote = engine.calculateQuotation(config, {
     eventCategory: 'wedding',
     packageId: 'pkg-wedding-premium',
     eventDetails: { days: 2 }
   });
-  assert.strictEqual(quote.subtotal, 74999);
-  assert.strictEqual(quote.estimatedTotal, 74999);
+  assert.strictEqual(quote.subtotal, 100000);
+  assert.strictEqual(quote.estimatedTotal, 100000);
 });
 
 // 3. Pre-Wedding Tiers
-it('should calculate Pre-Wedding package tiers (₹7,999, ₹15,999, ₹24,999)', () => {
+it('should calculate Pre-Wedding package tiers (₹15,000, ₹30,000, ₹50,000)', () => {
   const essential = engine.calculateQuotation(config, {
     eventCategory: 'prewed',
     packageId: 'pkg-prewed-essential'
   });
-  assert.strictEqual(essential.estimatedTotal, 7999);
+  assert.strictEqual(essential.estimatedTotal, 15000);
 
   const signature = engine.calculateQuotation(config, {
     eventCategory: 'prewed',
     packageId: 'pkg-prewed-signature'
   });
-  assert.strictEqual(signature.estimatedTotal, 15999);
+  assert.strictEqual(signature.estimatedTotal, 30000);
 
   const premium = engine.calculateQuotation(config, {
     eventCategory: 'prewed',
     packageId: 'pkg-prewed-premium'
   });
-  assert.strictEqual(premium.estimatedTotal, 24999);
+  assert.strictEqual(premium.estimatedTotal, 50000);
 });
 
-// 4. Engagement Tiers
-it('should calculate Engagement package tiers (₹9,999, ₹18,999, ₹31,999)', () => {
+// 4. Engagement Tiers (A little more than pre-wedding: ₹20,000, ₹35,000, ₹60,000)
+it('should calculate Engagement package tiers (₹20,000, ₹35,000, ₹60,000)', () => {
   const essential = engine.calculateQuotation(config, {
     eventCategory: 'engagement',
     packageId: 'pkg-engagement-essential'
   });
-  assert.strictEqual(essential.estimatedTotal, 9999);
+  assert.strictEqual(essential.estimatedTotal, 20000);
 
   const signature = engine.calculateQuotation(config, {
     eventCategory: 'engagement',
     packageId: 'pkg-engagement-signature'
   });
-  assert.strictEqual(signature.estimatedTotal, 18999);
+  assert.strictEqual(signature.estimatedTotal, 35000);
 
   const premium = engine.calculateQuotation(config, {
     eventCategory: 'engagement',
     packageId: 'pkg-engagement-premium'
   });
-  assert.strictEqual(premium.estimatedTotal, 31999);
+  assert.strictEqual(premium.estimatedTotal, 60000);
+});
+
+// 4b. Individual Functions Tiers (₹15,000, ₹30,000, ₹50,000)
+it('should calculate Individual Functions package tiers (₹15,000, ₹30,000, ₹50,000)', () => {
+  const essential = engine.calculateQuotation(config, {
+    eventCategory: 'functions',
+    packageId: 'pkg-fn-essential'
+  });
+  assert.strictEqual(essential.estimatedTotal, 15000);
+
+  const signature = engine.calculateQuotation(config, {
+    eventCategory: 'functions',
+    packageId: 'pkg-fn-signature'
+  });
+  assert.strictEqual(signature.estimatedTotal, 30000);
+
+  const premium = engine.calculateQuotation(config, {
+    eventCategory: 'functions',
+    packageId: 'pkg-fn-premium'
+  });
+  assert.strictEqual(premium.estimatedTotal, 50000);
 });
 
 // 5. Duplicate Prevention & Inclusions
@@ -122,8 +143,8 @@ it('should NOT charge extra for services already included in the base package', 
     }
   });
 
-  // Base is 49999, included items must not increase the price
-  assert.strictEqual(quote.subtotal, 49999);
+  // Base is 75000, included items must not increase the price
+  assert.strictEqual(quote.subtotal, 75000);
 
   // Check line items: should mark items as included
   const highlightItem = quote.lineItems.find(i => i.id === 'addon-cine-highlight');
@@ -135,7 +156,7 @@ it('should NOT charge extra for services already included in the base package', 
 });
 
 it('should charge only for additional units beyond base package inclusions', () => {
-  // Signature wedding includes 1 Reel (addon-reel-single). If user asks for 3 reels, charge for 2 extra reels (2 * 2499 = 4998).
+  // Signature wedding includes 1 Reel (addon-reel-single). If user asks for 3 reels, charge for 2 extra reels (2 * 4500 = 9000).
   const quote = engine.calculateQuotation(config, {
     eventCategory: 'wedding',
     packageId: 'pkg-wedding-signature',
@@ -145,26 +166,26 @@ it('should charge only for additional units beyond base package inclusions', () 
     }
   });
 
-  const expectedSubtotal = 49999 + (2 * 2499);
+  const expectedSubtotal = 75000 + (2 * 4500);
   assert.strictEqual(quote.subtotal, expectedSubtotal);
 
   const reelItem = quote.lineItems.find(i => i.id === 'addon-reel-single');
   assert.strictEqual(reelItem.quantity, 3);
   assert.strictEqual(reelItem.includedQuantity, 1);
   assert.strictEqual(reelItem.billableQuantity, 2);
-  assert.strictEqual(reelItem.totalPrice, 4998);
+  assert.strictEqual(reelItem.totalPrice, 9000);
 });
 
 // 6. Multi-Day Wedding Scaling
 it('should calculate additional wedding days beyond base package standard days', () => {
-  // 3-day wedding on a 2-day base package adds 1 extra day (₹24,999)
+  // 3-day wedding on a 2-day base package adds 1 extra day (₹35,000)
   const quote = engine.calculateQuotation(config, {
     eventCategory: 'wedding',
     packageId: 'pkg-wedding-signature',
     eventDetails: { days: 3 }
   });
 
-  const expectedSubtotal = 49999 + 24999;
+  const expectedSubtotal = 75000 + 35000;
   assert.strictEqual(quote.subtotal, expectedSubtotal);
 
   const extraDayItem = quote.lineItems.find(i => i.id === 'adjustment-extra-days');
@@ -174,7 +195,7 @@ it('should calculate additional wedding days beyond base package standard days',
 
 // 7. Hourly Addons
 it('should calculate hourly addons accurately', () => {
-  // 3 extra coverage hours (3 * 2000 = 6000)
+  // 3 extra coverage hours (3 * 4000 = 12000)
   const quote = engine.calculateQuotation(config, {
     eventCategory: 'wedding',
     packageId: 'pkg-wedding-essential',
@@ -184,7 +205,7 @@ it('should calculate hourly addons accurately', () => {
     }
   });
 
-  assert.strictEqual(quote.subtotal, 29999 + 6000);
+  assert.strictEqual(quote.subtotal, 40000 + 12000);
 });
 
 // 8. Custom "Build Your Own" Package
@@ -194,15 +215,15 @@ it('should correctly calculate custom "Build Your Own" package starting at ₹0 
     packageId: 'custom',
     eventDetails: { days: 1 },
     crew: {
-      photo_candid: 1, // 9999
-      drone_pilot: 1   // 7499
+      photo_candid: 1, // 15000
+      drone_pilot: 1   // 12000
     },
     selectedAddons: {
-      'addon-album-standard': 1 // 8999
+      'addon-album-standard': 1 // 15000
     }
   });
 
-  const expectedTotal = 9999 + 7499 + 8999; // 26497
+  const expectedTotal = 15000 + 12000 + 15000; // 42000
   assert.strictEqual(quote.subtotal, expectedTotal);
   assert.strictEqual(quote.estimatedTotal, expectedTotal);
 });
@@ -216,10 +237,10 @@ it('should apply Founding Couple Launch Offer savings', () => {
     applyLaunchOffer: true
   });
 
-  // Base ₹49,999 - ₹10,000 launch offer discount = ₹39,999
-  assert.strictEqual(quote.subtotal, 49999);
-  assert.strictEqual(quote.discountAmount, 10000);
-  assert.strictEqual(quote.estimatedTotal, 39999);
+  // Base ₹75,000 - ₹25,000 launch offer discount = ₹50,000
+  assert.strictEqual(quote.subtotal, 75000);
+  assert.strictEqual(quote.discountAmount, 25000);
+  assert.strictEqual(quote.estimatedTotal, 50000);
 });
 
 // 10. Custom-Priced Items Flagging
@@ -280,34 +301,47 @@ it('should generate a rich, clean WhatsApp inquiry text with line items and refe
   assert.ok(waMsg.includes('Estimated Total'));
 });
 
-// 13. Coverage Scope Pricing (+₹8,500 vs ₹0)
-it('should correctly calculate coverage scope (₹0 for one-side, ₹0 for joint venue, +₹8,500 for separate venues)', () => {
+// 13. Coverage Scope Pricing (1.0x one-side, 1.4x joint venue, 1.85x separate locations)
+it('should correctly calculate coverage scope (1.0x for one-side, 1.4x for joint venue, 1.85x for separate venues)', () => {
   const quoteOneSide = engine.calculateQuotation(config, {
     eventCategory: 'wedding',
     packageId: 'pkg-wedding-signature',
     coverageScope: 'one_side'
   });
   assert.strictEqual(quoteOneSide.coverageScopeSurcharge, 0);
-  assert.strictEqual(quoteOneSide.subtotal, 49999);
+  assert.strictEqual(quoteOneSide.subtotal, 75000);
 
   const quoteJoint = engine.calculateQuotation(config, {
     eventCategory: 'wedding',
     packageId: 'pkg-wedding-signature',
     coverageScope: 'both_same_venue'
   });
-  assert.strictEqual(quoteJoint.coverageScopeSurcharge, 0);
-  assert.strictEqual(quoteJoint.subtotal, 49999);
+  // 1.4x of ₹75,000 = ₹1,05,000 (+₹30,000 surcharge)
+  assert.strictEqual(quoteJoint.coverageScopeSurcharge, 30000);
+  assert.strictEqual(quoteJoint.subtotal, 105000);
+  const jointLine = quoteJoint.lineItems.find(i => i.id === 'scope-joint-venue');
+  assert.ok(jointLine, 'Joint venue scope line item exists');
+  assert.strictEqual(jointLine.totalPrice, 30000);
 
   const quoteSeparate = engine.calculateQuotation(config, {
     eventCategory: 'wedding',
     packageId: 'pkg-wedding-signature',
     coverageScope: 'both_diff_venues'
   });
-  assert.strictEqual(quoteSeparate.coverageScopeSurcharge, 8500);
-  assert.strictEqual(quoteSeparate.subtotal, 49999 + 8500);
+  // 1.85x of ₹75,000 = ₹1,38,750 (+₹63,750 surcharge)
+  assert.strictEqual(quoteSeparate.coverageScopeSurcharge, 63750);
+  assert.strictEqual(quoteSeparate.subtotal, 138750);
   const scopeLine = quoteSeparate.lineItems.find(i => i.id === 'scope-dual-locations');
   assert.ok(scopeLine, 'Dual location scope line item exists');
-  assert.strictEqual(scopeLine.totalPrice, 8500);
+  assert.strictEqual(scopeLine.totalPrice, 63750);
+
+  // Non-wedding event category must NOT apply coverage scope multiplier
+  const prewedQuote = engine.calculateQuotation(config, {
+    eventCategory: 'prewed',
+    packageId: 'pkg-prewed-signature',
+    coverageScope: 'both_diff_venues'
+  });
+  assert.strictEqual(prewedQuote.coverageScopeSurcharge, 0);
 });
 
 console.log(`\nResults: ${passedTests}/${totalTests} tests passed.\n`);
