@@ -445,6 +445,10 @@ span.gujarati-quote {
   gap: 16px;
 }
 
+#nav-cta-date {
+  display: none !important;
+}
+
 .mobile-menu-toggle {
   display: none;
   background: none;
@@ -4105,12 +4109,43 @@ span.gujarati-quote {
   margin-bottom: 14px;
 }
 
+.qb-sum-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
 .qb-sum-tag {
   font-family: var(--font-mono);
   font-size: 0.72rem;
   color: var(--gold-light);
   letter-spacing: 0.1em;
   text-transform: uppercase;
+}
+
+.qb-sum-reset-btn {
+  background: transparent;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  color: var(--gold-light);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  padding: 3px 9px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  line-height: 1.3;
+}
+
+.qb-sum-reset-btn:hover {
+  background: rgba(212, 175, 55, 0.15);
+  border-color: var(--gold);
+  color: #ffffff;
+  transform: translateY(-1px);
 }
 
 .qb-sum-title {

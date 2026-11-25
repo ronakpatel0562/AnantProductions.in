@@ -77,7 +77,7 @@
       crew_assistant: 0
     },
     selectedAddons: {}, // addonId -> quantity
-    applyLaunchOffer: true, // Default to founding offer if eligible
+    applyLaunchOffer: false, // Standard package pricing by default; opt-in for launch promotion
     promoCode: '',
     customer: {
       names: '',
@@ -88,8 +88,75 @@
     }
   };
 
+  // Helper to generate a completely fresh, unmutated default state
+  function getDefaultState() {
+    return {
+      currentStep: 1,
+      referenceId: engine.generateQuoteRef(),
+      eventCategory: 'wedding',
+      coverageScope: 'one_side',
+      packageId: 'pkg-wedding-signature',
+      activeAddonCategory: 'albums',
+      eventDetails: {
+        eventType: 'Two-Day Gujarati Wedding',
+        days: 2,
+        dates: '',
+        isDateFlexible: false,
+        city: 'Ahmedabad',
+        venue: '',
+        venueGroom: '',
+        venueBride: '',
+        hoursPerDay: 6,
+        functions: []
+      },
+      crew: {
+        photo_trad: 0,
+        photo_candid: 1,
+        cinema_cam: 1,
+        video_trad: 0,
+        drone_pilot: 0,
+        crew_assistant: 0
+      },
+      selectedAddons: {},
+      applyLaunchOffer: false,
+      promoCode: '',
+      customer: {
+        names: '',
+        phone: '',
+        email: '',
+        preferredContact: 'WhatsApp',
+        notes: ''
+      }
+    };
+  }
+
   // Master State Instance
-  let builderState = { ...defaultState };
+  let builderState = getDefaultState();
+
+  // Reset all builder values cleanly back to baseline defaults
+  function resetQuotation(notify = true) {
+    try {
+      localStorage.removeItem('anant_builder_draft');
+    } catch (e) {}
+
+    if (window.location.hash && window.location.hash.includes('quote=')) {
+      try {
+        history.replaceState(null, document.title, window.location.pathname + window.location.search);
+      } catch (e) {}
+    }
+
+    builderState = getDefaultState();
+    saveDraftToStorage();
+    renderBuilder();
+    scrollToQuotationSection();
+
+    if (notify) {
+      showToast('Quotation estimator values have been reset to defaults.');
+    }
+  }
+
+  // Expose resetQuotation globally
+  window.resetQuotation = resetQuotation;
 
   // Try recovering from URL hash or localStorage
   function loadInitialState() {
@@ -99,7 +166,7 @@
       if (match && match[1]) {
         const decoded = engine.deserializeStateFromHash(match[1]);
         if (decoded) {
-          builderState = { ...builderState, ...decoded };
+          builderState = { ...getDefaultState(), ...decoded };
           builderState.currentStep = getStepList().length; // Jump straight to final review & proposal
           return;
         }
@@ -112,11 +179,37 @@
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed && parsed.eventCategory) {
-          builderState = { ...builderState, ...parsed };
+          const fresh = getDefaultState();
+          builderState = {
+            ...fresh,
+            ...parsed,
+            eventDetails: {
+              ...fresh.eventDetails,
+              ...(parsed.eventDetails || {})
+            },
+            crew: {
+              ...fresh.crew,
+              ...(parsed.crew || {})
+            },
+            customer: {
+              ...fresh.customer,
+              ...(parsed.customer || {})
+            },
+            selectedAddons: { ...(parsed.selectedAddons || {}) }
+          };
+          // Reset applyLaunchOffer unless promo code or explicit launch offer search param
+          if (!builderState.promoCode) {
+            builderState.applyLaunchOffer = false;
+          }
         }
       }
     } catch (e) {
       // Ignore
+    }
+
+    // Support explicit offer parameter in URL
+    if (window.location.search && (window.location.search.includes('offer=launch') || window.location.search.includes('promo=LAUNCH_OFFER'))) {
+      builderState.applyLaunchOffer = true;
     }
 
     // If draft had custom package selected, reset to default signature package
@@ -926,7 +1019,7 @@
 
       <div class="qb-step-footer" style="margin-top: 16px;">
         <button type="button" class="btn btn-outline-gold qb-btn-prev" data-step-prev="${builderState.currentStep - 1}">← Back to Add-ons</button>
-        <button type="button" class="btn btn-outline-gold" data-step-goto="1">↺ Start New Quotation</button>
+        <button type="button" class="btn btn-outline-gold" id="btn-start-new-quotation" data-action="reset-quotation" data-step-goto="1">↺ Start New Quotation</button>
       </div>
     `;
   }
@@ -938,7 +1031,12 @@
     return `
       <div class="qb-summary-card">
         <div class="qb-sum-header">
-          <span class="qb-sum-tag">LIVE QUOTATION ESTIMATOR</span>
+          <div class="qb-sum-header-top">
+            <span class="qb-sum-tag">LIVE QUOTATION ESTIMATOR</span>
+            <button type="button" class="qb-sum-reset-btn" id="btn-summary-reset" title="Reset quotation estimator values to defaults" aria-label="Reset quotation estimator">
+              ↺ Reset
+            </button>
+          </div>
           <h4 class="qb-sum-title">${quotation.basePackageName}</h4>
           <div class="qb-sum-ref">Ref: ${quotation.referenceId}</div>
         </div>
@@ -1245,11 +1343,31 @@
 
     document.querySelectorAll('[data-step-goto]').forEach(btn => {
       btn.addEventListener('click', () => {
+        if (btn.getAttribute('data-action') === 'reset-quotation' || btn.textContent.includes('Start New Quotation')) {
+          resetQuotation(true);
+          return;
+        }
         builderState.currentStep = Number(btn.getAttribute('data-step-goto'));
         renderBuilder();
         scrollToQuotationSection();
       });
     });
+
+    document.querySelectorAll('[data-action="reset-quotation"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        resetQuotation(true);
+      });
+    });
+
+    // Summary Card Reset Action
+    const summaryResetBtn = document.getElementById('btn-summary-reset');
+    if (summaryResetBtn) {
+      summaryResetBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        resetQuotation(true);
+      });
+    }
 
     // Step 1: Coverage Scope Selection
     document.querySelectorAll('[data-select-scope]').forEach(card => {
@@ -1266,19 +1384,41 @@
     document.querySelectorAll('[data-select-category]').forEach(card => {
       card.addEventListener('click', () => {
         const cat = card.getAttribute('data-select-category');
-        builderState.eventCategory = cat;
-        if (cat !== 'wedding') {
-          builderState.coverageScope = 'one_side';
+        if (builderState.eventCategory !== cat) {
+          builderState.eventCategory = cat;
+          // Cleanly reset add-ons and functions so previous category choices do not contaminate the new estimate
+          builderState.selectedAddons = {};
+          builderState.eventDetails.functions = [];
+
+          if (cat !== 'wedding') {
+            builderState.coverageScope = 'one_side';
+          }
+
+          const eventTypeNames = {
+            wedding: 'Two-Day Gujarati Wedding',
+            prewed: 'Pre-Wedding & Couple Film',
+            engagement: 'Engagement / Sakar Pudo',
+            functions: 'Individual Functions'
+          };
+          builderState.eventDetails.eventType = eventTypeNames[cat] || 'Celebration';
+
+          // select first package in category
+          const catPkgs = config.packageCategories[cat]?.packages || [];
+          builderState.packageId = catPkgs[0]?.id || 'pkg-wedding-signature';
+          builderState.eventDetails.days = catPkgs[0]?.standardDays || (cat === 'wedding' ? 2 : 1);
+          
+          const found = catPkgs[0];
+          if (found && found.baseCrew) {
+            builderState.crew = { ...found.baseCrew };
+          }
+
+          const maxSteps = getStepList().length;
+          if (builderState.currentStep > maxSteps) {
+            builderState.currentStep = maxSteps;
+          }
+          saveDraftToStorage();
+          renderBuilder();
         }
-        // select first package in category
-        const catPkgs = config.packageCategories[cat]?.packages || [];
-        builderState.packageId = catPkgs[0]?.id || 'pkg-wedding-signature';
-        builderState.eventDetails.days = catPkgs[0]?.standardDays || (cat === 'wedding' ? 2 : 1);
-        const maxSteps = getStepList().length;
-        if (builderState.currentStep > maxSteps) {
-          builderState.currentStep = maxSteps;
-        }
-        renderBuilder();
       });
     });
 

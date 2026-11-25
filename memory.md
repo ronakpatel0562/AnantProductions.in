@@ -277,12 +277,14 @@ Whenever changes or additions are made:
     - Unified the final step (`renderStep_FinalQuotationAndContact`) with a clean two-column grid: quick contact details on the left, instant 1-click WhatsApp quote submission and official PDF download on the right.
     - Added an always-accessible `📄 Review & Download PDF` action button in the studio header and inside the live summary sidebar card.
     - Replaced the embedded quotation builder on `index.html` with a high-converting studio launcher card pointing to `quote.html`, and updated all navbar and footer CTAs.
-  - **Quotation Builder Step 6 UI Polish & Navbar Clearance Fix:**
-    - Resolved horizontal button clipping and truncation in Card 02 (`Instant Dispatch & Official Proposal`): converted `.qb-final-grid` from a cramped 2-column grid to a clean vertical stack where Card 01 (Couple Details) and Card 02 (Dispatch Actions) both enjoy 100% width with dedicated flex `.qb-action-row` rows (`Review & Download PDF`, `Direct Print`, `Copy Shareable Link`, `Copy Summary Text`).
-    - Fixed bottom pinned bar (`.qb-nav-bar-fixed`) floating over content on `index.html`: restricted `.qb-nav-bar-fixed` via CSS so it displays only on the dedicated standalone studio page (`body.qb-standalone-page` on `quote.html`), keeping `index.html` completely unblocked and clean.
-    - Eliminated duplicate WhatsApp buttons: on Step 6, the right sidebar now focuses cleanly on the price breakdown and PDF preview with an advisory notice, while Card 02 acts as the prominent primary WhatsApp dispatch hub.
-    - Added `scroll-margin-top: 100px;` and `padding-top: 14px;` to `.qb-stepper`, and updated `scrollToQuotationSection()` in `js/quotation-builder.js` to scroll directly to `#quotation-builder-app` with 24px of clear margin below the sticky navbar.
-    - Verified all 41 unit tests pass and verified visual state in browser subagent.
+  - **Live Quotation Estimator Reset & Baseline Pricing Polish:**
+    - Resolved baseline quotation value mismatch where `applyLaunchOffer: true` was previously active by default, which subtracted ₹25,000 on initial page load and displayed Signature Wedding at ₹50,000 instead of its standard ₹75,000 package rate. Set `applyLaunchOffer: false` by default, making launch savings opt-in via explicit offer URLs or promo codes.
+    - Added dedicated `getDefaultState()` factory to eliminate shallow copy mutations (`{ ...defaultState }`), ensuring fresh reference IDs and clean nested objects (`eventDetails`, `selectedAddons`, `crew`, `customer`).
+    - Added interactive `↺ Reset` button in the sticky Live Quotation Estimator header (`.qb-sum-reset-btn`) allowing clients to reset all customized values and add-ons at any step in the wizard.
+    - Added full state reset handling on the final step's `↺ Start New Quotation` button (`resetQuotation()`), clearing local drafts, removing quote URL hashes, and returning smoothly to Step 1.
+    - Added clean category switching logic in Step 1: switching between Wedding, Pre-Wedding, Engagement, and Standalone Functions now cleanly wipes previous category add-ons and updates event type and duration baselines.
+    - Temporarily hid navbar header CTA button `#nav-cta-date` ("Quote Builder") across all site pages (`index.html`, `about.html`, `contact.html`, `terms-and-conditions.html`, `privacy-policy.html`, `404.html`, `500.html`) and via `#nav-cta-date { display: none !important; }` in `css/style.css`.
+    - Added unit test suite in `test/quotation-estimator-reset.test.js` (5/5 tests passing; 46/46 total project tests passing).
 
 
 
